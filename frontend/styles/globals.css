@@ -1,0 +1,54 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  color: var(--black);
+  background: #F5F6F8;
+
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+a {
+  text-decoration: none;
+
+  color: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #3B434E;
+  --gray-light: #EBEBEB;
+  --white: white;
+  --primary: #7653FC;
+  --primary-hover: #6344DF;
+  --red: #FC836D;
+  --green: #1DC37E;
+  --green-light: #C8F8E4;
+  --font-family: 'Noto Sans KR', sans-serif;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr auto;
+
+  min-height: 100vh;
+  gap: 40px 30px;
+  grid-template-areas: "leftplayer gamearea rightplayer";
+}
+
+.leftplayer {
+  grid-area: leftplayer;
+}
+
+.gamearea {
+  grid-area: gamearea;
+}
+
+.rightplayer {
+  grid-area: rightplayer;
+}
