@@ -8,10 +8,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "stylelint": "stylelint \"**/*.css\" --fix"
+    "stylelint": "stylelint \"**/*.css\" --fix",
+    "serve": "concurrently \"npm run dev\" \"npm run mock\"",
+    "mock": "json-server -w db.json -p 4300 -d 1750"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "next": "11.0.1",
+    "nextjs-progressbar": "^0.0.11",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
@@ -21,10 +25,12 @@
     "@types/react": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
+    "concurrently": "^6.2.0",
     "css-what": "^5.0.1",
     "eslint": "^7.29.0",
     "eslint-config-next": "11.0.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "json-server": "^0.16.3",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-order": "^4.1.0",
