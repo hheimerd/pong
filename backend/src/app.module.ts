@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
-import { DatabaseType } from 'typeorm';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'example';
@@ -20,7 +19,7 @@ const password = process.env.POSTGRES_PASSWORD || 'example';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.NODE_ENV === 'development',
     }),
-    UsersModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
