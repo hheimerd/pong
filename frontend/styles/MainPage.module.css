@@ -1,0 +1,65 @@
+.bg {
+    background: #005D58;
+}
+
+.title {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 130px;
+    line-height: 152px;
+    letter-spacing: -0.04em;
+
+    color: #FFFFFF;
+}
+
+.title_2 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 32px;
+    line-height: 94.4%;
+    /* or 30px */
+
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    color: #5FCEB2;
+
+}
+
+.title_3 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    line-height: 42px;
+    letter-spacing: -0.04em;
+
+    color: #FFFFFF;
+}
+
+.pp_icon {
+    position: absolute;
+    width: 826px;
+    height: 1150px;
+    left: 744px;
+    top: 0px;
+}
+
+.decr_text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: -0.04em;
+
+    color: #FFFFFF;
+
+}
+
+.game_field {
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 16px;
+}
+

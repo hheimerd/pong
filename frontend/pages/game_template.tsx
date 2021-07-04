@@ -1,8 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {Canvas, Button, Htag} from "../components";
 import useKeypress from "../hooks/useKeypress";
+import {useSession} from "next-auth/client";
 
 export default function Home(): JSX.Element {
+    const [session] = useSession()
+
+    if (!session) {
+        return <>
+            <h1>You dont have rights</h1>
+        </>
+    }
+
     const [counter, setCounter] = useState<number>(0);
     const [offsetY, setOffsetY] = useState<number>(0);
 
