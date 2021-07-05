@@ -1,0 +1,17 @@
+.avatar {
+  display: inline-block;
+}
+
+.small {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 24px;
+}
+
+.large {
+  width: 96px;
+  height: 96px;
+
+  border-radius: 48px;
+}
