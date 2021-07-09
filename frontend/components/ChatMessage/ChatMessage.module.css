@@ -1,0 +1,25 @@
+.box {
+  display: block;
+  margin: 1rem 0.5rem;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  grid-template-rows: auto;
+  height: 100%;
+
+  grid-row-gap: 1rem;
+  padding: 0.5rem 1rem;
+  justify-content: end;
+  align-content: end;
+}
+
+.box h3 {
+  font-weight: bold;
+  margin: 0;
+}
+
+.box p {
+  margin: 0;
+}

@@ -1,0 +1,13 @@
+.chat {
+  display: grid;
+  grid-template-rows: 1fr 82px;
+  grid-template-columns: 1fr;
+
+  background-color: #005D58;
+  color: rgba(255, 255, 255, 0.5);;
+  font-size: 1.2rem;
+  border: 1px solid #68CFBF;
+  box-sizing: border-box;
+  border-radius: 12px;
+  height: calc(80vh - 82px);
+}
