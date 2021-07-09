@@ -1,7 +1,13 @@
-import {Avatar} from "../../components";
+import React from "react";
+import {AvatarButton} from "../../components";
 
-export default function MainPage() {
-    return <>
-      <Avatar size="small" image="photo_avatar.png"/>
-    </>
+const Chat = () => {
+    return (<>
+      <div>
+        <AvatarButton image="" link="/chat/room/1" name="Ivan"/>
+        <AvatarButton image="photo_avatar.png" link="/chat/room/2" name="Marge"/>
+      </div>
+    </>);
 }
+
+export default Chat
