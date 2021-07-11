@@ -9,8 +9,8 @@ module.exports = {
   port: 5432,
   username,
   password,
-  database: 'postgres',
-  synchronize: process.env.NODE_ENV === 'development',
+  database: process.env.DB_NAME || 'postgres',
+  synchronize: process.env.NODE_ENV !== 'production',
   dropSchema: false,
   logging: true,
   entities: [

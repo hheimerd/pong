@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { FindConditions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { genSalt, hash } from 'bcryptjs';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User) private readonly userModel: Repository<User>,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const exists = await this.count({
+      email: createUserDto.email,
+      login: createUserDto.login,
+    });
+
+    if (exists != 0) throw new ConflictException();
+
+    const salt = await genSalt(10);
+    const password = await hash(createUserDto.password, salt);
+    const user = await this.userModel.create({ ...createUserDto, password });
+    await this.userModel.save(user);
+    return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(take = 15, skip = 0) {
+    return this.userModel.find({ take, skip });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(id: number) {
+    return this.userModel.findOne(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    return this.userModel.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    return this.userModel.delete(id);
+  }
+
+  async count(options: FindConditions<User>) {
+    return this.userModel.count({ where: options });
   }
 }
