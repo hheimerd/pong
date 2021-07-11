@@ -2,3 +2,8 @@ export * from './Htag/Htag';
 export * from './Button/Button';
 export * from './Canvas/Canvas';
 export * from './Avatar/Avatar';
+export * from './AvatarButton/AvatarButton';
+export * from './ChatMessage/ChatMessage';
+export * from './ChatMessageList/ChatMessageList';
+export * from './Chat/Chat';
+export * from './ChatForm/ChatForm';
