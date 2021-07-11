@@ -43,6 +43,12 @@ export class UserService {
     return this.userModel.delete(id);
   }
 
+  async getAuthData(id: number) {
+    return this.userModel.findOne(id, {
+      select: ['email', 'password', 'login'],
+    });
+  }
+
   async count(options: FindConditions<User>) {
     return this.userModel.count({ where: options });
   }

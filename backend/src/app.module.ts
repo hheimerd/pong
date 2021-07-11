@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'postgres';
@@ -21,6 +21,7 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
       synchronize: process.env.NODE_ENV === 'development',
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

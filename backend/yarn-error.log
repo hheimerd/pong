@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add -D @types/platform-fastify
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @nestjs/passprot
 
 PATH: 
   C:\Program Files\PowerShell\7;C:\Program Files\Oculus\Support\oculus-runtime;C:\Program Files (x86)\AMD APP\bin\x86_64;C:\Program Files (x86)\AMD APP\bin\x86;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Program Files\PowerShell\7\;C:\Program Files\dotnet\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\32-ko\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\PhpStorm 2020.3.2\bin;C:\Programs\PHP;C:\Users\32-ko\AppData\Roaming\npm;c:\bin\;C:\Programs\CLion 2020.3.2\bin;C:\Programs\Postges\bin;C:\Programs\adb;C:\Users\32-ko\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\32-ko\AppData\Local\Yarn\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fplatform-fastify: Not found
+  Error: https://registry.yarnpkg.com/@nestjs%2fpassprot: Not found
       at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66097:18)
       at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140749:22)
       at Request.emit (node:events:378:20)
@@ -37,6 +37,7 @@ npm manifest:
     "scripts": {
       "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
       "migration:generate": "yarn run typeorm migration:generate -n",
+      "migration:revert": "yarn run typeorm migration:revert",
       "migration:create": "yarn run typeorm migration:create -n",
       "migration:run": "yarn run typeorm migration:run",
       "prebuild": "rimraf dist",
