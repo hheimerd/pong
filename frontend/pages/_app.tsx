@@ -7,6 +7,7 @@ import { Provider } from 'next-auth/client'
 import { ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
 import styles from "../styles/MainPage.module.css";
+import {UserProfileContextProvider} from '../context/userprofile.context';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
@@ -21,6 +22,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
 	return (
 	<Provider session={pageProps.session}>
+    <UserProfileContextProvider>
 		<Head>
 			<title>My Top</title>
 			<link rel="icon" href="/favicon.ico" />
@@ -33,6 +35,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 			<CssBaseline />
 			<Component {...pageProps} />
 		</ThemeProvider>
+    </UserProfileContextProvider>
 	</Provider>
 	);
 }

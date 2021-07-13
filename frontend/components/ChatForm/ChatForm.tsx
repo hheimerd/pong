@@ -1,10 +1,11 @@
 import styles from './ChatForm.module.css';
-import React, {useContext, useRef} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import {ChatContext} from '../../context/chat.context';
 import {Avatar} from '../Avatar/Avatar';
-// import {IChatMessage} from '../../interfaces/message.interface';
+import {UserProfileContext} from '../../context/userprofile.context';
 
 export const ChatForm = () => {
+  const {avatar} = useContext(UserProfileContext);
   const {dispatch} = useContext(ChatContext);
   const inputElement = useRef(null)
   
@@ -24,9 +25,11 @@ export const ChatForm = () => {
     }
   }
 
+  if(!avatar) return null
+
   return (
     <section className={styles.box}>
-      <Avatar image="/photo_avatar.png"/>
+      <Avatar image={avatar.sm}/>
       <input
         onKeyPress={handleKeyDown}
         className={styles.input}
