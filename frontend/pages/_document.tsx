@@ -27,7 +27,7 @@ class MyDocument extends Document {
 		return (
 			<Html lang="ru">
 				<Head/>
-				<body>
+				<body >
 					<Main/>
 					<NextScript/>
 				</body>

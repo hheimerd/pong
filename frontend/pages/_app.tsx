@@ -6,6 +6,7 @@ import theme from '../theme';
 import { Provider } from 'next-auth/client'
 import { ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
+import styles from "../styles/MainPage.module.css";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 

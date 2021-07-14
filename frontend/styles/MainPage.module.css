@@ -1,5 +1,5 @@
 .bg {
-    background: #005D58;
+    background: #057A68;
 }
 
 .title {
@@ -13,6 +13,8 @@
 }
 
 .title_2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -27,6 +29,8 @@
 
 }
 
+
+
 .title_3 {
     font-family: Roboto;
     font-style: normal;
@@ -39,11 +43,12 @@
 }
 
 .pp_icon {
-    position: absolute;
-    width: 826px;
-    height: 1150px;
-    left: 744px;
-    top: 0px;
+    float: right;
+}
+
+.sign_in_school
+{
+    margin-right: 150px;
 }
 
 .decr_text {
