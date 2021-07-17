@@ -13,14 +13,17 @@ import {
   NotFoundException,
   ParseIntPipe,
   DefaultValuePipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserByIdPipe } from './pipes/user-by-id.pipe';
+import { PolicyGuard } from 'src/policy/guards/policy.guard';
 
 @Controller('user')
+@UseGuards(PolicyGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

@@ -17,9 +17,9 @@ export abstract class ModelByIdPipe<T> implements PipeTransform {
     value: string,
     metadata: ArgumentMetadata,
   ): Promise<string | T> {
-    if (metadata.type != 'query' && metadata.type != 'param') {
-      return value;
-    }
+    // if (metadata.type != 'query' && metadata.type != 'param' ) {
+    //   return value;
+    // }
 
     const id = parseInt(value, 10);
     const model = await this.service.findById(id);

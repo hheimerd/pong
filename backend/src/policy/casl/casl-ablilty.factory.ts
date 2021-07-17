@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { Role, User } from 'src/user/entities/user.entity';
 
-type Subjects = InferSubjects<typeof User> | 'all';
+export type Subjects = InferSubjects<typeof User> | 'all';
 
 export enum Action {
   Manage = 'manage',

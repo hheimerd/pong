@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PolicyModule } from './policy/policy.module';
+import { RequestModule } from './request/request.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'postgres';
@@ -26,6 +27,7 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
     }),
     AuthModule,
     PolicyModule,
+    RequestModule,
   ],
 })
 export class AppModule {}

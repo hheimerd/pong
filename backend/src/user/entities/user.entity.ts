@@ -33,6 +33,6 @@ export class User {
   password: string;
 
   @Column('varchar', { array: true })
-  @Field((type) => [Role])
+  @Field(() => [Role])
   roles: Role[];
 }
