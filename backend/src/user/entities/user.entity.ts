@@ -1,10 +1,14 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
   User = 'user',
   Admin = 'admin',
 }
+
+registerEnumType(Role, {
+  name: 'Role',
+});
 
 @Entity()
 @ObjectType()

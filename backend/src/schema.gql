@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  login: String!
+  roles: [Role!]!
+}
+
+enum Role {
+  User
+  Admin
+}
+
+type Query {
+  user(id: Int!): User!
+}

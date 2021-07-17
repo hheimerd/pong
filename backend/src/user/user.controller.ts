@@ -17,7 +17,6 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ModelByIdPipe } from 'src/pipes/ModelById.pipe';
 import { User } from './entities/user.entity';
 import { UserByIdPipe } from './pipes/user-by-id.pipe';
 

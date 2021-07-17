@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { PolicyModule } from './policy/policy.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'postgres';
@@ -21,9 +21,11 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
       synchronize: process.env.NODE_ENV === 'development',
     }),
     UserModule,
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'src/schema.gql',
+    }),
     AuthModule,
+    PolicyModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
