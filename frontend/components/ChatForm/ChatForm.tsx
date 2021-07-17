@@ -25,11 +25,11 @@ export const ChatForm = () => {
     }
   }
 
-  if(!avatar) return null
+  // if(!avatar) return null
 
   return (
     <section className={styles.box}>
-      <Avatar image={avatar.sm}/>
+      {avatar && <Avatar image={avatar.sm}/>}
       <input
         onKeyPress={handleKeyDown}
         className={styles.input}
