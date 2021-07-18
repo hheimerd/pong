@@ -23,7 +23,7 @@ services:
       - 3000:3000
     volumes:
       - ./backend:/app
-    entrypoint: "sh -c 'cd /app && npx yarn && npx yarn run start'"
+    entrypoint: "sh -c 'cd /app && npx yarn && npx yarn run migration:run && npx yarn run start'"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
