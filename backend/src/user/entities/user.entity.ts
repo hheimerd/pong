@@ -29,10 +29,10 @@ export class User {
   @Field()
   login: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, default: [Role.User] })
   @Field(() => [Role])
   roles: Role[];
 }

@@ -33,6 +33,7 @@
     "@nestjs/graphql": "^8.0.2",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/mapped-types": "*",
+    "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-express": "^8.0.4",
     "@nestjs/typeorm": "^7.1.5",
     "apollo-server-express": "2.x.x",

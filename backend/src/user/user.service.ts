@@ -43,9 +43,9 @@ export class UserService {
     return this.userModel.delete(id);
   }
 
-  async getAuthData(id: number) {
-    return this.userModel.findOne(id, {
-      select: ['email', 'password', 'login'],
+  async findOne(search) {
+    return this.userModel.findOne({
+      where: search,
     });
   }
 
