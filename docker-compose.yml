@@ -1,0 +1,33 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pong
+    ports:
+      - 5432:5432
+    
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  server:
+    image: node:16-alpine
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend:/app
+    entrypoint: "sh -c 'cd /app && npx yarn && npx yarn run start'"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_NAME=pong
+      - NODE_ENV=development
+      - DB_PORT=5432
+      - DB_HOST=db
