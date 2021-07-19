@@ -7,7 +7,7 @@ import {UserProfileContext} from '../../context/userprofile.context';
 export const ChatForm = () => {
   const {avatar} = useContext(UserProfileContext);
   const {dispatch} = useContext(ChatContext);
-  const inputElement = useRef(null)
+  const inputElement = useRef(null);
   
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -20,10 +20,10 @@ export const ChatForm = () => {
       dispatch({
         type: 'SEND_MESSAGE',
         payload: inputElement.current.value
-      })
-      inputElement.current.value = ''
+      });
+      inputElement.current.value = '';
     }
-  }
+  };
 
   // if(!avatar) return null
 

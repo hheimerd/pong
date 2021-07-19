@@ -17,7 +17,7 @@ export const Button = ({ appearance, arrow = 'none', children, className, ...pro
         [styles.down]: arrow == 'down'
       })}>
         <ArrowIcon/>
-        </span>}
+      </span>}
     </button>
   );
 };

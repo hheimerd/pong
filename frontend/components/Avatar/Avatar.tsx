@@ -5,10 +5,10 @@ import {useEffect} from "react";
 
 export const Avatar = ({ size = 'small', image = '/no-avatar.png', className, onClick, ...props}: AvatarProps): JSX.Element => {
   useEffect(() => {
-    console.log(onClick)
-  }, [])
+    console.log(onClick);
+  }, []);
   if (image === '') {
-    image = '/no-avatar.png'
+    image = '/no-avatar.png';
   }
   return (
     <img

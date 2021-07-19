@@ -6,7 +6,7 @@ import {ChatContext} from '../../context/chat.context';
 
 export const ChatMessageList = () => {
   const {state} = useContext(ChatContext);
-  const messagesEndRef = useRef<null | HTMLDivElement>(null)
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(
     () => {
@@ -26,5 +26,5 @@ export const ChatMessageList = () => {
       </React.Fragment>
     );
   });
-  return <div className={styles.wrapper}>{Messages}<div ref={messagesEndRef} /></div>
+  return <div className={styles.wrapper}>{Messages}<div ref={messagesEndRef} /></div>;
 };
