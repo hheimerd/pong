@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { FindConditions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -16,7 +16,7 @@ export class UserService {
     const exists = await this.count({
       email: createUserDto.email,
       login: createUserDto.login,
-    });
+    });    
 
     if (exists != 0) throw new ConflictException();
 
@@ -35,8 +35,12 @@ export class UserService {
     return this.userModel.findOne(id);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userModel.update(id, updateUserDto);
+  async update(id: number, dto: UpdateUserDto) {
+    const user = await this.userModel.findOne(id);
+    if (!user) return null;
+    const updated = { ...user, ...dto};
+    
+    return this.userModel.save(updated);
   }
 
   async remove(id: number) {

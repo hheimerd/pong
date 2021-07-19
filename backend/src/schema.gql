@@ -16,5 +16,27 @@ enum Role {
 }
 
 type Query {
+  createUser(input: CreateUserDto!): User!
   user(id: Int!): User!
+  users(offset: Int!, limit: Int!): [User!]!
+}
+
+input CreateUserDto {
+  name: String!
+  email: String!
+  login: String!
+  password: String!
+}
+
+type Mutation {
+  updateUser(input: UpdateUserDto!, id: Float!): User!
+  removeUser(id: Float!): Boolean!
+}
+
+input UpdateUserDto {
+  name: String
+  email: String
+  login: String
+  newPassword: String
+  oldPassword: String
 }
