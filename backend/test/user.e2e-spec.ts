@@ -30,7 +30,6 @@ describe('AppController (e2e)', () => {
       .expect(201)
       .then(({ body }: request.Response) => {
         expect(body).toBeDefined();
-        console.log(body);
         userId = body.id;
         done();
       });
@@ -51,7 +50,6 @@ describe('AppController (e2e)', () => {
       .get('/user/' + userId)
       .expect(200)
       .then(({ body }: request.Response) => {
-        console.log('delete, %O', body);
         done();
       });
   });
@@ -61,7 +59,6 @@ describe('AppController (e2e)', () => {
       .delete('/user/' + userId)
       .expect(200)
       .then(({ body }: request.Response) => {
-        console.log('delete, %O', body);
         done();
       });
   });

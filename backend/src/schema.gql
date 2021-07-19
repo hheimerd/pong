@@ -15,10 +15,21 @@ enum Role {
   Admin
 }
 
+type JwtResponse {
+  access_token: String!
+}
+
 type Query {
-  createUser(input: CreateUserDto!): User!
   user(id: Int!): User!
   users(offset: Int!, limit: Int!): [User!]!
+  login(password: String!, login: String!): JwtResponse!
+  getProfile: User!
+}
+
+type Mutation {
+  createUser(input: CreateUserDto!): User!
+  updateUser(input: UpdateUserDto!, id: Float!): User!
+  removeUser(id: Float!): Boolean!
 }
 
 input CreateUserDto {
@@ -26,11 +37,6 @@ input CreateUserDto {
   email: String!
   login: String!
   password: String!
-}
-
-type Mutation {
-  updateUser(input: UpdateUserDto!, id: Float!): User!
-  removeUser(id: Float!): Boolean!
 }
 
 input UpdateUserDto {
