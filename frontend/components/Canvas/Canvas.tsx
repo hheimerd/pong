@@ -9,14 +9,14 @@ import React from "react";
  */
 
 export const Canvas = ({ size = 'medium', offsetY = 20, children, className, ...props}: CanvasProps): JSX.Element => {
-  let canvasRef = useRef<HTMLCanvasElement | null>(null);
-  let canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
     // Initialize
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
-      let ctx = canvasCtxRef.current;
+      const ctx = canvasCtxRef.current;
       ctx.fillStyle = "black";
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       ctx.fillRect(20, offsetY, 10, 30);

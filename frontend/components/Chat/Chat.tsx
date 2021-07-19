@@ -7,4 +7,4 @@ export const Chat: React.FC<ChatProps> = ({children, ...props}: ChatProps): JSX.
       {children}
     </div>
   );
-}
+};

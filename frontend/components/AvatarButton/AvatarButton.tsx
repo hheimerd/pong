@@ -2,7 +2,7 @@ import {AvatarButtonProps} from "./AvatarButton.props";
 import styles from './AvatarButton.module.css';
 import React from "react";
 import {Avatar} from "../Avatar/Avatar";
-import Link from 'next/link'
+import Link from 'next/link';
 
 export const AvatarButton = ({image, name, link, ...props}: AvatarButtonProps): JSX.Element => {
   return (

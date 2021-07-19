@@ -32,11 +32,8 @@ services:
       - DB_PORT=5432
       - DB_HOST=db
 
-  # frontend:
-  #   image: node:16-alpine
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./frontend:/app
-  #   entrypoint: "sh -c 'cd /app && npx yarn && npx yarn run dev'"
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - 3040:3000

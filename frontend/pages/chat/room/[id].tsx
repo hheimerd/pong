@@ -1,10 +1,10 @@
-import {useRouter} from 'next/router'
-import {Chat, ChatForm, ChatMessageList} from '../../../components'
-import {ChatContextProvider} from '../../../context/chat.context'
+import {useRouter} from 'next/router';
+import {Chat, ChatForm, ChatMessageList} from '../../../components';
+import {ChatContextProvider} from '../../../context/chat.context';
 
 const ChatRoom = () => {
-  const router = useRouter()
-  const { id } = router.query
+  const router = useRouter();
+  const { id } = router.query;
 
   return (
     <ChatContextProvider>
@@ -14,7 +14,7 @@ const ChatRoom = () => {
         <ChatForm />
       </Chat>
     </ChatContextProvider>
-  )
-}
+  );
+};
 
-export default ChatRoom
+export default ChatRoom;
