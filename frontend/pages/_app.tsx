@@ -9,6 +9,12 @@ import {CssBaseline} from "@material-ui/core";
 // import styles from "../styles/MainPage.module.css";
 import {UserProfileContextProvider} from '../context/userprofile/userprofile.context';
 
+import {
+  ApolloProvider
+} from "@apollo/client";
+import client from './api/apollo-client'
+
+
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
   React.useEffect(() => {
@@ -19,9 +25,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     }
   }, []);
 
-
   return (
-    <Provider session={pageProps.session}>
+  <ApolloProvider client={client}>
+  <Provider session={pageProps.session}>
       <UserProfileContextProvider>
         <Head>
           <title>My Top</title>
@@ -37,6 +43,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         </ThemeProvider>
       </UserProfileContextProvider>
     </Provider>
+    </ApolloProvider>
+
   );
 }
 

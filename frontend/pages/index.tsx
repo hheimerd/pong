@@ -19,8 +19,59 @@ import CheckIcon from '@material-ui/icons/Check';
 import theme from "../theme";
 import Router from "next/router";
 
+import {gql, useMutation, useQuery} from "@apollo/client";
+import client from "./api/apollo-client";
+
+import {GET_USERS} from './api/queries/users';
+import {CREATE_USER} from './api/mutations/users';
+import {useEffect, useState} from 'react';
+
+
+
+
+
+
+
 export default function MainPage({provider}) {
-  const [ session, loading ] = useSession();
+  // const [ session, loading ] = useSession();
+
+  if (typeof window !== "undefined") {
+
+  localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsIm5hbWUiOiJoZXkiLCJlbWFpbCI6ImFiYXNAYXNmLmNvbSIsImxvZ2luIjoiaGV5aGV5Iiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE2MjY3OTczMTMsImV4cCI6MTYyNjgwMDkxM30.n3svM6ARXTN8fTxbEN9yQ2-3y3rvYyOt_oi_IuTA_Zs');
+    
+    }
+
+  const {data, loading, error} = useQuery(GET_USERS, {variables: {
+                                                        "usersOffset": 0,
+                                                        "usersLimit": 0}
+                                                      });
+  const [users, setUsers] = useState([]);
+
+  const [createUser] = useMutation(CREATE_USER);
+
+
+  const _createUser = () => {
+    createUser({
+      variables: 
+      {
+        "createUserInput": {
+          "name": "ahey",
+          "email": "aabas@asf.com",
+          "login": "aheyhey",
+          "password": "aqweqfasdga13"
+        }
+      }
+    }).then(({data}) => {
+      console.log(data)
+    })
+  }
+  useEffect(() => {
+    if (!loading) {
+      console.log(data)
+      setUsers(data.users)
+      // _createUser();
+    }
+  }, [data])
 
   const useStyles = makeStyles({
     item: {
@@ -33,6 +84,12 @@ export default function MainPage({provider}) {
 
   const classes = useStyles();
 
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
+
+
+
   const features = ['Играйте с друзьями в пинг понг',
     'Смотрите игры в онлайн режиме',
     'Повышайте  свой рейтинг',
@@ -41,7 +98,7 @@ export default function MainPage({provider}) {
 
 
   return <>
-    {!session &&
+    {
         <>
           <div className={styles.bg}>
             <Box>
@@ -73,7 +130,27 @@ export default function MainPage({provider}) {
                     <Button style={{color: "black", backgroundColor: "orange", marginTop:"40px",
                       maxWidth: '1000px', minWidth: '100%'}}
                     startIcon={<Image layout="fixed" width="65px" height="65px" src={logo42}/>}
-                    onClick={() => Router.push('https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2F42-school&response_type=code')}
+                    onClick={() => {
+                      try {
+                        createUser(
+                          {
+                            variables: {
+                              createUserInput: {
+                                "name": "anullaaaaqqaaaa",
+                                "email": "anull@nullqqqaa.com",
+                                "login": "anullaaaaaqaqqa",
+                                "password": "a  enullaaaaaaaawaaaaaaaaaaqq"
+                              }
+                            }
+                          }).then(()=> console.log(data));
+                      }
+                      catch (e) {
+                        {console.log(e);}
+                      }
+                    }
+                    }
+
+                      // Router.push('https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2F42-school&response_type=code')}
                     // onClick={() => signIn(provider.id)}
                     >
                       Вход через аккаунт Школы</Button>
@@ -109,10 +186,14 @@ export default function MainPage({provider}) {
 
                 <Grid item xs={1}/>
               </Grid>
-
+          <div>
+            {users.map(user => <div> {user.name} </div>)}
+          </div>
 
             </Box>
           </div>
+
+
         </>
     }
 
@@ -120,7 +201,7 @@ export default function MainPage({provider}) {
     {
       // For logged in
     }
-    {session && <>
+    {/* {session && <>
       <Drawer
         variant="temporary"
         ModalProps={{
@@ -129,15 +210,36 @@ export default function MainPage({provider}) {
       />
             Signed in as {session.user.name} <br/>
       <button onClick={() => signOut()}>Sign out</button>
-    </>}
+    </>} */}
   </>;
 }
 
-export async function getServerSideProps(context){
-  const providers = await getProviders();
-  const provider = providers['42-school'];
+// export async function getServerSideProps(context){
+//   const providers = await getProviders();
+//   const provider = providers['42-school'];
+//
+//   return {
+//     props: { provider }
+//   };
+// }
 
-  return {
-    props: { provider }
-  };
-}
+// export async function getStaticProps() {
+//
+//   addTodo({ variables: { type: input.value } });
+//
+//   const { data } = await client.mutation({
+//     mutation: gql`
+//         mutation($createUserInput: CreateUserDto!)  {
+//           createUser(input: $createUserInput) {
+//             id
+//           }
+//         }
+//       `,
+//   });
+//
+//   return {
+//     props: {
+//       countries: data.countries.slice(0, 4),
+//     },
+//   };
+// }
