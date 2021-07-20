@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import CheckIcon from '@material-ui/icons/Check';
 import theme from "../theme";
+import Router from "next/router";
 
 export default function MainPage({provider}) {
   const [ session, loading ] = useSession();
@@ -72,7 +73,10 @@ export default function MainPage({provider}) {
                     <Button style={{color: "black", backgroundColor: "orange", marginTop:"40px",
                       maxWidth: '1000px', minWidth: '100%'}}
                     startIcon={<Image layout="fixed" width="65px" height="65px" src={logo42}/>}
-                    onClick={() => signIn(provider.id)}>Вход через аккаунт Школы</Button>
+                    onClick={() => Router.push('https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2F42-school&response_type=code')}
+                    // onClick={() => signIn(provider.id)}
+                    >
+                      Вход через аккаунт Школы</Button>
                   </div>
 
 
