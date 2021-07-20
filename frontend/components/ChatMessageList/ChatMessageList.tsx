@@ -4,7 +4,7 @@ import {ChatMessage} from '../ChatMessage/ChatMessage';
 import {IChatMessage} from '../../interfaces/message.interface';
 import {ChatContext} from '../../context/chat.context';
 
-export const ChatMessageList = () => {
+export const ChatMessageList = (): JSX.Element => {
   const {state} = useContext(ChatContext);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 

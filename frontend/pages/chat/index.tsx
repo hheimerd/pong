@@ -1,7 +1,7 @@
 import React from "react";
 import {AvatarButton} from "../../components";
 
-const Chat = () => {
+const Chat = (): JSX.Element => {
   return (<>
     <div>
       <AvatarButton image="" link="/chat/room/1" name="Ivan"/>
