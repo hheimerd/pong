@@ -31,7 +31,6 @@ import {useEffect, useState} from 'react';
 
 
 
-
 export default function MainPage({provider}) {
   // const [ session, loading ] = useSession();
 
@@ -130,27 +129,7 @@ export default function MainPage({provider}) {
                     <Button style={{color: "black", backgroundColor: "orange", marginTop:"40px",
                       maxWidth: '1000px', minWidth: '100%'}}
                     startIcon={<Image layout="fixed" width="65px" height="65px" src={logo42}/>}
-                    onClick={() => {
-                      try {
-                        createUser(
-                          {
-                            variables: {
-                              createUserInput: {
-                                "name": "anullaaaaqqaaaa",
-                                "email": "anull@nullqqqaa.com",
-                                "login": "anullaaaaaqaqqa",
-                                "password": "a  enullaaaaaaaawaaaaaaaaaaqq"
-                              }
-                            }
-                          }).then(()=> console.log(data));
-                      }
-                      catch (e) {
-                        {console.log(e);}
-                      }
-                    }
-                    }
-
-                      // Router.push('https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2F42-school&response_type=code')}
+                    onClick= { () => Router.push('https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3040%2Fintra_callback&response_type=code')}
                     // onClick={() => signIn(provider.id)}
                     >
                       Вход через аккаунт Школы</Button>
@@ -213,6 +192,25 @@ export default function MainPage({provider}) {
     </>} */}
   </>;
 }
+
+
+
+// export async function getServerSideProps(context) {
+//   const { req } = context;
+//   const { origin } = absoluteUrl(req);
+
+//   const baseApiUrl = `${origin}/api`;
+
+//   const { token } = getAppCookies(req);
+//   const profile = token ? verifyToken(token.split(' ')[1]) : '';
+//   return {
+//     props: {
+//       baseApiUrl,
+//       profile,
+//     },
+//   };
+// }
+
 
 // export async function getServerSideProps(context){
 //   const providers = await getProviders();
