@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
@@ -30,6 +31,7 @@ export class User {
   login: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column('varchar', { array: true, default: [Role.User] })
