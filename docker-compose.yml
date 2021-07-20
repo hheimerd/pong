@@ -16,7 +16,7 @@ services:
     ports:
       - 8080:8080
 
-  server:
+  backend:
     image: node:16-alpine
     restart: always
     ports:
