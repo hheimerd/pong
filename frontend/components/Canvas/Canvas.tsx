@@ -23,7 +23,7 @@ export const Canvas = ({ size = 'medium', offsetY = 20, children, className, ...
       console.log('setOffsetY: ' + offsetY);
       canvasRef.current.focus();
     }
-  }, []);
+  }, [offsetY]);
 
   return (
     <canvas
