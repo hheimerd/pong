@@ -3,7 +3,9 @@ import {useRouter} from 'next/router';
 import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {Button, FormControlLabel, Switch} from '@material-ui/core';
+import {FormControlLabel, Switch} from '@material-ui/core';
+import {Button, Htag} from '../../../components';
+import styles from './edit.module.css';
 
 interface Films {
   title: string;
@@ -132,52 +134,75 @@ const ChannelRoom = (): JSX.Element => {
   if (typeof id !== "string") return null;
 
   return (
-    <div>
-      <h1>Edit channel id: {id}</h1>
-      <TextField id="outlined-size-normal" label="Name" fullWidth size="small" />
-      <br/>
-      <br/>
-      <Autocomplete
-        size="small"
-        fullWidth
-        multiple
-        id="fixed-tags-demo"
-        value={value}
-        onChange={(_event: React.ChangeEvent, newValue: Films[]) => {
-          setValue([
-            ...newValue,
-          ]);
-        }}
-        options={top100Films}
-        getOptionLabel={(option) => option.title}
-        getOptionSelected={(option, value) => option.title === value.title}
-        renderTags={(tagValue, getTagProps) =>
-          tagValue.map((option, index) => (
-            <Chip
-              size="small"
-              label={option.title}
-              {...getTagProps({ index })}
+    <div className={styles.form}>
+      <Htag tag='h1'>Edit channel id: {id}</Htag>
+      <div className={styles.line}>
+        <TextField 
+          id="outlined-size-normal" 
+          label="Name" 
+          fullWidth 
+          size="small" 
+          variant="outlined" 
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+      </div>
+      <div className={styles.line}>
+        <Autocomplete
+          fullWidth
+          multiple
+          id="fixed-tags-demo"
+          value={value}
+          onChange={(_event: React.ChangeEvent, newValue: Films[]) => {
+            setValue([
+              ...newValue,
+            ]);
+          }}
+          options={top100Films}
+          getOptionLabel={(option) => option.title}
+          getOptionSelected={(option, value) => option.title === value.title}
+          renderTags={(tagValue, getTagProps) =>
+            tagValue.map((option, index) => (
+              <Chip
+                label={option.title}
+                {...getTagProps({ index })}
+              />
+            ))
+          }
+          renderInput={(params) => (
+            <TextField {...params}
+              label="Users"
+              placeholder="Add user" 
+              variant="outlined" 
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField {...params} label="Users" placeholder="Add user" />
-        )}
-      />
-      <FormControlLabel 
-        control={
-          <Switch 
-            checked={state}
-            onChange={handleChange} 
-            name="checkedA" 
-          />
-        }
-        label="Private" />
-      <TextField id="outlined-size-normal2" label="Password" fullWidth 
-        size="small"
-        type="password"
-        InputLabelProps={{ shrink: true, }} />
-      <Button variant="contained" color="primary"> Primary </Button>
+          )}
+        />
+      </div>
+      <div className={styles.line}>
+        <FormControlLabel 
+          control={
+            <Switch 
+              checked={state}
+              onChange={handleChange} 
+              name="checkedA" 
+            />
+          }
+          label="Private" />
+      </div>
+      <div className={styles.line}>
+        <TextField id="outlined-size-normal2" label="Password" fullWidth 
+          size="small"
+          type="password"
+          variant="outlined"
+          InputLabelProps={{ shrink: true, }}/>
+      </div>
+      <div className={styles.line}>
+        <Button appearance="primary"> Submit </Button>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import {AvatarButton} from "../../components";
+import {AvatarButton, Htag} from "../../components";
 import {IChatMessage} from "../../interfaces/message.interface";
 
 const Chat = (): JSX.Element => {
@@ -25,13 +25,16 @@ const Chat = (): JSX.Element => {
         <AvatarButton 
           name={onemessage.user_name}
           image={onemessage.user_avatar}
-          link={'/chat/room/' + onemessage.user_id}/>
+          link={'/chat/room/' + onemessage.user_id}
+          appearance='offline'
+        />
       </React.Fragment>
     );
   });
 
   return (<>
     <div>
+      <Htag tag='h1'>Chats</Htag>
       {Messages}
     </div>
   </>);

@@ -3,8 +3,8 @@ body {
   margin: 0;
   padding: 0;
 
-  color: var(--black);
-  background: #F5F6F8;
+  color: var(--white);
+  background: var(--green);
 
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -20,15 +20,20 @@ a {
 }
 
 :root {
-  --black: #3B434E;
-  --gray-light: #EBEBEB;
-  --white: white;
-  --primary: #7653FC;
-  --primary-hover: #6344DF;
+  --black: #000;
+  --gray: #999;
+  --white: #FFF;
+  --primary: #FFB886;
+  --primary-hover: #DFA876;
   --red: #FC836D;
-  --green: #1DC37E;
-  --green-light: #C8F8E4;
-  --font-family: 'Noto Sans KR', sans-serif;
+  --green: #057A68;
+  --green-light: #68CFBF;
+  --green-lightlight: #88EFDF;
+  --green-lightdark: #48AF9F;
+  --green-dark: #005D58;
+  --font-family: "Roboto", sans-serif;
+  --online: #3BDF4B;
+  --ingame: #FBFF4F;
 }
 
 .wrapper {
@@ -51,4 +56,25 @@ a {
 
 .rightplayer {
   grid-area: rightplayer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table thead td {
+  color: var(--green-light);
+  border-bottom: 2px solid var(--green-light);
+}
+
+table td {
+  border-bottom: 1px solid var(--green-lightdark);
+  padding: .5rem;
+}
+
+table td a {
+  font-weight: bold;
+  color: var(--primary);
 }

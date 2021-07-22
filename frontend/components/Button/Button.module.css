@@ -2,20 +2,27 @@
   display: inline-block;
 
   box-sizing: border-box;
-  padding: 10px;
+  padding: 9px 24px;
+  margin: 0;
 
   cursor: pointer;
   transition: all 0.2s;
   text-align: center;
 
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
 
   font-size: 14px;
 }
 
+.button:hover {
+  -webkit-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow:    2px 2px 13px 0px rgba(50, 50, 50, 0.5);
+  box-shadow:         2px 2px 13px 0px rgba(50, 50, 50, 0.5);
+}
+
 .primary {
-  color: var(--white);
+  color: var(--black);
   background-color: var(--primary);
 }
 
@@ -24,14 +31,15 @@
 }
 
 .ghost {
+  margin: 0 0.4rem;
+
   color: var(--black);
-  border: 1px solid var(--gray-light);
-  background-color: inherit;
+
+  background-color: var(--green-light);
 }
 
 .ghost:hover {
-  color: var(--white);
-  background-color: var(--primary-hover);
+  background-color: var(--green-lightlight);
 }
 
 .arrow {
@@ -47,5 +55,5 @@
 
 .primary svg,
 .ghost:hover svg {
-  fill: var(--white);
+  fill: var(--black);
 }

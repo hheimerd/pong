@@ -8,8 +8,6 @@
   grid-row-gap: 1rem;
   padding: 1rem;
   background: rgba(0, 0, 0, 0.75);
-  border: 1px solid #68CFBF;
-  box-sizing: border-box;
   border-radius: 0px 0px 12px 12px;
 }
 

@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {AppProps} from 'next/dist/next-server/lib/router/router';
 import theme from '../theme';
 import { Provider } from 'next-auth/client';
@@ -15,7 +16,8 @@ import {
 import client from './api/apollo-client'
 
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp(props: AppProps): JSX.Element {
+  const { Component, pageProps } = props;
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -49,3 +51,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 }
 
 export default MyApp;
+
+MyApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};

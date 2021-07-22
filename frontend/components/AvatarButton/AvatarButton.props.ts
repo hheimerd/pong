@@ -4,5 +4,6 @@ export interface AvatarButtonProps extends DetailedHTMLProps<AnchorHTMLAttribute
   image: string;
   link: string;
   name: string;
+  appearance?: 'offline' | 'online' | 'ingame';
 }
 

@@ -5,6 +5,7 @@ import {IChatMessage} from "../../interfaces/message.interface";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+
 export const ChatMessage = ({user_avatar, user_name, user_message}: IChatMessage): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
