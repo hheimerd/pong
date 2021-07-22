@@ -15,12 +15,6 @@ import {
 import client from './api/apollo-client'
 
 
-import {
-  ApolloProvider
-} from "@apollo/client";
-import client from './api/apollo-client'
-
-
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
   React.useEffect(() => {
