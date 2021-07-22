@@ -9,12 +9,32 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
 // import styles from "../styles/MainPage.module.css";
 import {UserProfileContextProvider} from '../context/userprofile/userprofile.context';
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import {setContext} from '@apollo/client/link/context';
+// import client from './api/apollo-client'
 
-import {
-  ApolloProvider
-} from "@apollo/client";
-import client from './api/apollo-client'
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3000/graphql',
+});
 
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  // const token = localStorage.getItem('token');
+  // manual token insert
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3QyQHRlc3QucnUiLCJsb2dpbiI6InRlc3QxMjMiLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTYyNjk2OTgyMywiZXhwIjoxNjI2OTczNDIzfQ.r5HipcpV8mrIc3wsgMS-FM9gWmFrjn3fLfxIITIFOkQ';
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
 
 function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props;

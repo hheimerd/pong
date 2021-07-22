@@ -21,7 +21,7 @@ export const ChatMessage = ({user_avatar, user_name, user_message}: IChatMessage
     <div className={styles.box}>
       <div className={styles.wrapper}>
         <div className={styles.image}>
-          <Avatar image={user_avatar} onClick={handleClick} aria-controls="simple-menu"/>
+          <Avatar image={user_avatar} alt={user_name} onClick={handleClick} aria-controls="simple-menu"/>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
