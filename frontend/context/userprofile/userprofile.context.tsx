@@ -1,13 +1,13 @@
 import React, { createContext, useEffect, useState } from "react";
-import {IUserProfile} from "../interfaces/userprofile.interface";
+import {IUserProfile} from "../../interfaces/userprofile.interface";
 
 export const UserProfileContext = createContext({} as IUserProfile);
 
-export const UserProfileContextProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
+export const UserProfileContextProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IUserProfile>({} as IUserProfile);
 
   useEffect(() => {
-    console.log("Context useEffect 1");
+    console.log("UserProfileContextProvider useEffect");
     const initialState: IUserProfile = {
       id: '46b7d58b-2b87-45eb-8305-ee75de435106',
       name: 'Marge',
@@ -36,4 +36,4 @@ export const UserProfileContextProvider: React.FC = ({ children }: React.PropsWi
       {children}
     </UserProfileContext.Provider>
   );
-}
+};
