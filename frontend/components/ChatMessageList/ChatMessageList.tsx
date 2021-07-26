@@ -31,10 +31,7 @@ export const ChatMessageList = ({id}: ChatMessageListProps): JSX.Element => {
   const Messages = Array.from(state).map((onemessage: IChatMessage, i: number) => {
     return (
       <React.Fragment key={i}>
-        <ChatMessage
-          user_name={onemessage.user_name}
-          user_avatar={onemessage.user_avatar}
-          user_message={onemessage.user_message}/>
+        <ChatMessage onemessage={onemessage}/>
       </React.Fragment>
     );
   });

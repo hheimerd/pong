@@ -1,31 +1,39 @@
 import React from "react";
 import {AvatarButton, Htag} from "../../components";
-import {IChatMessage} from "../../interfaces/message.interface";
+import {IChat} from "../../interfaces/chat.interface";
 
 const Chat = (): JSX.Element => {
   // Change this function, when it will be possible to fetch data from API
-  const fetchChatRoomsList = ():Array<IChatMessage> => {
+  const fetchChatRoomsList = ():Array<IChat> => {
     return ([
       {
-        user_id: "1",
-        user_name: "Marge",
-        user_avatar: "/photo_avatar.png",
+        id: "1",
+        users: [
+          {
+            id: "1",
+            name: "Marge",
+            avatar: { sm: "/photo_avatar.png" }
+          }
+        ]
       },
       {
-        user_id: "2",
-        user_name: "Ivan Smirnov",
-        user_avatar: "",
+        id: "2",
+        users: [
+          {
+            id: "1",
+            name: "Sergey Ivanov",
+          }
+        ]
       },
     ]);
   };
 
-  const Messages = Array.from(fetchChatRoomsList()).map((onemessage: IChatMessage, i: number) => {
+  const Messages = Array.from(fetchChatRoomsList()).map((onemessage: IChat, i: number) => {
     return (
       <React.Fragment key={i}>
         <AvatarButton 
-          name={onemessage.user_name}
-          image={onemessage.user_avatar}
-          link={'/chat/room/' + onemessage.user_id}
+          user={onemessage.users[0]}
+          link={'/chat/room/' + onemessage.id}
           appearance='offline'
         />
       </React.Fragment>

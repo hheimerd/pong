@@ -1,51 +1,71 @@
 import React, {useEffect, useState} from "react";
 import {Button, Htag} from "../../components";
 import {useRouter} from "next/router";
+import {ChatType, IChat} from "../../interfaces/chat.interface";
 
-interface Row {
-  id: number,
-  name: string,
-  type: string,
-  users_count: number,
-  owner: string
-  role: string
-}
-
-const createData = (
-  id: number,
-  name: string,
-  type: string,
-  users_count: number,
-  owner: string,
-  role: string
-): Row => {
-  return { id, name, type, users_count, owner, role };
-};
-
-const fetchChannels = (): Array<Row> => {
-  const rows: Array<Row> = [
-    createData(1, "Frozen yoghurt", "Private", 6, "me", "owner"),
-    createData(2, "Ice cream sandwich", "Private", 9, "me", "owner"),
-    createData(3, "Eclair", "Public", 16, "Alexandr", "user"),
-    createData(4, "Cupcake", "Public", 3, "Mihail", "user"),
-    createData(5, "Gingerbread", "Protected", 16, "Stepan", "admin")
-  ];
-  return rows;
+const fetchChatArray = ():Array<IChat> => {
+  return ([
+    {
+      id: "1",
+      name: "First channel",
+      type: ChatType.Channel,
+      owner: {
+        id: "1",
+      },
+      users: [
+        {
+          id: "1",
+          name: "Marge",
+          avatar: { sm: "/photo_avatar.png" }
+        },
+        {
+          id: "2",
+          name: "Sergey Ivanov",
+        }
+      ],
+      is_private: false,
+    },
+    {
+      id: "2",
+      name: "Second private channel",
+      type: ChatType.Channel,
+      owner: {
+        id: "2",
+      },
+      users: [
+        {
+          id: "1",
+          name: "Marge",
+          avatar: { sm: "/photo_avatar.png" }
+        },
+        {
+          id: "2",
+          name: "Sergey Ivanov",
+        },
+        {
+          id: "3",
+          name: "Ivan Ivanov",
+        }
+      ],
+      is_private: true,
+      password: "123"
+    },
+  ]);
 };
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
-  const [rows, setRows] = useState<Array<Row>>();
+  const [rows, setRows] = useState<Array<IChat>>();
 
   useEffect(() => {
-    setRows(fetchChannels());
+    setRows(fetchChatArray());
   }, []);
 
-  const handleLeave = (values: Row) => {
+  const handleLeave = (values: IChat) => {
     console.log("The Values that you wish to leave ", values);
   };
 
-  const handleEdit = (values: Row) => {
+  const handleEdit = (values: IChat) => {
     console.log("The Values that you wish to edit ", values);
     router.push('/channel/edit/' + values.id);
   };
@@ -66,20 +86,21 @@ const Channel = (): JSX.Element => {
           </tr>
         </thead>
         <tbody>
-          {rows.map(row => (
-            <tr key={row.name}>
+          {rows.map(channel => (
+            <tr key={channel.name}>
               <td>
-                <a href={"/channel/room/" + row.id}>{row.name}</a>
+                <a href={"/channel/room/" + channel.id}>{channel.name}</a>
               </td>
-              <td>{row.type}</td>
-              <td>{row.users_count}</td>
-              <td>{row.owner}</td>
+              <td>{channel.is_private ? "Private" : "Public"}</td>
+              <td>{channel.users.length}</td>
+              <td>{channel.owner.name}</td>
               <td align="right">
-                { row.role === "owner" 
-                  ? <Button appearance="ghost" onClick={() => handleEdit(row)}>Edit</Button>
+                { /* change 1 to this user profile id */ }
+                { channel.owner.id === "1"
+                  ? <Button appearance="ghost" onClick={() => handleEdit(channel)}>Edit</Button>
                   : null
                 }
-                <Button appearance="ghost" onClick={() => handleLeave(row)}> Leave </Button>
+                <Button appearance="ghost" onClick={() => handleLeave(channel)}> Leave </Button>
               </td>
             </tr>
           ))}

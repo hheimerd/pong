@@ -1,6 +1,8 @@
+import {IUserProfile} from "./userprofile.interface";
+
 export interface IChatMessage {
-  user_id?: string;
-  user_name?: string;
-  user_avatar?: string;
-  user_message?: string;
+  chat?: number;
+  created_at: Date;
+  message: string;
+  user: IUserProfile;
 }

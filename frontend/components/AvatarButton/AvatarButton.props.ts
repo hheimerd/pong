@@ -1,9 +1,9 @@
 import {AnchorHTMLAttributes, DetailedHTMLProps} from "react";
+import {IUserProfile} from "../../interfaces/userprofile.interface";
 
 export interface AvatarButtonProps extends DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
-  image: string;
+  user: IUserProfile;
   link: string;
-  name: string;
   appearance?: 'offline' | 'online' | 'ingame';
 }
 

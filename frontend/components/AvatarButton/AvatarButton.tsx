@@ -5,7 +5,11 @@ import {Avatar} from "../Avatar/Avatar";
 import cn from 'classnames';
 import Link from 'next/link';
 
-export const AvatarButton = ({image, name, link, appearance, className, ...props}: AvatarButtonProps): JSX.Element => {
+export const AvatarButton = ({user, link, appearance, className, ...props}: AvatarButtonProps): JSX.Element => {
+  let image = "";
+  if (typeof user.avatar !== "undefined" && typeof user.avatar.sm !== "undefined") {
+    image = user.avatar.sm;
+  }
   return (
     <Link href={link}>
       <a
@@ -23,7 +27,7 @@ export const AvatarButton = ({image, name, link, appearance, className, ...props
             <Avatar image={image}/>
           </span>
           <span className={styles.button__name}>
-            {name}
+            {user.name}
           </span>
         </span>
       </a>

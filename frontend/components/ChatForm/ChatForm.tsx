@@ -6,7 +6,7 @@ import {Avatar} from '../Avatar/Avatar';
 import {IChatMessage} from '../../interfaces/message.interface';
 import {ActionType} from '../../context/chat/chat.actions';
 import {useQuery} from '@apollo/client';
-import {PROFILE_QUERY} from '../../graphql'
+import {PROFILE_QUERY} from '../../graphql';
 
 export const ChatForm = (): JSX.Element => {
   // const {loading, error, data} = useContext(UserProfileContext);
@@ -26,10 +26,19 @@ export const ChatForm = (): JSX.Element => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       const msg: IChatMessage = { 
-        user_id: data.getProfile.id,
-        user_name: data.getProfile.name,
-        user_avatar: '/photo_avatar.png',
-        user_message: inputElement.current.value
+        message: inputElement.current.value,
+        user: {
+          id: data.getProfile.id,
+          name: data.getProfile.name,
+          email: "none@none.ru",
+          is_admin: false,
+          created_at: "2021-07-03 12:32:22",
+          updated_at: "2021-07-03 12:32:22",
+          avatar: {
+            sm: '/photo_avatar.png',
+            lg: '/photo_avatar.png',
+          }
+        }
       };
       dispatch({
         type: ActionType.SendMessage,

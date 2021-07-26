@@ -5,16 +5,34 @@ import {ActionType, ChatActions} from "./chat.actions";
 const fetchMessages = (id: number):Array<IChatMessage> => {
   return ([
     {
-      user_id: "1",
-      user_name: "Marge",
-      user_avatar: "/photo_avatar.png",
-      user_message: "Hello!"
+      message: "Hello!",
+      user: {
+        id: "1",
+        name: "Marge",
+        email: "none@none.ru",
+        is_admin: false,
+        created_at: "2021-07-03 12:32:22",
+        updated_at: "2021-07-03 12:32:22",
+        avatar: {
+          sm: "/photo_avatar.png",
+          lg: "/photo_avatar.png",
+        }
+      }
     },
     {
-      user_id: "2",
-      user_name: "Ivan Smirnov",
-      user_avatar: "",
-      user_message: "Уедем, бросим край докучный И каменные города, Где Вам и холодно, и скучно, И даже страшно иногда.Нежней цветы и звезды ярче В стране, где светит Южный Крест, В стране богатой, словно ларчик Для очарованных невест."
+      message: "Уедем, бросим край докучный И каменные города, Где Вам и холодно, и скучно, И даже страшно иногда.Нежней цветы и звезды ярче В стране, где светит Южный Крест, В стране богатой, словно ларчик Для очарованных невест.",
+      user: {
+        id: "2",
+        name: "Ivan Smirnov",
+        email: "none@none.ru",
+        is_admin: false,
+        created_at: "2021-07-03 12:32:22",
+        updated_at: "2021-07-03 12:32:22",
+        avatar: {
+          sm: "/photo_avatar.png",
+          lg: "/photo_avatar.png",
+        }
+      }
     },
   ]);
 };
