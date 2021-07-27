@@ -5,6 +5,9 @@ import { AuthModule } from './auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PolicyModule } from './policy/policy.module';
 import { RequestModule } from './request/request.module';
+import { ChatMessageModule } from './chat-message/chat-message.module';
+import { ChatModule } from './chat/chat.module';
+import { OrmModule } from './orm/orm.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'postgres';
@@ -28,6 +31,9 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
     AuthModule,
     PolicyModule,
     RequestModule,
+    ChatMessageModule,
+    ChatModule,
+    OrmModule,
   ],
 })
 export class AppModule {}

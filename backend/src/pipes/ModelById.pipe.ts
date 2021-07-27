@@ -5,12 +5,12 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 
-interface IModelService<T> {
-  findById(id: number): Promise<T> | T;
+export interface IModelService<T = any> {
+  findOne(id: any): Promise<T> | T;
 }
 
 @Injectable()
-export abstract class ModelByIdPipe<T> implements PipeTransform {
+export abstract class ModelByIdPipe<T = any> implements PipeTransform {
   constructor(private readonly service: IModelService<T>) {}
 
   async transform(
@@ -21,8 +21,7 @@ export abstract class ModelByIdPipe<T> implements PipeTransform {
     //   return value;
     // }
 
-    const id = parseInt(value, 10);
-    const model = await this.service.findById(id);
+    const model = await this.service.findOne(value);
     if (!model) {
       throw new NotFoundException();
     }

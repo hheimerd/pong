@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Chat } from 'src/chat/entities/chat.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
 
 export enum Role {
   User = 'user',
@@ -13,26 +14,42 @@ registerEnumType(Role, {
 @Entity()
 @ObjectType()
 export class User {
+  @Field()
   @PrimaryGeneratedColumn()
-  @Field(() => Int)
   id: number;
 
-  @Column({ length: 32 })
   @Field()
+  @Column({ length: 32 })
   name: string;
 
-  @Column({ unique: true })
   @Field()
+  @Column({ unique: true })
   email: string;
 
-  @Column({ unique: true, length: 32 })
   @Field()
+  @Column({ unique: true, length: 32 })
   login: string;
 
   @Column()
   password: string;
 
-  @Column('varchar', { array: true, default: [Role.User] })
   @Field(() => [Role])
+  @Column('varchar', { array: true, default: [Role.User] })
   roles: Role[];
+
+  @Field()
+  @CreateDateColumn()
+  created_at: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @Field(() => [String])
+  @Column('string', { array: true })
+  avatar?: string[];
+
+  @Field(() => [Chat])
+  @ManyToMany(hasMany => Chat, chat => chat.members)
+  chats: Promise<Chat[]>
 }

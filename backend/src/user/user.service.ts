@@ -31,7 +31,7 @@ export class UserService {
     return this.userModel.find({ take, skip });
   }
 
-  async findById(id: number) {
+  async findOne(id: number) {
     return this.userModel.findOne(id);
   }
 
@@ -47,7 +47,7 @@ export class UserService {
     return this.userModel.delete(id);
   }
 
-  async findOne(search) {
+  async find(search) {
     return this.userModel.findOne({
       where: search,
     });

@@ -21,7 +21,7 @@ export class AuthService {
     } else {
       searchOptions.login = login;
     }
-    const user = await this.userService.findOne(searchOptions);
+    const user = await this.userService.find(searchOptions);
 
     if (!user) return null;
 
