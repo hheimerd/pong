@@ -5,8 +5,8 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
 
 module.exports = {
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT) || 5432,
   username,
   password,
   database: process.env.DB_NAME || 'postgres',

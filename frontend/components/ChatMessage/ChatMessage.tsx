@@ -1,11 +1,13 @@
 import styles from './ChatMessage.module.css';
 import React from "react";
 import {Avatar} from "../Avatar/Avatar";
-import {IChatMessage} from "../../interfaces/message.interface";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import {ChatMessageProps} from './ChatMessage.props';
 
-export const ChatMessage = ({user_avatar, user_name, user_message}: IChatMessage): JSX.Element => {
+
+export const ChatMessage = ({onemessage}: ChatMessageProps): JSX.Element => {
+  const {user, message} = onemessage;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
@@ -20,7 +22,12 @@ export const ChatMessage = ({user_avatar, user_name, user_message}: IChatMessage
     <div className={styles.box}>
       <div className={styles.wrapper}>
         <div className={styles.image}>
-          <Avatar image={user_avatar} onClick={handleClick} aria-controls="simple-menu"/>
+          <Avatar 
+            image={user.avatar.sm}
+            alt={user.name} 
+            onClick={handleClick}
+            aria-controls="simple-menu"
+          />
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
@@ -46,8 +53,8 @@ export const ChatMessage = ({user_avatar, user_name, user_message}: IChatMessage
           </Menu>
         </div>
         <div className={styles.message}>
-          <h3>{user_name}</h3>
-          <p>{user_message}</p>
+          <h3>{user.name}</h3>
+          <p>{message}</p>
         </div>
       </div>
     </div>

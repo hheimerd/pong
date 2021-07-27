@@ -16,14 +16,17 @@ services:
     ports:
       - 8080:8080
 
-  server:
+  backend:
     image: node:16-alpine
     restart: always
     ports:
       - 3000:3000
     volumes:
       - ./backend:/app
-    entrypoint: "sh -c 'cd /app && npx yarn && npx yarn run migration:run && npx yarn run start'"
+    depends_on:
+      - db
+    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn run migration:run && npx yarn run start'"
+#    command: tail -F anything
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

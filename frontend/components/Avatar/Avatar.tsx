@@ -3,9 +3,9 @@ import styles from './Avatar.module.css';
 import cn from 'classnames';
 import {useEffect} from "react";
 
-export const Avatar = ({ size = 'small', image = '/no-avatar.png', className, onClick, ...props}: AvatarProps): JSX.Element => {
+export const Avatar = ({ size = 'small', image = '/no-avatar.png', name='', className, onClick, ...props}: AvatarProps): JSX.Element => {
   useEffect(() => {
-    console.log(onClick);
+    console.log("Avatar onClick: " + onClick);
   }, []);
   if (image === '') {
     image = '/no-avatar.png';
@@ -18,6 +18,7 @@ export const Avatar = ({ size = 'small', image = '/no-avatar.png', className, on
         [styles.large]: size == 'large',
         [styles.pointer]: onClick,
       })}
+      alt={name}
       onClick={onClick ? onClick : null}
       {...props}
     />

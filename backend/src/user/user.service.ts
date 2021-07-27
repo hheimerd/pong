@@ -13,10 +13,10 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const exists = await this.count({
-      email: createUserDto.email,
-      login: createUserDto.login,
-    });    
+    const exists = await this.count([
+      { email: createUserDto.email },
+      { login: createUserDto.login },
+    ]);        
 
     if (exists != 0) throw new ConflictException();
 
@@ -53,7 +53,7 @@ export class UserService {
     });
   }
 
-  async count(options: FindConditions<User>) {
+  async count(options: FindConditions<User>[]) {
     return this.userModel.count({ where: options });
   }
 }

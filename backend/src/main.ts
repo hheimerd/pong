@@ -6,7 +6,6 @@ import * as dotenv from 'dotenv';
 async function bootstrap() {
   try {
     const envConfig = dotenv.parse(fs.readFileSync('.env'));
-    console.log(envConfig);
     for (const k in envConfig) {
       process.env[k] = envConfig[k];
     }

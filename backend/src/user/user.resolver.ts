@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(() => User, { name: 'createUser' })
+  @Mutation (() => User, { name: 'createUser' })
   @UsePipes(ValidationPipe)
   async create(@Args('input') createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
@@ -42,7 +42,6 @@ export class UserResolver {
     @Args('id', ParseIntPipe) id: number,
     @Args('input') updateUserDto: UpdateUserDto,
   ) {
-    // console.log(id, updateUserDto);
     const updated = await this.userService.update(id, updateUserDto);
     if (!updated) throw new NotFoundException();
     
