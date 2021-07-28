@@ -1,26 +1,48 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { UserService } from 'src/user/user.service';
+import { Repository } from 'typeorm';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
+import { Chat } from './entities/chat.entity';
 
 @Injectable()
 export class ChatService {
-  create(createChatInput: CreateChatInput) {
-    return 'This action adds a new chat';
+  constructor(
+    @InjectRepository(Chat) private readonly chatRepository: Repository<Chat>,
+    private readonly userService: UserService
+  ) {}
+
+  create(input: CreateChatInput, user: User) {
+    const chat = new Chat();
+
+    chat.admins = Promise.resolve([user]);
+    chat.members = this.userService.findMany(input.users);
+    chat.messages = Promise.resolve([]);
+    chat.owner = Promise.resolve(user);
+    chat.name = input.name;
+    chat.password = input.password;
+    chat.is_private = input.is_private;
+    chat.type = input.type; 
+
+    return this.chatRepository.save(chat);
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  findAll(user) {
+    return this.chatRepository.find({ where: { user } });
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} chat`;
+    return this.chatRepository.findOne(id);
   }
 
   update(id: string, updateChatInput: UpdateChatInput) {
-    return `This action updates a #${id} chat`;
+    const chat = { id, ...updateChatInput };
+    return this.chatRepository.save(chat);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} chat`;
+    return this.chatRepository.delete(id);
   }
 }

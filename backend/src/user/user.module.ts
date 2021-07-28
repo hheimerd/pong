@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
 import { PolicyModule } from 'src/policy/policy.module';
-import { OrmModule } from 'src/orm/orm.module';
 import { ModelByIdPipe } from 'src/pipes/ModelById.pipe';
 
 @Module({

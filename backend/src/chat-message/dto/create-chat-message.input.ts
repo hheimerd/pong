@@ -1,9 +1,13 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateChatMessageInput {
   @Field()
   @IsString()
-  message: string
+  message: string;
+
+  @Field()
+  @IsUUID()
+  chat: string;
 }

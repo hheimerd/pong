@@ -31,6 +31,10 @@ export class UserService {
     return this.userModel.find({ take, skip });
   }
 
+  async findMany(ids: number[]) {
+    return this.userModel.findByIds(ids);
+  }
+
   async findOne(id: number) {
     return this.userModel.findOne(id);
   }
