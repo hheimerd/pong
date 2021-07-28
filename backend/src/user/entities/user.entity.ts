@@ -48,7 +48,7 @@ export class User {
   updated_at: Date;
 
   @Field(() => [String])
-  @Column('string', { array: true })
+  @Column('varchar', { array: true, default: []})
   avatar?: string[];
 
   @Field(() => [Chat])

@@ -44,6 +44,7 @@
     "graphql": "^15.5.1",
     "graphql-tools": "^7.0.5",
     "passport": "^0.4.1",
+    "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.6.0",

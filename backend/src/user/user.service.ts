@@ -56,4 +56,12 @@ export class UserService {
   async count(options: FindConditions<User>[]) {
     return this.userModel.count({ where: options });
   }
+
+  async findOrCreate(dto: CreateUserDto) {
+    let user: User = await this.userModel.findOne({ where: { email: dto.email }});
+    if (user)
+      return user;
+
+    return await this.create(dto);
+  }
 }

@@ -2,12 +2,45 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ChatMessage {
+  chat: Chat!
+  created_at: DateTime!
+  message: String!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Chat {
+  id: String!
+  name: String
+  members: [User!]!
+  admins: [User!]
+  owner: User
+  type: ChatType!
+  is_private: Boolean!
+  password: String
+  messages: [ChatMessage!]!
+}
+
+enum ChatType {
+  Chat
+  Channel
+}
+
 type User {
-  id: Int!
+  id: Float!
   name: String!
   email: String!
   login: String!
   roles: [Role!]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  avatar: [String!]!
+  chats: [Chat!]!
 }
 
 enum Role {
@@ -24,12 +57,19 @@ type Query {
   users(offset: Int!, limit: Int!): [User!]!
   login(password: String!, login: String!): JwtResponse!
   getProfile: User!
+  chatMessage(id: Int!): ChatMessage!
+  chat(id: String!): Chat!
 }
 
 type Mutation {
   createUser(input: CreateUserDto!): User!
   updateUser(input: UpdateUserDto!, id: Float!): User!
   removeUser(id: Float!): Boolean!
+  createChatMessage(createChatMessageInput: CreateChatMessageInput!): ChatMessage!
+  removeChatMessage(id: Int!): ChatMessage!
+  createChat(createChatInput: CreateChatInput!): Chat!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  removeChat(id: String!): Chat!
 }
 
 input CreateUserDto {
@@ -45,4 +85,20 @@ input UpdateUserDto {
   login: String
   newPassword: String
   oldPassword: String
+}
+
+input CreateChatMessageInput {
+  message: String!
+}
+
+input CreateChatInput {
+  name: String
+  users: [Int!]!
+  type: ChatType!
+  is_private: Boolean!
+  password: String
+}
+
+input UpdateChatInput {
+  id: String!
 }
