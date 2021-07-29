@@ -31,7 +31,6 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
     }),
     AuthModule,
     PolicyModule,
-    RequestModule,
     ChatMessageModule,
     ChatModule,
     OrmModule,

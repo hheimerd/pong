@@ -5,10 +5,18 @@ import { ChatMessage } from './entities/chat-message.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/user/user.module';
 import { ChatModule } from 'src/chat/chat.module';
+import { PubSub } from 'graphql-subscriptions';
 
 @Module({
-  providers: [ChatMessageResolver, ChatMessageService],
+  providers: [
+    ChatMessageResolver, 
+    ChatMessageService, 
+    {
+      provide: 'PUB_SUB',
+      useValue: new PubSub(),
+    }
+  ],
   imports: [TypeOrmModule.forFeature([ChatMessage]), ChatModule],
-  exports: [ChatMessageService],
+  exports: [ChatMessageService, 'PUB_SUB'],
 })
 export class ChatMessageModule {}

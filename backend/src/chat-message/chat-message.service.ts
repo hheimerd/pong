@@ -1,4 +1,4 @@
-import { Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatService } from 'src/chat/chat.service';
 import { User } from 'src/user/entities/user.entity';
@@ -10,13 +10,17 @@ import { ChatMessage } from './entities/chat-message.entity';
 export class ChatMessageService {
   constructor(
     @InjectRepository(ChatMessage) private readonly messageRepository: Repository<ChatMessage>,
+    @Inject(forwardRef(() => ChatService))
     private readonly chatService: ChatService
     ) {}
 
   @UsePipes(ValidationPipe)
-  create(input: CreateChatMessageInput, user: User) {
+  async create(input: CreateChatMessageInput, user: User) {
     const message = new ChatMessage();
-    message.chat = this.chatService.findOne(input.chat);
+    message.chat = this.chatService.findOne(input.chat_id);
+    if (!await message.chat)
+      throw new NotFoundException();
+    
     message.message = input.message;
     message.user = Promise.resolve(user);
     return this.messageRepository.save(message);

@@ -10,18 +10,31 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthResolver } from './auth.resolver';
 import { FtStrategy } from './strategies/ft.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, AuthResolver, FtStrategy],
+  providers: [
+    AuthService, 
+    LocalStrategy, 
+    JwtStrategy, 
+    AuthResolver, 
+    FtStrategy, 
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   imports: [
-    UserModule,
     PassportModule,
+    UserModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '1w' },
     }),
     RequestModule,
   ],
+  exports: [AuthService]
 })
 export class AuthModule {}

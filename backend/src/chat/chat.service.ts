@@ -6,12 +6,13 @@ import { Repository } from 'typeorm';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { Chat } from './entities/chat.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectRepository(Chat) private readonly chatRepository: Repository<Chat>,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   create(input: CreateChatInput, user: User) {

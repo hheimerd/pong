@@ -65,9 +65,9 @@ type Mutation {
   createUser(input: CreateUserDto!): User!
   updateUser(input: UpdateUserDto!, id: Float!): User!
   removeUser(id: Float!): Boolean!
-  createChatMessage(createChatMessageInput: CreateChatMessageInput!): ChatMessage!
+  createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
-  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  updateChat(input: UpdateChatInput!): Chat!
   removeChat(id: String!): Chat!
 }
 
@@ -88,7 +88,7 @@ input UpdateUserDto {
 
 input CreateChatMessageInput {
   message: String!
-  chat: String!
+  chat_id: String!
 }
 
 input CreateChatInput {
@@ -101,4 +101,8 @@ input CreateChatInput {
 
 input UpdateChatInput {
   id: String!
+}
+
+type Subscription {
+  messageAdded(token: String!, chatId: String!): ChatMessage!
 }

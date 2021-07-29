@@ -4,21 +4,25 @@ import { ChatMessage } from './entities/chat-message.entity';
 import { CreateChatMessageInput } from './dto/create-chat-message.input';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions'; 
+import { Inject } from '@nestjs/common';
 
-const pubSub = new PubSub();
+export const CHAT_MESSAGE_SUBSCRIBE_KEY = 'messageAdded';
 
 @Resolver(() => ChatMessage)
 export class ChatMessageResolver {
-  constructor(private readonly chatMessageService: ChatMessageService) {}
+  constructor(
+    private readonly chatMessageService: ChatMessageService,
+    @Inject('PUB_SUB') private readonly pubSub: PubSub
+    ) {}
 
   @Mutation(() => Boolean)
-  createChatMessage(
-    @Args('createChatMessageInput') createChatMessageInput: CreateChatMessageInput,
+  async createChatMessage(
+    @Args('input') input: CreateChatMessageInput,
     @CurrentUser() user: User
     ) {
-      const message = this.chatMessageService.create(createChatMessageInput, user);
-      pubSub.publish('messageAdded', { messageAdded: message });
+      const message = await this.chatMessageService.create(input, user);
+      this.pubSub.publish(CHAT_MESSAGE_SUBSCRIBE_KEY, { messageAdded: message });
       return true;
   }
 

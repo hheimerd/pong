@@ -4,7 +4,7 @@ import { RequestService } from 'src/request/request.service';
 
 export const CurrentUser = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
-    const ctx = RequestService.getRequest(context);
-    return ctx.getContext().req.user;
+    const req = RequestService.getRequest(context);
+    return req.user;
   },
 );

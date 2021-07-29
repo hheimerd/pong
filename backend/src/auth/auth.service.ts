@@ -1,5 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { FindConditions, Repository } from 'typeorm';
 import { compare } from 'bcryptjs';
@@ -9,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
@@ -33,8 +33,14 @@ export class AuthService {
     return userData;
   }
 
+  async verifyToken(token: string) {
+    const payload = this.jwtService.verify(token);
+    return payload;
+  }
+
   async login(user: any) {
     const { password, ...payload } = user;
+
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -14,19 +14,21 @@ export class Chat {
   id: string;
   
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   name?: string;
   
   @Field(type => [User])
   @ManyToMany(hasMany => User, (user) => user.chats)
+  @JoinTable()
   members: Promise<User[]>;
   
   @Field(type => [User],{ nullable: true })
-  @ManyToMany(hasMany => User)
+  @ManyToMany(hasMany => User, { nullable: true })
+  @JoinTable()
   admins?: Promise<User[]>;
   
   @Field(type => User,{ nullable: true })
-  @ManyToOne(hasOne => User)
+  @ManyToOne(hasOne => User, { nullable: true })
   owner?: Promise<User>;
   
   @Field(type => ChatType)
@@ -38,7 +40,7 @@ export class Chat {
   is_private: boolean;
   
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   password?: string;
   
   @Field(type => [ChatMessage])

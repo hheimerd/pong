@@ -1,6 +1,5 @@
 import { NotFoundException, ValidationPipe, UseGuards, UsePipes, BadRequestException, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -17,14 +16,12 @@ export class UserResolver {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Query(() => User, { name: 'user' })
   async findOneById(@Args('id', { type: () => Int }, UserByIdPipe) user: User) {
     if (!user) throw new NotFoundException();
     return user;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Query(() => [User], { name: 'users' })
   async findAll(
     @Args('limit', { type: () => Int }, new DefaultValuePipe(15), ParseIntPipe) limit,
@@ -35,7 +32,6 @@ export class UserResolver {
   }
 
 
-  @UseGuards(JwtAuthGuard)
   @Mutation(() => User, { name: 'updateUser' })
   @UsePipes(ValidationPipe)
   async update(
