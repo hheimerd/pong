@@ -15,17 +15,19 @@ export class ChatService {
     private readonly userService: UserService,
   ) {}
 
-  create(input: CreateChatInput, user: User) {
+  async create(input: CreateChatInput, user: User) {
     const chat = new Chat();
 
     chat.admins = Promise.resolve([user]);
-    chat.members = this.userService.findMany(input.users);
+    chat.members = Promise.resolve(
+      await this.userService.findMany(input.members),
+    );
     chat.messages = Promise.resolve([]);
     chat.owner = Promise.resolve(user);
     chat.name = input.name;
     chat.password = input.password;
     chat.is_private = input.is_private;
-    chat.type = input.type; 
+    chat.type = input.type;
 
     return this.chatRepository.save(chat);
   }

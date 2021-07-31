@@ -93,7 +93,7 @@ input CreateChatMessageInput {
 
 input CreateChatInput {
   name: String
-  users: [Int!]!
+  members: [Int!]!
   type: ChatType!
   is_private: Boolean!
   password: String

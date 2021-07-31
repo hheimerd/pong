@@ -1,6 +1,13 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Chat } from 'src/chat/entities/chat.entity';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 export enum Role {
@@ -48,10 +55,10 @@ export class User {
   updated_at: Date;
 
   @Field(() => [String])
-  @Column('varchar', { array: true, default: []})
+  @Column('varchar', { array: true, default: [] })
   avatar?: string[];
 
   @Field(() => [Chat])
-  @ManyToMany(hasMany => Chat, chat => chat.members)
-  chats: Promise<Chat[]>
+  @ManyToMany((hasMany) => Chat, (chat) => chat.members)
+  chats: Promise<Chat[]>;
 }

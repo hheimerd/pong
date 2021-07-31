@@ -10,7 +10,7 @@ export class ChatMessage {
   id: string;
 
   @Field(type => Chat)
-  @ManyToOne((related) => Chat, (chat) => chat.messages )
+  @ManyToOne((related) => Chat, (chat) => chat.messages)
   chat: Promise<Chat>;
 
   @Field()

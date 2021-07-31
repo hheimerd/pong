@@ -16,11 +16,11 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 @Module({
   controllers: [AuthController],
   providers: [
-    AuthService, 
-    LocalStrategy, 
-    JwtStrategy, 
-    AuthResolver, 
-    FtStrategy, 
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    AuthResolver,
+    FtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
@@ -35,6 +35,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     }),
     RequestModule,
   ],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}
