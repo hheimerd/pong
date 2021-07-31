@@ -36,7 +36,15 @@ services:
       - DB_HOST=db
 
   frontend:
-    build: ./frontend
+    image: node:16-alpine
     restart: always
     ports:
-      - 3040:3000
+      - 3040:3040
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn dev'"
+#    command: tail -F anything
+    environment:
+      GRAPHQL_REMOTE: http://localhost:3000/graphql
