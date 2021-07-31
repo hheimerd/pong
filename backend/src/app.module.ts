@@ -28,6 +28,10 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
       installSubscriptionHandlers: true,
+      cors: {
+        origin: process.env.PUBLIC_URL,
+        credentials: true,
+      },
     }),
     AuthModule,
     PolicyModule,
