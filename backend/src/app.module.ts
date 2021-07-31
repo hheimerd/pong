@@ -29,7 +29,7 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
       autoSchemaFile: 'src/schema.gql',
       installSubscriptionHandlers: true,
       cors: {
-        origin: process.env.PUBLIC_URL,
+        origin: '*',
         credentials: true,
       },
     }),
