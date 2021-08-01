@@ -1,3 +1,3 @@
 export interface ChatMessageListProps {
-  id: number;
+  id: string;
 }

@@ -1,58 +1,54 @@
-import styles from './ChatForm.module.css';
-import React, {useContext, useRef} from "react";
-import {ChatContext} from '../../context/chat/chat.context';
-import {Avatar} from '../Avatar/Avatar';
-// import {UserProfileContext} from '../../context/userprofile/userprofile.context';
-import {IChatMessage} from '../../interfaces/message.interface';
-import {ActionType} from '../../context/chat/chat.actions';
-import {useQuery} from '@apollo/client';
-import {PROFILE_QUERY} from '../../graphql';
+import { gql, useMutation, useQuery } from "@apollo/client";
+import React, { useRef } from "react";
+import { CREATE_MESSAGE_MUTATION, PROFILE_QUERY } from "../../graphql";
+import { Avatar } from "../Avatar/Avatar";
+import styles from "./ChatForm.module.css";
 
 export const ChatForm = (): JSX.Element => {
   // const {loading, error, data} = useContext(UserProfileContext);
-  const { loading, error, data } = useQuery(
-    PROFILE_QUERY,
-    {
-      fetchPolicy: "network-only", 
-      pollInterval: 1000,
-    }
-  );
-  const {dispatch} = useContext(ChatContext);
+  const { loading, error, data } = useQuery(PROFILE_QUERY);
+  // const { dispatch } = useContext(ChatContext);
+  const [addMessage] = useMutation(CREATE_MESSAGE_MUTATION);
   const inputElement = useRef(null);
 
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
-  
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      const msg: IChatMessage = { 
-        message: inputElement.current.value,
-        user: {
-          id: data.getProfile.id,
-          name: data.getProfile.name,
-          email: "none@none.ru",
-          is_admin: false,
-          created_at: "2021-07-03 12:32:22",
-          updated_at: "2021-07-03 12:32:22",
-          avatar: {
-            sm: '/photo_avatar.png',
-            lg: '/photo_avatar.png',
-          }
-        }
-      };
-      dispatch({
-        type: ActionType.SendMessage,
-        payload: msg
+    if (event.key === "Enter") {
+      if (inputElement.current.value === "") return;
+
+      // const msg: IChatMessage = {
+      //   message: inputElement.current.value,
+      //   created_at: new Date(),
+      //   user: {
+      //     id: data.getProfile.id,
+      //   },
+      // };
+      // dispatch({
+      //   type: ActionType.SendMessage,
+      //   payload: msg,
+      // });
+
+      addMessage({
+        variables: {
+          createChatMessageInput: {
+            chat_id: "4b6dbbf6-09a4-4120-9d71-37f6fdd2cc98",
+            message: inputElement.current.value,
+          },
+        },
       });
-      inputElement.current.value = '';
+
+      inputElement.current.value = "";
     }
   };
 
-  // if(!avatar) return null
+  console.log("data: " + data.getProfile.avatar);
+  // if (!data.getProfile) return null;
 
   return (
     <section className={styles.box}>
-      <Avatar image='/photo_avatar.png' alt={data.getProfile.name}/>
+      <Avatar image={data.getProfile.avatar} alt={data.getProfile.name} />
       <input
         onKeyPress={handleKeyDown}
         className={styles.input}

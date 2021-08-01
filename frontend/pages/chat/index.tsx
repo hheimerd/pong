@@ -1,51 +1,49 @@
+import { useQuery } from "@apollo/client";
 import React from "react";
-import {AvatarButton, Htag} from "../../components";
-import {IChat} from "../../interfaces/chat.interface";
+import { AvatarButton, Htag } from "../../components";
+import { CHATS_QUERY } from "../../graphql";
+import { ChatType, IChat } from "../../interfaces/chat.interface";
 
 const Chat = (): JSX.Element => {
-  // Change this function, when it will be possible to fetch data from API
-  const fetchChatRoomsList = ():Array<IChat> => {
-    return ([
-      {
-        id: "1",
-        users: [
-          {
-            id: "1",
-            name: "Marge",
-            avatar: { sm: "/photo_avatar.png" }
-          }
-        ]
-      },
-      {
-        id: "2",
-        users: [
-          {
-            id: "1",
-            name: "Sergey Ivanov",
-          }
-        ]
-      },
-    ]);
+  const { loading, error, data } = useQuery(CHATS_QUERY);
+  if (loading) return <p>Loading user profile from graphql...</p>;
+  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+
+  const current_user_id = data.getProfile.id;
+  // filter chats only with ChatType == Chat
+  const chats = data.getProfile.chats.filter(
+    (x: IChat) => x.type === ChatType.Chat
+  );
+
+  const Messages = (chats: [IChat]) => {
+    if (typeof chats !== "undefined") {
+      return Array.from(chats).map((onemessage: IChat, i: number) => {
+        return (
+          <React.Fragment key={i}>
+            <AvatarButton
+              user={onemessage.members.find((x) => x.id !== current_user_id)}
+              link={"/chat/room/" + onemessage.id}
+              appearance="offline"
+            />
+          </React.Fragment>
+        );
+      });
+    }
+    return undefined;
   };
 
-  const Messages = Array.from(fetchChatRoomsList()).map((onemessage: IChat, i: number) => {
-    return (
-      <React.Fragment key={i}>
-        <AvatarButton 
-          user={onemessage.users[0]}
-          link={'/chat/room/' + onemessage.id}
-          appearance='offline'
-        />
-      </React.Fragment>
-    );
-  });
-
-  return (<>
-    <div>
-      <Htag tag='h1'>Chats</Htag>
-      {Messages}
-    </div>
-  </>);
+  return (
+    <>
+      <div>
+        <Htag tag="h1">Chats</Htag>
+        {typeof Messages(chats) === "undefined" || chats.length === 0 ? (
+          <p className="info-message">No chats available now :(</p>
+        ) : (
+          Messages(chats)
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Chat;

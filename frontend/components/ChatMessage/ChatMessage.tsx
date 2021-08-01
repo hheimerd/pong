@@ -1,13 +1,14 @@
-import styles from './ChatMessage.module.css';
+import styles from "./ChatMessage.module.css";
 import React from "react";
-import {Avatar} from "../Avatar/Avatar";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import {ChatMessageProps} from './ChatMessage.props';
+import { Avatar } from "../Avatar/Avatar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { ChatMessageProps } from "./ChatMessage.props";
+import format from "date-fns/format";
+import { parseISO } from "date-fns";
 
-
-export const ChatMessage = ({onemessage}: ChatMessageProps): JSX.Element => {
-  const {user, message} = onemessage;
+export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
+  const { user, message, created_at } = onemessage;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
@@ -22,9 +23,9 @@ export const ChatMessage = ({onemessage}: ChatMessageProps): JSX.Element => {
     <div className={styles.box}>
       <div className={styles.wrapper}>
         <div className={styles.image}>
-          <Avatar 
+          <Avatar
             image={user.avatar.sm}
-            alt={user.name} 
+            alt={user.name}
             onClick={handleClick}
             aria-controls="simple-menu"
           />
@@ -37,12 +38,12 @@ export const ChatMessage = ({onemessage}: ChatMessageProps): JSX.Element => {
             elevation={0}
             getContentAnchorEl={null}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+              vertical: "bottom",
+              horizontal: "left",
             }}
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
+              vertical: "top",
+              horizontal: "left",
             }}
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
@@ -53,8 +54,11 @@ export const ChatMessage = ({onemessage}: ChatMessageProps): JSX.Element => {
           </Menu>
         </div>
         <div className={styles.message}>
-          <h3>{user.name}</h3>
-          <p>{message}</p>
+          <h3 className={styles.message__name}>{user.name}</h3>
+          <div className={styles.message__date}>
+            {format(new Date(created_at), "H:mm")}
+          </div>
+          <p className={styles.message__text}>{message}</p>
         </div>
       </div>
     </div>

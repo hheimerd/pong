@@ -15,11 +15,37 @@
   align-content: end;
 }
 
-.box h3 {
-  font-weight: bold;
-  margin: 0;
+.message {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "message__name message__date"
+    "message__text message__text";
 }
 
-.box p {
+.message__name {
+  grid-area: message__name;
   margin: 0;
+  padding: 0;
+  line-height: 1.3rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.message__date {
+  grid-area: message__date;
+  text-align: right;
+  line-height: 1.3rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+}
+
+.message__text {
+  grid-area: message__text;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
 }

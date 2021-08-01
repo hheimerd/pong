@@ -1,18 +1,19 @@
-import {IUserProfile} from "./userprofile.interface";
+import { IChatMessage } from "./message.interface";
+import { IUserProfile } from "./userprofile.interface";
 
 export enum ChatType {
-  Chat = "CHAT",
-  Channel = "CHANNEL",
+  Chat = "Chat",
+  Channel = "Channel",
 }
 
 export interface IChat {
   id?: string;
   name?: string;
-  users?: IUserProfile[];
+  members?: IUserProfile[];
   admins?: IUserProfile[];
   owner?: IUserProfile;
   type?: ChatType;
   is_private?: boolean;
   password?: string;
+  messages: [IChatMessage];
 }
-

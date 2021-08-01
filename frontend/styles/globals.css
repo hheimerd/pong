@@ -6,7 +6,7 @@ body {
   color: var(--white);
   background: var(--green);
 
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 a {
@@ -22,18 +22,18 @@ a {
 :root {
   --black: #000;
   --gray: #999;
-  --white: #FFF;
-  --primary: #FFB886;
-  --primary-hover: #DFA876;
-  --red: #FC836D;
-  --green: #057A68;
-  --green-light: #68CFBF;
-  --green-lightlight: #88EFDF;
-  --green-lightdark: #48AF9F;
-  --green-dark: #005D58;
+  --white: #fff;
+  --primary: #ffb886;
+  --primary-hover: #dfa876;
+  --red: #fc836d;
+  --green: #057a68;
+  --green-light: #68cfbf;
+  --green-lightlight: #88efdf;
+  --green-lightdark: #48af9f;
+  --green-dark: #005d58;
   --font-family: "Roboto", sans-serif;
-  --online: #3BDF4B;
-  --ingame: #FBFF4F;
+  --online: #3bdf4b;
+  --ingame: #fbff4f;
 }
 
 .wrapper {
@@ -71,10 +71,24 @@ table thead td {
 
 table td {
   border-bottom: 1px solid var(--green-lightdark);
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 table td a {
   font-weight: bold;
   color: var(--primary);
+}
+
+.info-message {
+  text-align: center;
+  background-color: var(--green-dark);
+  padding: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.error-message {
+  text-align: center;
+  background-color: darkred;
+  padding: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
 }

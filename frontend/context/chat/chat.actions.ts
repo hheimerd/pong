@@ -1,4 +1,4 @@
-import {IChatMessage} from "../../interfaces/message.interface";
+import { IChatMessage } from "../../interfaces/message.interface";
 
 export enum ActionType {
   SendMessage,
@@ -8,24 +8,27 @@ export enum ActionType {
 }
 
 interface SendMessage {
-  type: ActionType.SendMessage
-  payload: IChatMessage
+  type: ActionType.SendMessage;
+  payload: IChatMessage;
 }
 
 interface GetMessages {
-  type: ActionType.GetMessages
-  payload: number
+  type: ActionType.GetMessages;
+  payload: string;
 }
 
 interface GetChatsList {
-  type: ActionType.GetChatsList
-  payload: Array<string>
+  type: ActionType.GetChatsList;
+  payload: Array<string>;
 }
 
 interface GetChannelsList {
-  type: ActionType.GetChannelsList
-  payload: Array<string>
+  type: ActionType.GetChannelsList;
+  payload: Array<string>;
 }
 
-export type ChatActions = SendMessage | GetMessages | GetChatsList | GetChannelsList;
-
+export type ChatActions =
+  | SendMessage
+  | GetMessages
+  | GetChatsList
+  | GetChannelsList;
