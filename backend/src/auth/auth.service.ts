@@ -1,9 +1,10 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { FindConditions, Repository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { RequestUser } from './entities/request-user.entitiy';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(login: string, pass: string) {
+  async validateUser(login: string, pass: string): Promise<RequestUser> {
     const searchOptions: FindConditions<User> = {};
 
     if (login.includes('@')) {

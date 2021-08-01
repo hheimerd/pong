@@ -14,6 +14,8 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,6 +23,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserByIdPipe } from './pipes/user-by-id.pipe';
 import { PolicyGuard } from 'src/policy/guards/policy.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { RequestUser } from 'src/auth/entities/request-user.entitiy';
 
 @Controller('user')
 @UseGuards(PolicyGuard)
@@ -44,9 +49,6 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id', UserByIdPipe) user: User) {
-    // const user = await this.userService.findById(id);
-    // if (user == null) throw new NotFoundException();
-    // delete user.password;
     const { password, ...result } = user;
     return result;
   }
@@ -66,5 +68,18 @@ export class UserController {
     if (!result.affected) {
       throw new NotFoundException();
     }
+  }
+
+  @Post('avatar')
+  @UseInterceptors(FileInterceptor('image'))
+  async updateImage(
+    @UploadedFile() image: Express.Multer.File,
+    @CurrentUser() user: RequestUser,
+  ) {
+    const mime = image.mimetype;
+    if (!mime.startsWith('image/')) {
+      throw new BadRequestException();
+    }
+    return await this.userService.uploadAvatar(image, user.id);
   }
 }
