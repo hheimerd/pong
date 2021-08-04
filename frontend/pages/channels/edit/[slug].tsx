@@ -1,57 +1,104 @@
-import React, {useEffect} from 'react';
-import {useRouter} from 'next/router';
-import Chip from '@material-ui/core/Chip';
+import { useMutation, useQuery } from '@apollo/client';
+import { Chip, FormControlLabel, Switch } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {FormControlLabel, Switch} from '@material-ui/core';
-import {Button, Htag} from '../../../components';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef } from 'react';
+import { Button, Htag } from '../../../components';
+import { CHATS_QUERY, CREATE_CHAT_MUTATION, USERS_QUERY } from '../../../graphql';
+import { ChatType, IChat } from '../../../interfaces/chat.interface';
+import { IUserProfile } from '../../../interfaces/userprofile.interface';
 import styles from './edit.module.css';
 
-interface Users {
-  name: string;
-  id: number;
-}
-
-const usersArr: Array<Users> = [
-  { name: 'Anna',       id: 1 },
-  { name: 'Andrey',     id: 2 },
-  { name: 'Pavel',      id: 3 },
-  { name: 'Ekaterina',  id: 4 },
-  { name: 'Michael',    id: 5 },
-  { name: 'Boris',      id: 6 },
-  { name: 'Elena',      id: 7 },
-];
-
 const ChannelRoom = (): JSX.Element => {
+  const { data: dataR, error: errorR, loading: loadingR } = useQuery(USERS_QUERY, { variables: {usersOffset: 0, usersLimit: 100}});
+  const [createChat, { data: dataM, loading: loadingM, error: errorM }] = useMutation(CREATE_CHAT_MUTATION);
+  const { loading, error, data } = useQuery(CHATS_QUERY);
   const router = useRouter();
-  // channel id
-  const { id } = router.query;
-  // form fields
-  const [usersValue, setUsersValue] = React.useState<Array<Users>>([usersArr[3], usersArr[5]]);
-  const [adminsValue, setAdminsValue] = React.useState<Array<Users>>([usersArr[1]]);
+  const { slug } = router.query;
+
+  // states for form fields
+  const [usersValue, setUsersValue] = React.useState<Array<IUserProfile>>();
+  const [usersInputReset, setUsersInputReset] = React.useState('');
+  const [adminsValue, setAdminsValue] = React.useState<Array<IUserProfile>>();
+  const [adminsInputReset, setAdminsInputReset] = React.useState('');
   const [isPrivate, setPrivate] = React.useState(false);
   const [name, setName] = React.useState('');
+  const nameRef = useRef();
   const [password, setPassword] = React.useState('');
 
-  const fetchInitialFormData = () => {
-    return 'Artur';
+  // get current channel from current user profile
+  const getChannel = () => {
+    const channel = data.getProfile.chats.filter(
+      (x: IChat) => x.id === slug
+    )[0];
+    return channel;
   };
 
+  // on loading CHATS_QUERY
   useEffect(() => {
-    setName(fetchInitialFormData);
-  }, []);
+    if (!loading && slug !== "create")
+    {
+      setName(getChannel().name);
+      // update name input field default value
+      if (nameRef.current)
+        nameRef.current.value = getChannel().name;
+      setUsersValue(getChannel().members);
+      // hack to redraw Autocomplete
+      // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
+      setUsersInputReset(getChannel().members);
+      setAdminsValue(getChannel().admins);
+      setAdminsInputReset(getChannel().admins);
+    }
+  }, [loading]);
+
+  // on submit
+  useEffect(() => {
+    if (typeof dataM !== "undefined") {
+      console.log("mutation: ", dataM);
+      router.push('/channels');
+    }
+  }, [loadingM]);
+
+  // wait fetching data
+  if (loading || loadingR) return <p>Loading user profile from graphql...</p>;
+  if (error || errorR) return <p>Error: can't fetching data from graphql :(</p>;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(name + ", " + usersValue.join(", ") + ", " + adminsValue.join(", ") + ", " + isPrivate + ", " + password);
+
+    if (name === "") return;
+
+    // convert Objects array to Array of [id]
+    const membersIdArr = usersValue.reduce((a, {id}) => {  
+        if (id) a.push(id);
+        return a;  
+    }, []);
+
+    // send message to backend via mutation CREATE_CHAT_MUTATION
+    if (slug === "create") {
+      createChat({
+        variables: {
+          createChatCreateChatInput: {
+            name: name,
+            members: membersIdArr,
+            type: ChatType.Channel,
+            is_private: false
+          },
+        },
+      });
+    }
+
+    // console.log(name + ", " + usersValue.join(", ") + ", " + adminsValue.join(", ") + ", " + isPrivate + ", " + password);
+
   };
 
   // check router variable type
-  if (typeof id !== "string") return null;
+  if (typeof slug !== "string") return null;
 
   return (
     <div className={styles.form}>
-      <Htag tag='h1'>Edit channel id: {id}</Htag>
+      <Htag tag='h1'>Edit channel</Htag>
       <form onSubmit={handleSubmit}>
         <div className={styles.line}>
           <TextField 
@@ -65,16 +112,18 @@ const ChannelRoom = (): JSX.Element => {
               shrink: true,
             }}
             defaultValue={name}
+            inputRef={nameRef}
           />
         </div>
         <div className={styles.line}>
           <Autocomplete fullWidth multiple id="usersArr-tags" value={usersValue}
-            onChange={(_event: React.ChangeEvent, newValue: Users[]) => {
+            key={usersInputReset}
+            onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
               setUsersValue([
                 ...newValue,
               ]);
             }}
-            options={usersArr}
+            options={dataR.users}
             getOptionLabel={(option) => option.name}
             getOptionSelected={(option, value) => option.name === value.name}
             renderTags={(tagValue, getTagProps) =>
@@ -96,12 +145,13 @@ const ChannelRoom = (): JSX.Element => {
         </div>
         <div className={styles.line}>
           <Autocomplete fullWidth multiple id="admins-tags" value={adminsValue}
-            onChange={(_event: React.ChangeEvent, newValue: Users[]) => {
+            key={adminsInputReset}
+            onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
               setAdminsValue([
                 ...newValue,
               ]);
             }}
-            options={usersArr}
+            options={dataR.users}
             getOptionLabel={(option) => option.name}
             getOptionSelected={(option, value) => option.name === value.name}
             renderTags={(tagValue, getTagProps) =>

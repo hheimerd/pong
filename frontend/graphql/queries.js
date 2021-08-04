@@ -16,7 +16,18 @@ export const CHATS_QUERY = gql`
       id
       chats {
         id
+        name
         members {
+          name
+          id
+          avatar
+        }
+        owner {
+          name
+          id
+          avatar
+        }
+        admins {
           name
           id
           avatar
@@ -39,6 +50,16 @@ export const MESSAGES_QUERY = gql`
           avatar
         }
       }
+    }
+  }
+`;
+
+export const USERS_QUERY = gql`
+  query Query($usersOffset: Int!, $usersLimit: Int!) {
+    users(offset: $usersOffset, limit: $usersLimit) {
+      id
+      name
+      avatar
     }
   }
 `;
