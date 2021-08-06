@@ -5,8 +5,8 @@ import {
   InMemoryCache,
   split,
 } from "@apollo/client";
-import { WebSocketLink } from "@apollo/client/link/ws";
 import { setContext } from "@apollo/client/link/context";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -14,24 +14,16 @@ import { Provider } from "next-auth/client";
 import { AppProps } from "next/dist/next-server/lib/router/router";
 import Head from "next/head";
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import styles from "../styles/MainPage.module.css";
 import { UserProfileContextProvider } from "../context/userprofile/userprofile.context";
 import "../styles/globals.css";
 import theme from "../theme";
-import { IChatMessage } from "../interfaces/message.interface";
 // import client from './api/apollo-client'
 
 const httpLink = createHttpLink({
   uri: process.env.GRAPHQL_REMOTE,
 });
-
-// manual token insert for user 1
-// const token =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ik1hcmdlIFNpbXBzb24iLCJlbWFpbCI6InRlc3QyQHRlc3QucnUiLCJsb2dpbiI6Im1hcmdlX3MiLCJyb2xlcyI6WyJ1c2VyIl0sImNyZWF0ZWRfYXQiOiIyMDIxLTA3LTMxVDE4OjE2OjQ4LjQ4MFoiLCJ1cGRhdGVkX2F0IjoiMjAyMS0wNy0zMVQxODoxNjo0OC40ODBaIiwiYXZhdGFyIjpbXSwiaWF0IjoxNjI3NzU2NjM5LCJleHAiOjE2MjgzNjE0Mzl9.wzWT8Zyx_AaM026P5RFZK0eRzTIAzXr_5vHFxoERbYY";
-// manual token insert for user 2
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6Ikl2YW4gUGV0cm92IiwiZW1haWwiOiJpdmFuMkB0ZXN0LnJ1IiwibG9naW4iOiJpdmFuX3AiLCJyb2xlcyI6WyJ1c2VyIl0sImNyZWF0ZWRfYXQiOiIyMDIxLTA3LTMxVDE4OjE3OjA3LjkyNloiLCJ1cGRhdGVkX2F0IjoiMjAyMS0wNy0zMVQxODoxNzowNy45MjZaIiwiYXZhdGFyIjpbXSwiaWF0IjoxNjI3ODQwNjM4LCJleHAiOjE2Mjg0NDU0Mzh9.n6w1qlgvlTajPspmT25iWUTBRFs8c4WvGZTP4y5b_X4";
 
 const wsLink = process.browser
   ? new WebSocketLink({
@@ -39,18 +31,6 @@ const wsLink = process.browser
       options: { reconnect: true },
     })
   : null;
-
-const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  // const token = localStorage.getItem('token');
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    },
-  };
-});
 
 // The split function takes three parameters:
 //
@@ -71,13 +51,32 @@ const splitLink = process.browser
     )
   : httpLink;
 
-const client = new ApolloClient({
-  link: authLink.concat(splitLink),
-  cache: new InMemoryCache(),
-});
+const getApolloClient = (token: string) => {
+  token = `Bearer ${token}`;
+  const authLink = setContext((_, { headers }) => {
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        ...headers,
+        authorization: token,
+      },
+    };
+  });
+  return new ApolloClient({
+    link: authLink.concat(splitLink),
+    cache: new InMemoryCache(),
+  });
+};
+
+const ApolloClientProvider = (props: any) => {
+  console.log("token: ", props.token);
+  const client = getApolloClient(props.token);
+  return <ApolloProvider client={client} {...props} />;
+};
 
 function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props;
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -85,10 +84,12 @@ function MyApp(props: AppProps): JSX.Element {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
+    // get the authentication token from local storage if it exists
+    setToken(localStorage.getItem("token"));
   }, []);
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloClientProvider token={token}>
       <Provider session={pageProps.session}>
         <UserProfileContextProvider>
           <Head>
@@ -100,8 +101,10 @@ function MyApp(props: AppProps): JSX.Element {
               href="https://fonts.gstatic.com"
               crossOrigin="true"
             />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link
-              href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+              href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
               rel="stylesheet"
             />
           </Head>
@@ -112,7 +115,7 @@ function MyApp(props: AppProps): JSX.Element {
           </ThemeProvider>
         </UserProfileContextProvider>
       </Provider>
-    </ApolloProvider>
+    </ApolloClientProvider>
   );
 }
 
