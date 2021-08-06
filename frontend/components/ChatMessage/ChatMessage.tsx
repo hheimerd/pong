@@ -46,11 +46,12 @@ export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleClose}>View user profile</MenuItem>
+            <MenuItem onClick={handleClose}>Start game</MenuItem>
+            <MenuItem onClick={handleClose}>Ban for 10 minutes</MenuItem>
+            <MenuItem onClick={handleClose}>Add to channel admins</MenuItem>
+            <MenuItem onClick={handleClose}>Add to blacklist</MenuItem>
+            <MenuItem onClick={handleClose}>Remove from channel</MenuItem>
           </Menu>
         </div>
         <div className={styles.message}>

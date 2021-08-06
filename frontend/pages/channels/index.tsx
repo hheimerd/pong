@@ -1,20 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Htag } from "../../components";
 import { CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
-  const { query } = useRouter();
-  const { loading, error, data, refetch } = useQuery(CHATS_QUERY);
-
-  // if request has GET parameter "refetch", then refeth data using CHATS_QUERY
-  useEffect(() => {
-    console.log("refetch");
-    refetch();
-  }, [query.refetch]);
+  const { loading, error, data } = useQuery(CHATS_QUERY);
 
   // wait while data loading
   if (loading) return <p>Loading user profile from graphql...</p>;

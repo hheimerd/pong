@@ -33,6 +33,8 @@ export const CHATS_QUERY = gql`
           avatar
         }
         type
+        is_private
+        password
       }
     }
   }

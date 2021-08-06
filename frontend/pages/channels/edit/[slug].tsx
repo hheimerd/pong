@@ -3,7 +3,7 @@ import { Chip, FormControlLabel, Switch } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Htag } from '../../../components';
 import { CHATS_QUERY, CREATE_CHAT_MUTATION, USERS_QUERY } from '../../../graphql';
 import { ChatType, IChat } from '../../../interfaces/chat.interface';
@@ -12,20 +12,33 @@ import styles from './edit.module.css';
 
 const ChannelRoom = (): JSX.Element => {
   const { data: dataR, error: errorR, loading: loadingR } = useQuery(USERS_QUERY, { variables: {usersOffset: 0, usersLimit: 100}});
-  const [createChat, { data: dataM, loading: loadingM, error: errorM }] = useMutation(CREATE_CHAT_MUTATION);
+  const [createChat, { data: dataM, loading: loadingM, error: errorM }] = useMutation(
+    CREATE_CHAT_MUTATION, {
+    refetchQueries: [
+        { query: CHATS_QUERY }
+      ]
+    }
+  );
   const { loading, error, data } = useQuery(CHATS_QUERY);
   const router = useRouter();
   const { slug } = router.query;
 
   // states for form fields
   const [usersValue, setUsersValue] = React.useState<Array<IUserProfile>>();
-  const [usersInputReset, setUsersInputReset] = React.useState('');
   const [adminsValue, setAdminsValue] = React.useState<Array<IUserProfile>>();
-  const [adminsInputReset, setAdminsInputReset] = React.useState('');
   const [isPrivate, setPrivate] = React.useState(false);
+  const privateRef = useRef();
   const [name, setName] = React.useState('');
   const nameRef = useRef();
   const [password, setPassword] = React.useState('');
+  const passwordRef = useRef();
+
+  // Hack to redraw Autocomplete
+  // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
+  const [usersInputReset, setUsersInputReset] = React.useState('');
+  const [adminsInputReset, setAdminsInputReset] = React.useState('');
+
+  const [isNameValid, setIsNameValid] = useState(true);
 
   // get current channel from current user profile
   const getChannel = () => {
@@ -44,10 +57,18 @@ const ChannelRoom = (): JSX.Element => {
       if (nameRef.current)
         nameRef.current.value = getChannel().name;
       setUsersValue(getChannel().members);
-      // hack to redraw Autocomplete
+      setAdminsValue(getChannel().admins);
+      setPrivate(getChannel().is_private);
+      if (privateRef.current)
+        privateRef.current.value = getChannel().is_private;
+      setPassword(getChannel().password);
+      if (passwordRef.current)
+        passwordRef.current.value = getChannel().password;
+      console.log("getChannel: ", getChannel());
+
+      // Hack to redraw Autocomplete
       // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
       setUsersInputReset(getChannel().members);
-      setAdminsValue(getChannel().admins);
       setAdminsInputReset(getChannel().admins);
     }
   }, [loading]);
@@ -64,33 +85,52 @@ const ChannelRoom = (): JSX.Element => {
   if (loading || loadingR) return <p>Loading user profile from graphql...</p>;
   if (error || errorR) return <p>Error: can't fetching data from graphql :(</p>;
 
+  const isFormValid = (): boolean => {
+    if (name !== "") {
+      setIsNameValid(true);
+    } else {
+      setIsNameValid(false);
+      nameRef.current.focus();
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    if (isFormValid()) {
+      // convert Objects array to Array of [id]
+      const membersIdArr = usersValue.reduce((a, {id}) => {  
+          if (id) a.push(id);
+          return a;  
+      }, []);
 
-    if (name === "") return;
+      // convert Objects array to Array of [id]
+      // const adminsIdArr = adminsValue.reduce((a, {id}) => {  
+      //     if (id) a.push(id);
+      //     return a;  
+      // }, []);
 
-    // convert Objects array to Array of [id]
-    const membersIdArr = usersValue.reduce((a, {id}) => {  
-        if (id) a.push(id);
-        return a;  
-    }, []);
-
-    // send message to backend via mutation CREATE_CHAT_MUTATION
-    if (slug === "create") {
-      createChat({
-        variables: {
-          createChatCreateChatInput: {
-            name: name,
-            members: membersIdArr,
-            type: ChatType.Channel,
-            is_private: false
+      // send message to backend via mutation CREATE_CHAT_MUTATION
+      if (slug === "create") {
+        createChat({
+          variables: {
+            createChatCreateChatInput: {
+              name: name,
+              members: membersIdArr,
+              // admins not realized in backend yet
+              // admins: adminsIdArr,
+              type: ChatType.Channel,
+              is_private: isPrivate,
+              password: password
+            },
           },
-        },
-      });
+        });
+      }
+
+      // console.log(name + ", " + usersValue.join(", ") + ", " + adminsValue.join(", ") + ", " + isPrivate + ", " + password);
+
     }
-
-    // console.log(name + ", " + usersValue.join(", ") + ", " + adminsValue.join(", ") + ", " + isPrivate + ", " + password);
-
   };
 
   // check router variable type
@@ -103,7 +143,7 @@ const ChannelRoom = (): JSX.Element => {
         <div className={styles.line}>
           <TextField 
             id="outlined-size-normal" 
-            label="Name" 
+            label="Name *" 
             fullWidth 
             size="small" 
             variant="outlined"
@@ -113,6 +153,8 @@ const ChannelRoom = (): JSX.Element => {
             }}
             defaultValue={name}
             inputRef={nameRef}
+            error={!isNameValid}
+            helperText={!isNameValid ? 'Empty field!' : ' '}
           />
         </div>
         <div className={styles.line}>
@@ -179,6 +221,7 @@ const ChannelRoom = (): JSX.Element => {
                 onChange={event => setPrivate(event.target.checked)} 
                 name="checkedA" 
                 color="primary"
+                inputRef={privateRef}
               />
             }
             label="Private" />
@@ -189,8 +232,10 @@ const ChannelRoom = (): JSX.Element => {
               size="small"
               type="password"
               variant="outlined"
+              defaultValue={password}
               InputLabelProps={{ shrink: true, }}
               onChange={event => setPassword(event.target.value)}
+              inputRef={passwordRef}
             />
           </div>
           : null 
