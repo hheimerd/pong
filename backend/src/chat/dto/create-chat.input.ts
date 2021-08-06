@@ -7,7 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { ChatType } from '../entities/chat-type.enum';
+import { ChatType } from '@prisma/client';
 
 @InputType()
 export class CreateChatInput {
@@ -27,11 +27,6 @@ export class CreateChatInput {
   @Field()
   @IsBoolean()
   is_private: boolean;
-
-  /**
-   * // FIXME: Приватный и запароленный это разные чаты?
-   * Мы будем реализовывать приглашение в чат или просто паролем обойдемся?
-   *  */
 
   @Field({ nullable: true })
   @MinLength(4)

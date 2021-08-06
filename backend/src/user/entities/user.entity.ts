@@ -9,11 +9,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-
-export enum Role {
-  User = 'user',
-  Admin = 'admin',
-}
+import { Role } from '@prisma/client';
 
 registerEnumType(Role, {
   name: 'Role',

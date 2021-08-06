@@ -48,6 +48,18 @@ enum Role {
   Admin
 }
 
+type RequestUser {
+  id: Float
+  name: String
+  email: String
+  login: String
+  roles: [Role!]
+  created_at: DateTime
+  updated_at: DateTime
+  avatar: [String!]
+  chats: [Chat!]
+}
+
 type JwtResponse {
   access_token: String!
 }
@@ -56,8 +68,7 @@ type Query {
   user(id: Int!): User!
   users(offset: Int!, limit: Int!): [User!]!
   login(password: String!, login: String!): JwtResponse!
-  getProfile: User!
-  chatMessage(id: Int!): ChatMessage!
+  getProfile: RequestUser!
   chat(id: String!): Chat!
 }
 
@@ -67,6 +78,7 @@ type Mutation {
   removeUser(id: Float!): Boolean!
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
+  doSomethingWithUserInChat(userId: Int!, chatId: String!): Boolean!
   updateChat(input: UpdateChatInput!): Chat!
   removeChat(id: String!): Chat!
 }
@@ -88,7 +100,7 @@ input UpdateUserDto {
 
 input CreateChatMessageInput {
   message: String!
-  chat_id: String!
+  chatId: String!
 }
 
 input CreateChatInput {
@@ -100,6 +112,9 @@ input CreateChatInput {
 }
 
 input UpdateChatInput {
+  name: String
+  is_private: Boolean
+  password: String
   id: String!
 }
 

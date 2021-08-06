@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ModelByIdPipe } from 'src/pipes/ModelById.pipe';
-import { User } from '../entities/user.entity';
+import { ModelByIdPipe } from 'src/common/pipes/ModelById.pipe';
+import { User } from '@prisma/client';
 import { UserService } from '../user.service';
 
 @Injectable()

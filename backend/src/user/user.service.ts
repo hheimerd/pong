@@ -2,17 +2,18 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { FindConditions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 import { genSalt, hash } from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StorageService } from 'src/storage/storage.service';
+import { StorageService } from 'src/common/storage/storage.service';
 import * as sharp from 'sharp';
 import { join } from 'path';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userModel: Repository<User>,
+    private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
   ) {}
 
@@ -36,7 +37,7 @@ export class UserService {
     const oldAvatar = user.avatar;
 
     user.avatar = paths;
-    await this.userModel.save(user);
+    await this.prisma.user.create({ data: user });
 
     this.storageService.delete(...oldAvatar);
 
@@ -44,56 +45,57 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const exists = await this.count([
-      { email: createUserDto.email },
-      { login: createUserDto.login },
-    ]);
+    const exists = await this.count({
+      email: createUserDto.email,
+      login: createUserDto.login,
+    });
 
     if (exists != 0) throw new ConflictException();
 
     const salt = await genSalt(10);
     const password = await hash(createUserDto.password, salt);
-    const user = await this.userModel.create({ ...createUserDto, password });
-    await this.userModel.save(user);
+    const user = await this.prisma.user.create({
+      data: { ...createUserDto, password },
+    });
     return user;
   }
 
   async findAll(take = 15, skip = 0) {
-    return this.userModel.find({ take, skip });
+    return this.prisma.user.findMany({ take, skip });
   }
 
   async findMany(ids: number[]) {
-    return this.userModel.findByIds(ids);
+    return this.prisma.user.findMany({ where: { id: { in: ids } } });
   }
 
   async findOne(id: number) {
-    return this.userModel.findOne(id);
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   async update(id: number, dto: UpdateUserDto) {
-    const user = await this.userModel.findOne(id);
+    const user = await this.findOne(id);
     if (!user) return null;
     const updated = { ...user, ...dto };
 
-    return this.userModel.save(updated);
+    return this.prisma.user.update({ where: { id }, data: updated });
   }
 
   async remove(id: number) {
-    return this.userModel.delete(id);
+    return this.prisma.user.delete({ where: { id } });
   }
 
   async find(search) {
-    return this.userModel.findOne({
-      where: search,
+    return this.prisma.user.findUnique({
+      where: { login: 'tester2' },
     });
   }
 
-  async count(options: FindConditions<User>[]) {
-    return this.userModel.count({ where: options });
+  async count(options) {
+    return this.prisma.user.count({ where: options });
   }
 
   async findOrCreate(dto: CreateUserDto) {
-    const user: User = await this.userModel.findOne({
+    const user: User = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
     if (user) {

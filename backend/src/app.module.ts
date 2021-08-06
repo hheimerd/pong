@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './common/auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { PolicyModule } from './policy/policy.module';
+import { PolicyModule } from './common/policy/policy.module';
 import { ChatMessageModule } from './chat-message/chat-message.module';
 import { ChatModule } from './chat/chat.module';
-import { OrmModule } from './orm/orm.module';
-import { StorageModule } from './storage/storage.module';
+import { StorageModule } from './common/storage/storage.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { PUBLIC_PATH } from './storage/storage.constants';
+import { PUBLIC_PATH } from './common/storage/storage.constants';
+import { PrismaModule } from './common/prisma/prisma.module';
 
 const username = process.env.POSTGRES_USER || 'postgres';
 const password = process.env.POSTGRES_PASSWORD || 'postgres';
@@ -43,8 +43,8 @@ const password = process.env.POSTGRES_PASSWORD || 'postgres';
     PolicyModule,
     ChatMessageModule,
     ChatModule,
-    OrmModule,
     StorageModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}

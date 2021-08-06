@@ -1,5 +1,13 @@
-import { NotFoundException, ValidationPipe, UseGuards, UsePipes, BadRequestException, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
+import {
+  NotFoundException,
+  ValidationPipe,
+  UsePipes,
+  BadRequestException,
+  DefaultValuePipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Public } from 'src/common/auth/decorators/public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,7 +18,8 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Mutation (() => User, { name: 'createUser' })
+  @Mutation(() => User, { name: 'createUser' })
+  @Public()
   @UsePipes(ValidationPipe)
   async create(@Args('input') createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
@@ -31,7 +40,6 @@ export class UserResolver {
     return this.userService.findAll(limit, offset);
   }
 
-
   @Mutation(() => User, { name: 'updateUser' })
   @UsePipes(ValidationPipe)
   async update(
@@ -40,16 +48,13 @@ export class UserResolver {
   ) {
     const updated = await this.userService.update(id, updateUserDto);
     if (!updated) throw new NotFoundException();
-    
-    return updated
+
+    return updated;
   }
 
   @Mutation(() => Boolean, { name: 'removeUser' })
   async remove(@Args('id', ParseIntPipe) id: number) {
-    const result = await this.userService.remove(id);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
+    await this.userService.remove(id);
     return true;
   }
 }

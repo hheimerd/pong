@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -10,7 +10,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ChatType } from './chat-type.enum';
+import { ChatType } from '@prisma/client';
 
 registerEnumType(ChatType, { name: 'ChatType' });
 

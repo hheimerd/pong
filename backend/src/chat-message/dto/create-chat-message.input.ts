@@ -9,5 +9,5 @@ export class CreateChatMessageInput {
 
   @Field()
   @IsUUID()
-  chat_id: string;
+  chatId: string;
 }

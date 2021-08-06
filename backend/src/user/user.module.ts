@@ -4,9 +4,10 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
-import { PolicyModule } from 'src/policy/policy.module';
-import { ModelByIdPipe } from 'src/pipes/ModelById.pipe';
-import { StorageModule } from 'src/storage/storage.module';
+import { PolicyModule } from 'src/common/policy/policy.module';
+import { ModelByIdPipe } from 'src/common/pipes/ModelById.pipe';
+import { StorageModule } from 'src/common/storage/storage.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
 
 @Module({
   controllers: [UserController],
@@ -21,7 +22,7 @@ import { StorageModule } from 'src/storage/storage.module';
       },
     },
   ],
-  imports: [TypeOrmModule.forFeature([User]), PolicyModule, StorageModule],
+  imports: [PolicyModule, StorageModule, PrismaModule],
   exports: [UserService],
 })
 export class UserModule {}

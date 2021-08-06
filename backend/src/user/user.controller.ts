@@ -22,10 +22,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserByIdPipe } from './pipes/user-by-id.pipe';
-import { PolicyGuard } from 'src/policy/guards/policy.guard';
+import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { RequestUser } from 'src/auth/entities/request-user.entitiy';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 
 @Controller('user')
 @UseGuards(PolicyGuard)
@@ -64,10 +64,7 @@ export class UserController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.userService.remove(id);
-    if (!result.affected) {
-      throw new NotFoundException();
-    }
+    await this.userService.remove(id);
   }
 
   @Post('avatar')

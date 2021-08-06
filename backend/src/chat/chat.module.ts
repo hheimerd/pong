@@ -1,15 +1,21 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ChatResolver } from './chat.resolver';
 import { Chat } from './entities/chat.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PolicyModule } from 'src/policy/policy.module';
+import { PolicyModule } from 'src/common/policy/policy.module';
 import { UserModule } from 'src/user/user.module';
-import { AuthModule } from 'src/auth/auth.module';
-import { ChatMessageModule } from 'src/chat-message/chat-message.module';
+import { AuthModule } from 'src/common/auth/auth.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Chat]), PolicyModule, UserModule, forwardRef(() => ChatMessageModule), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Chat]),
+    PolicyModule,
+    UserModule,
+    AuthModule,
+    PrismaModule,
+  ],
   providers: [ChatResolver, ChatService],
   exports: [ChatService],
 })

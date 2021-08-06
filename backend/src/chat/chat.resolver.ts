@@ -1,39 +1,39 @@
-import { Resolver, Query, Mutation, Args, Int, Subscription } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import { Chat } from './entities/chat.entity';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { forwardRef, Inject, UseGuards } from '@nestjs/common';
-import { PolicyGuard } from 'src/policy/guards/policy.guard';
-import { User } from 'src/user/entities/user.entity';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
-import { PubSub } from 'graphql-subscriptions'; 
-import { AuthService } from 'src/auth/auth.service';
-import { CHAT_MESSAGE_SUBSCRIBE_KEY } from 'src/chat-message/chat-message.resolver';
-
+import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
 export class ChatResolver {
-  constructor(
-    private readonly chatService: ChatService,
-    @Inject(forwardRef(() => 'PUB_SUB'))
-    private readonly pubSub: PubSub
-    ) {}
+  constructor(private readonly chatService: ChatService) {}
 
   @Mutation(() => Chat)
   createChat(
-    @Args('createChatInput') createChatInput: CreateChatInput, 
-    @CurrentUser() user: User
-    ) {
-    return this.chatService.create(createChatInput, user);
+    @Args('createChatInput') createChatInput: CreateChatInput,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.chatService.create(createChatInput, user.id);
   }
 
   @Query(() => [Chat], { name: 'chat' })
-  findAll(@CurrentUser() user: User) {
+  findAll(@CurrentUser() user: RequestUser) {
     return this.chatService.findAll(user);
+  }
+
+  @Mutation(() => Boolean)
+  async doSomethingWithUserInChat(
+    @Args('chatId') chatId: string,
+    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return true || false;
   }
 
   @Query(() => Chat, { name: 'chat' })
@@ -49,14 +49,5 @@ export class ChatResolver {
   @Mutation(() => Chat)
   removeChat(@Args('id') id: string) {
     return this.chatService.remove(id);
-  }
-
-  @Subscription(returns => ChatMessage, { 
-    filter: (payload, variables) => {
-      return payload.messageAdded.chat.id == variables.id
-    }
-  })
-  async messageAdded(@Args('chatId') id: string, @Args('token') token: string) {
-    return await this.pubSub.asyncIterator<ChatMessage>(CHAT_MESSAGE_SUBSCRIBE_KEY);
   }
 }
