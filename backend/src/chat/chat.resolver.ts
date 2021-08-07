@@ -60,6 +60,25 @@ export class ChatResolver {
     return chat;
   }
 
+  @Mutation(() => Boolean)
+  async banUserInChat(
+    @Args('chatId') chatId: string,
+    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
+    @Args('minutes', { type: () => Int, nullable: true }) minutes = 5,
+  ): Promise<boolean> {
+    await this.chatService.banUser(chatId, userId, minutes);
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async unbanUserInChat(
+    @Args('chatId') chatId: string,
+    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
+  ): Promise<boolean> {
+    await this.chatService.unbanUser(chatId, userId);
+    return true;
+  }
+
   @ResolveField('messages', () => [ChatMessage])
   async getMessages(
     @Parent() chat: Chat,
@@ -86,6 +105,13 @@ export class ChatResolver {
     const members = await this.chatService.getMembers(chat.id);
 
     return members;
+  }
+
+  @ResolveField('banned', () => [User])
+  async getBanned(@Parent() chat: Chat) {
+    const banned = await this.chatService.getbanned(chat.id);
+
+    return banned;
   }
 
   @ResolveField('admins', () => [User])

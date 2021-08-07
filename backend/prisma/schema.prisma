@@ -21,31 +21,44 @@ enum ChatType {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String        @db.VarChar(32)
-  email        String        @db.VarChar(128) @unique
-  login        String        @db.VarChar(24) @unique
-  password     String        @db.VarChar(64)
+  id           Int                @id @default(autoincrement())
+  name         String             @db.VarChar(32)
+  email        String             @unique @db.VarChar(128)
+  login        String             @unique @db.VarChar(24)
+  password     String             @db.VarChar(64)
   roles        Role[]
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
+  created_at   DateTime           @default(now())
+  updated_at   DateTime           @updatedAt
   avatar       String[]
-  chats        Chat[]        @relation("members")
-  adminChats   Chat[]        @relation("admins")
+  chats        Chat[]             @relation("members")
+  adminChats   Chat[]             @relation("admins")
   ownChats     Chat[]
   ChatMessages ChatMessage[]
+  bannedChats  ChatsBannedUsers[]
+}
+
+model ChatsBannedUsers {
+  banned_at DateTime @default(now())
+  minutes   Int      @default(1)
+  banned    User     @relation(fields: [userId], references: [id])
+  chats     Chat     @relation(fields: [chatId], references: [id])
+  userId    Int
+  chatId    String   @db.Uuid
+
+  @@id([userId, chatId])
 }
 
 model Chat {
-  id         String        @id @default(uuid()) @db.Uuid
-  name       String        @db.VarChar(32)
-  members    User[]        @relation("members")
-  admins     User[]        @relation("admins")
-  owner      User          @relation(fields: [ownerId], references: [id])
+  id         String             @id @default(uuid()) @db.Uuid
+  name       String             @db.VarChar(32)
+  members    User[]             @relation("members")
+  admins     User[]             @relation("admins")
+  owner      User               @relation(fields: [ownerId], references: [id])
+  banned     ChatsBannedUsers[]
   ownerId    Int
   type       ChatType
   is_private Boolean
-  password   String?        @db.VarChar(64)
+  password   String?            @db.VarChar(64)
   messages   ChatMessage[]
 }
 

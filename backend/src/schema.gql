@@ -54,6 +54,7 @@ type Chat {
     limit: Int
   ): [ChatMessage!]!
   members: [User!]!
+  banned: [User!]!
   admins: [User!]!
 }
 
@@ -81,6 +82,8 @@ type Mutation {
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
   doSomethingWithUserInChat(userId: Int!, chatId: String!): Boolean!
+  banUser(minutes: Int, userId: Int!, chatId: String!): Boolean!
+  unbanUser(userId: Int!, chatId: String!): Boolean!
   updateChat(input: UpdateChatInput!): Chat!
   removeChat(id: String!): Chat!
 }

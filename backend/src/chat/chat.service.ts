@@ -8,6 +8,39 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async unbanUser(chatId: string, userId: number) {
+    await this.prisma.chatsBannedUsers.delete({
+      where: {
+        userId_chatId: {
+          chatId,
+          userId,
+        },
+      },
+    });
+  }
+
+  async getbanned(chatId: string) {
+    return await this.prisma.user.findMany({
+      where: {
+        bannedChats: {
+          some: {
+            chatId: chatId,
+          },
+        },
+      },
+    });
+  }
+
+  async banUser(chatId: string, userId: number, minutes: number) {
+    await this.prisma.chatsBannedUsers.create({
+      data: {
+        userId: userId,
+        chatId: chatId,
+        minutes: minutes,
+      },
+    });
+  }
+
   async getMembers(id: string) {
     return await this.prisma.user.findMany({
       where: {
