@@ -9,6 +9,34 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getMessages(chatId: string, limit: number, offset: number) {
+    const result = this.prisma.chatMessage.findMany({
+      where: { chat: { id: chatId } },
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+
+    return await result;
+  }
+
+  async isChatMember(chatId: string, userId: number): Promise<boolean> {
+    const result = await this.prisma.chat.count({
+      where: {
+        id: chatId,
+        members: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    return !!result;
+  }
+
   async create(input: CreateChatInput, ownerId: number) {
     return this.prisma.chat.create({
       data: {

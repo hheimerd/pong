@@ -14,13 +14,13 @@ export class Chat {
   name?: string;
 
   @Field((type) => [User])
-  members: Promise<User[]>;
+  members: User[];
 
   @Field((type) => [User], { nullable: true })
-  admins?: Promise<User[]>;
+  admins?: User[];
 
   @Field((type) => User, { nullable: true })
-  owner?: Promise<User>;
+  owner?: User;
 
   @Field((type) => ChatType)
   type: ChatType;
@@ -28,6 +28,6 @@ export class Chat {
   @Field()
   is_private: boolean;
 
-  @Field((type) => [ChatMessage])
-  messages: Promise<ChatMessage[]>;
+  @Field((type) => [ChatMessage], { defaultValue: [] })
+  messages: ChatMessage[];
 }

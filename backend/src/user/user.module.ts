@@ -3,23 +3,12 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserResolver } from './user.resolver';
 import { PolicyModule } from 'src/common/policy/policy.module';
-import { ModelByIdPipe } from 'src/common/pipes/ModelById.pipe';
 import { StorageModule } from 'src/common/storage/storage.module';
 import { PrismaModule } from 'src/common/prisma/prisma.module';
 
 @Module({
   controllers: [UserController],
-  providers: [
-    UserService,
-    UserResolver,
-    {
-      provide: ModelByIdPipe,
-      useFactory: (userService: UserService) => {
-        class Special extends ModelByIdPipe {}
-        return new Special(userService);
-      },
-    },
-  ],
+  providers: [UserService, UserResolver],
   imports: [PolicyModule, StorageModule, PrismaModule],
   exports: [UserService],
 })

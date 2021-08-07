@@ -1,6 +1,4 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Chat } from 'src/chat/entities/chat.entity';
-import { Exclude } from 'class-transformer';
 import { Role } from '@prisma/client';
 
 registerEnumType(Role, {
@@ -21,9 +19,6 @@ export class User {
   @Field()
   login: string;
 
-  @Exclude()
-  password: string;
-
   @Field(() => [Role])
   roles: Role[];
 
@@ -35,7 +30,4 @@ export class User {
 
   @Field(() => [String])
   avatar?: string[];
-
-  @Field(() => [Chat])
-  chats: Promise<Chat[]>;
 }

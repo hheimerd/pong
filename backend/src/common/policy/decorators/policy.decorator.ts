@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Action, AppAbility, Subjects } from '../casl/casl-ablilty.factory';
+import { Action, Subjects } from '../casl/casl-ablilty.factory';
 
 export const POLICIES_KEY = 'policies';
 export const CheckPolicies = (actions: Action, subject: Subjects) =>

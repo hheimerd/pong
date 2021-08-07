@@ -10,7 +10,6 @@ import {
   UsePipes,
   Query,
   BadRequestException,
-  NotFoundException,
   ParseIntPipe,
   DefaultValuePipe,
   UseGuards,
@@ -20,8 +19,6 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import { UserByIdPipe } from './pipes/user-by-id.pipe';
 import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
@@ -48,8 +45,8 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', UserByIdPipe) user: User) {
-    const { password, ...result } = user;
+  async findOne(@Param('id') id) {
+    const { password, ...result } = await this.userService.findOne(id);
     return result;
   }
 

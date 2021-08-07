@@ -4,10 +4,16 @@ import { Chat } from './entities/chat.entity';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
-import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import {
+  DefaultValuePipe,
+  ForbiddenException,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
+import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
@@ -37,8 +43,27 @@ export class ChatResolver {
   }
 
   @Query(() => Chat, { name: 'chat' })
-  findOne(@Args('id') id: string) {
+  async findOne(@Args('id') id: string) {
     return this.chatService.findOne(id);
+  }
+
+  @Query(() => [ChatMessage], { name: 'getChatMessages' })
+  async getMessages(
+    @Args('chatId') chatId: string,
+    @Args('limit', { type: () => Int, nullable: true })
+    limit = 15,
+    @Args('offset', { type: () => Int, nullable: true })
+    offset?: number,
+    @CurrentUser() user?: RequestUser,
+  ) {
+    if (limit > 100) limit = 100;
+
+    const isMember = await this.chatService.isChatMember(chatId, user.id);
+    if (!isMember) {
+      throw new ForbiddenException();
+    }
+
+    return this.chatService.getMessages(chatId, limit, offset);
   }
 
   @Mutation(() => Chat)

@@ -2,17 +2,44 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ChatMessage {
-  chat: Chat!
+type User {
+  id: Float!
+  name: String!
+  email: String!
+  login: String!
+  roles: [Role!]!
   created_at: DateTime!
-  message: String!
-  user: User!
+  updated_at: DateTime!
+  avatar: [String!]!
+}
+
+enum Role {
+  User
+  Admin
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type RequestUser {
+  id: Float
+  name: String
+  email: String
+  login: String
+  roles: [Role!]
+  created_at: DateTime
+  updated_at: DateTime
+  avatar: [String!]
+}
+
+type ChatMessage {
+  chat: Chat!
+  created_at: DateTime!
+  message: String!
+  user: User!
+}
 
 type Chat {
   id: String!
@@ -30,35 +57,6 @@ enum ChatType {
   Channel
 }
 
-type User {
-  id: Float!
-  name: String!
-  email: String!
-  login: String!
-  roles: [Role!]!
-  created_at: DateTime!
-  updated_at: DateTime!
-  avatar: [String!]!
-  chats: [Chat!]!
-}
-
-enum Role {
-  User
-  Admin
-}
-
-type RequestUser {
-  id: Float
-  name: String
-  email: String
-  login: String
-  roles: [Role!]
-  created_at: DateTime
-  updated_at: DateTime
-  avatar: [String!]
-  chats: [Chat!]
-}
-
 type JwtResponse {
   access_token: String!
 }
@@ -69,6 +67,7 @@ type Query {
   login(password: String!, login: String!): JwtResponse!
   getProfile: RequestUser!
   chat(id: String!): Chat!
+  getChatMessages(offset: Int, limit: Int, chatId: String!): [ChatMessage!]!
 }
 
 type Mutation {

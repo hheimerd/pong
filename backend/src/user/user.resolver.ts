@@ -6,12 +6,12 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
+import { Chat } from 'src/chat/entities/chat.entity';
 import { Public } from 'src/common/auth/decorators/public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { UserByIdPipe } from './pipes/user-by-id.pipe';
 import { UserService } from './user.service';
 
 @Resolver()
@@ -26,15 +26,20 @@ export class UserResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  async findOneById(@Args('id', { type: () => Int }, UserByIdPipe) user: User) {
+  async findOneById(
+    @Args('id', { type: () => Int }) userId: number,
+  ): Promise<User> {
+    const user = await this.userService.findOne(userId);
     if (!user) throw new NotFoundException();
     return user;
   }
 
   @Query(() => [User], { name: 'users' })
   async findAll(
-    @Args('limit', { type: () => Int }, new DefaultValuePipe(15), ParseIntPipe) limit,
-    @Args('offset', { type: () => Int }, new DefaultValuePipe(0), ParseIntPipe) offset,
+    @Args('limit', { type: () => Int }, new DefaultValuePipe(15), ParseIntPipe)
+    limit,
+    @Args('offset', { type: () => Int }, new DefaultValuePipe(0), ParseIntPipe)
+    offset,
   ) {
     if (limit > 100) throw new BadRequestException();
     return this.userService.findAll(limit, offset);
