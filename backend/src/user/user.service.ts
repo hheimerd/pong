@@ -1,9 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { FindConditions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { genSalt, hash } from 'bcryptjs';
-import { InjectRepository } from '@nestjs/typeorm';
 import { StorageService } from 'src/common/storage/storage.service';
 import * as sharp from 'sharp';
 import { join } from 'path';
@@ -86,7 +84,7 @@ export class UserService {
 
   async find(search) {
     return this.prisma.user.findUnique({
-      where: { login: 'tester2' },
+      where: search,
     });
   }
 

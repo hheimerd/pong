@@ -36,7 +36,6 @@
     "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-express": "^8.0.4",
     "@nestjs/serve-static": "^2.2.2",
-    "@nestjs/typeorm": "^7.1.5",
     "@prisma/client": "^2.28.0",
     "apollo-server": "^3.0.2",
     "apollo-server-express": "^3.0.0",
@@ -58,8 +57,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sharp": "^0.28.3",
-    "ts-morph": "^11.0.3",
-    "typeorm": "^0.2.34"
+    "ts-morph": "^11.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

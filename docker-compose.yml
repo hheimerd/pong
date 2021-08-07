@@ -25,7 +25,7 @@ services:
       - ./backend:/app
     depends_on:
       - db
-    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn run migration:run && npx yarn run start'"
+    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx prisma db push && npx yarn run start'"
 #    command: tail -F anything
     environment:
       - POSTGRES_USER=postgres

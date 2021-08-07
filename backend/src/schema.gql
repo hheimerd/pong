@@ -22,7 +22,6 @@ type Chat {
   owner: User
   type: ChatType!
   is_private: Boolean!
-  password: String
   messages: [ChatMessage!]!
 }
 

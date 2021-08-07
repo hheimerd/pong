@@ -7,10 +7,7 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 
 @Injectable()
 export class ChatService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(input: CreateChatInput, ownerId: number) {
     return this.prisma.chat.create({
@@ -23,11 +20,7 @@ export class ChatService {
           connect: { id: ownerId },
         },
         members: {
-          connect: [
-            {
-              id: input.members[0],
-            },
-          ],
+          connect: input.members.map((memberId) => ({ id: memberId })),
         },
         owner: {
           connect: { id: ownerId },
