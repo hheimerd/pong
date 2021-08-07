@@ -25,8 +25,8 @@ export class User {
   @Field()
   created_at: Date;
 
-  @Field()
-  updated_at: Date;
+  @Field({ nullable: true })
+  updated_at?: Date;
 
   @Field(() => [String])
   avatar?: string[];

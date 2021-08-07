@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { ChatService } from './chat.service';
 import { Chat } from './entities/chat.entity';
 import { CreateChatInput } from './dto/create-chat.input';
@@ -7,6 +15,7 @@ import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
 import {
   DefaultValuePipe,
   ForbiddenException,
+  NotFoundException,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +23,7 @@ import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
@@ -44,26 +54,43 @@ export class ChatResolver {
 
   @Query(() => Chat, { name: 'chat' })
   async findOne(@Args('id') id: string) {
-    return this.chatService.findOne(id);
+    const chat = await this.chatService.findOne(id);
+    if (!chat) throw new NotFoundException();
+
+    return chat;
   }
 
-  @Query(() => [ChatMessage], { name: 'getChatMessages' })
+  @ResolveField('messages', () => [ChatMessage])
   async getMessages(
-    @Args('chatId') chatId: string,
-    @Args('limit', { type: () => Int, nullable: true })
+    @Parent() chat: Chat,
+    @Args('limit', {
+      type: () => Int,
+      nullable: true,
+      description: 'max limit 100',
+    })
     limit = 15,
     @Args('offset', { type: () => Int, nullable: true })
     offset?: number,
     @CurrentUser() user?: RequestUser,
   ) {
     if (limit > 100) limit = 100;
+    if (limit < 0) limit = 15;
 
-    const isMember = await this.chatService.isChatMember(chatId, user.id);
-    if (!isMember) {
-      throw new ForbiddenException();
-    }
+    await this.checkIsMember(chat.id, user.id);
 
-    return this.chatService.getMessages(chatId, limit, offset);
+    return this.chatService.getMessages(chat.id, limit, offset);
+  }
+
+  @ResolveField('members', () => [User])
+  async getMembers(@Parent() chat: Chat) {
+    const members = await this.chatService.getMembers(chat.id);
+
+    return members;
+  }
+
+  @ResolveField('admins', () => [User])
+  async getAdmins(@Parent() chat: Chat) {
+    return this.chatService.getAdmins(chat.id);
   }
 
   @Mutation(() => Chat)
@@ -74,5 +101,12 @@ export class ChatResolver {
   @Mutation(() => Chat)
   removeChat(@Args('id') id: string) {
     return this.chatService.remove(id);
+  }
+
+  private async checkIsMember(chatId, userId) {
+    const isMember = await this.chatService.isChatMember(chatId, userId);
+    if (!isMember) {
+      throw new ForbiddenException();
+    }
   }
 }

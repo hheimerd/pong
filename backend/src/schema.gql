@@ -9,7 +9,7 @@ type User {
   login: String!
   roles: [Role!]!
   created_at: DateTime!
-  updated_at: DateTime!
+  updated_at: DateTime
   avatar: [String!]!
 }
 
@@ -44,12 +44,17 @@ type ChatMessage {
 type Chat {
   id: String!
   name: String
-  members: [User!]!
-  admins: [User!]
   owner: User
   type: ChatType!
   is_private: Boolean!
-  messages: [ChatMessage!]!
+  messages(
+    offset: Int
+
+    """max limit 100"""
+    limit: Int
+  ): [ChatMessage!]!
+  members: [User!]!
+  admins: [User!]!
 }
 
 enum ChatType {
@@ -67,7 +72,6 @@ type Query {
   login(password: String!, login: String!): JwtResponse!
   getProfile: RequestUser!
   chat(id: String!): Chat!
-  getChatMessages(offset: Int, limit: Int, chatId: String!): [ChatMessage!]!
 }
 
 type Mutation {

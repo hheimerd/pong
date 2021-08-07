@@ -13,12 +13,6 @@ export class Chat {
   @Field({ nullable: true })
   name?: string;
 
-  @Field((type) => [User])
-  members: User[];
-
-  @Field((type) => [User], { nullable: true })
-  admins?: User[];
-
   @Field((type) => User, { nullable: true })
   owner?: User;
 

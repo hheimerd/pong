@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { PrismaService } from 'src/common/prisma/prisma.service';
@@ -8,6 +7,26 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 @Injectable()
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async getMembers(id: string) {
+    return await this.prisma.user.findMany({
+      where: {
+        chats: {
+          some: { id },
+        },
+      },
+    });
+  }
+
+  async getAdmins(id: string) {
+    return await this.prisma.user.findMany({
+      where: {
+        adminChats: {
+          some: { id },
+        },
+      },
+    });
+  }
 
   async getMessages(chatId: string, limit: number, offset: number) {
     const result = this.prisma.chatMessage.findMany({
@@ -38,7 +57,7 @@ export class ChatService {
   }
 
   async create(input: CreateChatInput, ownerId: number) {
-    return this.prisma.chat.create({
+    return await this.prisma.chat.create({
       data: {
         name: input.name,
         password: input.password,
@@ -57,16 +76,19 @@ export class ChatService {
     });
   }
 
-  findAll(user: RequestUser) {
-    return this.prisma.user.findUnique({ where: { id: user.id } }).chats;
+  async findAll(user: RequestUser) {
+    return await this.prisma.user.findUnique({ where: { id: user.id } }).chats;
   }
 
-  findOne(id: string) {
-    return this.prisma.chat.findUnique({ where: { id: id } });
+  async findOne(id: string) {
+    return await this.prisma.chat.findUnique({
+      where: { id: id },
+      include: { owner: true },
+    });
   }
 
-  update(id: string, updateChatInput: UpdateChatInput) {
-    return this.prisma.chat.update({
+  async update(id: string, updateChatInput: UpdateChatInput) {
+    return await this.prisma.chat.update({
       where: { id },
       data: {
         ...updateChatInput,
@@ -74,7 +96,7 @@ export class ChatService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.chat.delete({ where: { id } });
+  async remove(id: string) {
+    return await this.prisma.chat.delete({ where: { id } });
   }
 }
