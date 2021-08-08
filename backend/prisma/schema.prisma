@@ -35,6 +35,7 @@ model User {
   chats        Chat[]             @relation("members")
   adminChats   Chat[]             @relation("admins")
   ownChats     Chat[]
+  // TODO: change register
   ChatMessages ChatMessage[]
   bannedChats  ChatsBannedUsers[]
   deleted_at   DateTime?

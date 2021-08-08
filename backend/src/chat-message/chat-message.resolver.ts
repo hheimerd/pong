@@ -1,4 +1,11 @@
-import { Resolver, Mutation, Args, Subscription } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Subscription,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { ChatMessageService } from './chat-message.service';
 import { ChatMessage } from './entities/chat-message.entity';
 import { CreateChatMessageInput } from './dto/create-chat-message.input';
@@ -6,6 +13,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { PubSub } from 'graphql-subscriptions';
 import { Inject } from '@nestjs/common';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
+import { User } from 'src/user/entities/user.entity';
 
 export const CHAT_MESSAGE_SUB_KEY = 'messageAdded';
 

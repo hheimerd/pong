@@ -6,15 +6,15 @@ import { User } from 'src/user/entities/user.entity';
 export class ChatMessage {
   id: string;
 
-  @Field((type) => Chat)
-  chat: Chat;
-
   @Field()
   created_at: Date;
 
   @Field()
   message: string;
 
-  @Field((type) => User)
-  user: User;
+  @Field()
+  userId: number;
+
+  @Field()
+  chatId: number;
 }
