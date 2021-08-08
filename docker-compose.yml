@@ -34,6 +34,7 @@ services:
       - NODE_ENV=development
       - DB_PORT=5432
       - DB_HOST=db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/pong?schema=public
 
   frontend:
     image: node:16-alpine
