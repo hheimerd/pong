@@ -78,7 +78,7 @@ type Query {
 
 type Mutation {
   createUser(input: CreateUserDto!): User!
-  updateUser(input: UpdateUserDto!, id: Float!): User!
+  updateUser(input: UpdateUserDto!): User!
   removeUser(id: Float!): Boolean!
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
@@ -97,10 +97,14 @@ input CreateUserDto {
 }
 
 input UpdateUserDto {
+  """ADMIN ONLY"""
+  id: Float
   name: String
   email: String
   login: String
   newPassword: String
+
+  """required if change email or password"""
   oldPassword: String
 }
 

@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import { Args, Int, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Chat } from 'src/chat/entities/chat.entity';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { Public } from 'src/common/auth/decorators/public.decorator';
+import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -48,10 +50,15 @@ export class UserResolver {
   @Mutation(() => User, { name: 'updateUser' })
   @UsePipes(ValidationPipe)
   async update(
-    @Args('id', ParseIntPipe) id: number,
-    @Args('input') updateUserDto: UpdateUserDto,
+    @Args('input') dto: UpdateUserDto,
+    @CurrentUser() user: RequestUser,
   ) {
-    const updated = await this.userService.update(id, updateUserDto);
+    let id = user.id;
+    if (dto.id) {
+      // TODO: check ablilty
+      id = dto.id;
+    }
+    const updated = await this.userService.update(id, dto);
     if (!updated) throw new NotFoundException();
 
     return updated;
