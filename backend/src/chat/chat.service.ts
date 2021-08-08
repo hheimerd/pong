@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
@@ -109,9 +109,9 @@ export class ChatService {
     });
   }
 
-  async findAll(user: RequestUser) {
+  async findAll(whereClause: Prisma.ChatWhereInput) {
     return await this.prisma.chat.findMany({
-      where: { members: { some: { id: user.id } } },
+      where: whereClause,
     });
   }
 

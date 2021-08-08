@@ -39,8 +39,8 @@ export class ChatResolver {
   }
 
   @Query(() => [Chat], { name: 'chats' })
-  findAll(@CurrentUser() user: RequestUser) {
-    return this.chatService.findAll(user);
+  findAll() {
+    return this.chatService.findAll({ is_private: false });
   }
 
   @Mutation(() => Boolean)
