@@ -100,6 +100,11 @@ export class ChatResolver {
     return this.chatService.getMessages(chat.id, limit, offset);
   }
 
+  @ResolveField('hasPassword', () => Boolean)
+  hasPassword(@Parent() chat: Chat) {
+    return !!chat.password;
+  }
+
   @ResolveField('members', () => [User])
   async getMembers(@Parent() chat: Chat) {
     const members = await this.chatService.getMembers(chat.id);

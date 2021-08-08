@@ -46,6 +46,7 @@ type Chat {
     """max limit 100"""
     limit: Int
   ): [ChatMessage!]!
+  hasPassword: Boolean!
   members: [User!]!
   banned: [User!]!
   admins: [User!]!
