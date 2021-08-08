@@ -16,7 +16,7 @@ const UserAddEdit = (): JSX.Element => {
   const { id } = router.query;
   const isCreatePage = id === "create" || typeof id === "undefined";
 
-  // get all users
+  // get user
   const {
     data: data,
     error: error,
@@ -181,14 +181,12 @@ const UserAddEdit = (): JSX.Element => {
         // send message to backend via mutation UPDATE_USER_MUTATION
         updateUser({
           variables: {
-            updateUserId: +id,
             updateUserInput: {
+              id: +id,
               name: name,
               email: email,
               login: login,
-              oldPassword: password,
-              newPassword: password,
-              // ...(typeof password !== "undefined" && { password: password }),
+              // ...(typeof password !== "undefined" && { newPassword: password }),
             },
           },
         });
@@ -222,26 +220,28 @@ const UserAddEdit = (): JSX.Element => {
             helperText={!isNameValid ? "Empty field!" : " "}
           />
         </div>
-        <div className={styles.line}>
-          <TextField
-            id="password"
-            label="Password"
-            fullWidth
-            size="small"
-            type="password"
-            variant="outlined"
-            defaultValue={password}
-            InputLabelProps={{ shrink: true }}
-            onChange={(event) => setPassword(event.target.value)}
-            inputRef={passwordRef}
-            error={!isPasswordValid}
-            helperText={
-              !isPasswordValid
-                ? "Must be longer than or equal to 6 characters!"
-                : " "
-            }
-          />
-        </div>
+        {isCreatePage && (
+          <div className={styles.line}>
+            <TextField
+              id="password"
+              label="Password"
+              fullWidth
+              size="small"
+              type="password"
+              variant="outlined"
+              defaultValue={password}
+              InputLabelProps={{ shrink: true }}
+              onChange={(event) => setPassword(event.target.value)}
+              inputRef={passwordRef}
+              error={!isPasswordValid}
+              helperText={
+                !isPasswordValid
+                  ? "Must be longer than or equal to 6 characters!"
+                  : " "
+              }
+            />
+          </div>
+        )}
         <div className={styles.line}>
           <TextField
             id="login"

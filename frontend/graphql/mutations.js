@@ -37,8 +37,8 @@ export const DELETE_USER_MUTATION = gql`
 `;
 
 export const UPDATE_USER_MUTATION = gql`
-  mutation Mutation($updateUserInput: UpdateUserDto!, $updateUserId: Float!) {
-    updateUser(input: $updateUserInput, id: $updateUserId) {
+  mutation Mutation($updateUserInput: UpdateUserDto!) {
+    updateUser(input: $updateUserInput) {
       id
     }
   }

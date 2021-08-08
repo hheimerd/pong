@@ -25,7 +25,7 @@ export const ChatForm = ({ id }: ChatFormListProps): JSX.Element => {
       addMessage({
         variables: {
           createChatMessageInput: {
-            chat_id: id,
+            chatId: id,
             message: inputElement.current.value,
           },
         },
