@@ -69,12 +69,12 @@ export class UserResolver {
       ParseIntPipe,
     )
     offset,
-    @Args('withBanned', { nullable: true }) withBanned: false,
+    @Args('withDeleted', { nullable: true }) withDeleted: false,
   ) {
     if (limit > 100) throw new BadRequestException();
 
     let querry: Prisma.UserWhereInput;
-    if (withBanned) {
+    if (withDeleted) {
       querry = {
         deleted_at: {},
       };
