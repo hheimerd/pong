@@ -34,7 +34,7 @@ export const CHATS_QUERY = gql`
         }
         type
         is_private
-        password
+        hasPassword
       }
     }
   }
@@ -46,11 +46,7 @@ export const MESSAGES_QUERY = gql`
       messages {
         created_at
         message
-        user {
-          name
-          id
-          avatar
-        }
+        userId
       }
     }
   }

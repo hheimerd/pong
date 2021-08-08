@@ -1,14 +1,20 @@
-import styles from "./ChatMessage.module.css";
-import React from "react";
-import { Avatar } from "../Avatar/Avatar";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { ChatMessageProps } from "./ChatMessage.props";
 import format from "date-fns/format";
+import router from "next/router";
+import React from "react";
+import { Avatar } from "../Avatar/Avatar";
+import styles from "./ChatMessage.module.css";
+import { ChatMessageProps } from "./ChatMessage.props";
 
-export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
-  const { user, message, created_at } = onemessage;
+export const ChatMessage = ({
+  onemessage,
+  user,
+}: ChatMessageProps): JSX.Element => {
+  const { userId, message, created_at } = onemessage;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  // console.log("user", user);
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     setAnchorEl(event.currentTarget);
@@ -23,7 +29,7 @@ export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
       <div className={styles.wrapper}>
         <div className={styles.image}>
           <Avatar
-            image={user.avatar.sm}
+            image={user.avatar ? user.avatar.sm : ""}
             alt={user.name}
             onClick={handleClick}
             aria-controls="simple-menu"
@@ -45,10 +51,14 @@ export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={handleClose}>View user profile</MenuItem>
-            <MenuItem onClick={handleClose}>Start game</MenuItem>
+            <MenuItem onClick={() => router.push("/users/" + user.id)}>
+              View user profile
+            </MenuItem>
+            <MenuItem onClick={() => router.push("/game/join/" + user.id)}>
+              Start game
+            </MenuItem>
             <MenuItem onClick={handleClose}>Ban for 10 minutes</MenuItem>
-            <MenuItem onClick={handleClose}>Add to channel admins</MenuItem>
+            <MenuItem onClick={handleClose}>Make admin</MenuItem>
             <MenuItem onClick={handleClose}>Add to blacklist</MenuItem>
             <MenuItem onClick={handleClose}>Remove from channel</MenuItem>
           </Menu>

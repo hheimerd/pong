@@ -1,13 +1,24 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect, useRef } from "react";
 import { MESSAGES_SUBSCRIPTION } from "../../graphql";
-import { MESSAGES_QUERY } from "../../graphql/queries";
+import { MESSAGES_QUERY, USERS_QUERY } from "../../graphql/queries";
 import { IChatMessage } from "../../interfaces/message.interface";
+import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { ChatMessage } from "../ChatMessage/ChatMessage";
 import styles from "./ChatMessageList.module.css";
 import { ChatMessageListProps } from "./ChatMessageList.props";
 
 export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
+  const {
+    loading: loadingUsers,
+    error: errorUsers,
+    data: dataUsers,
+  } = useQuery(USERS_QUERY, {
+    variables: {
+      usersOffset: 0,
+      usersLimit: 100,
+    },
+  });
   const { loading, error, data, subscribeToMore } = useQuery(MESSAGES_QUERY, {
     variables: { chatId: id },
   });
@@ -20,14 +31,14 @@ export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
       subscribeToMore({
         document: MESSAGES_SUBSCRIPTION,
         variables: {
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6Ikl2YW4gUGV0cm92IiwiZW1haWwiOiJpdmFuMkB0ZXN0LnJ1IiwibG9naW4iOiJpdmFuX3AiLCJyb2xlcyI6WyJ1c2VyIl0sImNyZWF0ZWRfYXQiOiIyMDIxLTA3LTMxVDE4OjE3OjA3LjkyNloiLCJ1cGRhdGVkX2F0IjoiMjAyMS0wNy0zMVQxODoxNzowNy45MjZaIiwiYXZhdGFyIjpbXSwiaWF0IjoxNjI3ODQwNjM4LCJleHAiOjE2Mjg0NDU0Mzh9.n6w1qlgvlTajPspmT25iWUTBRFs8c4WvGZTP4y5b_X4",
+          token: localStorage.getItem("token"),
           chatId: id,
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          // console.log(subscriptionData.data);
-          const newMessage = subscriptionData.data.messageAdded.message;
+          console.log("subscriptionData", subscriptionData.data);
+          const newMessage = subscriptionData.data.messageAdded;
+          console.log("newMessage", newMessage);
 
           return { ...prev, chat: [newMessage, ...prev.chat.messages] };
         },
@@ -74,21 +85,27 @@ export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
 
   // wait until state will be ready
   // if(!state) return null;
-  if (loading) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading || loadingUsers)
+    return <p>Loading user profile from graphql...</p>;
+  if (error || errorUsers)
+    return <p>Error: can't fetching data from graphql :(</p>;
 
   // console.log(data.chat.messages);
 
   // iterate over all messages
-  const Messages = Array.from(data.chat.messages).map(
-    (onemessage: IChatMessage, i: number) => {
+  const Messages = Array.from(data.chat.messages)
+    .slice(0)
+    .reverse()
+    .map((onemessage: IChatMessage, i: number) => {
+      const user = dataUsers.users.find(
+        (x: IUserProfile) => x.id === onemessage.userId
+      );
       return (
         <React.Fragment key={i}>
-          <ChatMessage onemessage={onemessage} />
+          <ChatMessage onemessage={onemessage} user={user} />
         </React.Fragment>
       );
-    }
-  );
+    });
   return (
     <div className={styles.wrapper}>
       {Messages}

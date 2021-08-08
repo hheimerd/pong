@@ -64,9 +64,9 @@ const Channel = (): JSX.Element => {
               </td>
               <td>{channel.is_private ? "Private" : "Public"}</td>
               <td>{channel.members.length}</td>
-              <td>{channel.owner.name}</td>
+              <td>{channel.owner ? channel.owner.name : ""}</td>
               <td align="right">
-                {channel.owner.id === current_user_id ? (
+                {channel.owner && channel.owner.id === current_user_id ? (
                   <Button
                     appearance="ghost"
                     onClick={() => handleEdit(channel)}
