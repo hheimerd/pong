@@ -11,11 +11,57 @@ import { Chat } from '@prisma/client';
 
 @Injectable()
 export class UserService {
+  async getFollowing(id: number) {
+    return await this.prisma.user.findMany({
+      where: {
+        following: { some: { id: id } },
+      },
+    });
+  }
+
+  async getFollowers(id: number) {
+    return await this.prisma.user.findMany({
+      where: {
+        followedBy: { some: { id: id } },
+      },
+    });
+  }
   constructor(
     private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
   ) {
     prisma.applySoftDelete('User', 'deleted_at', new Date(), null);
+  }
+
+  async getFriends(id: number) {
+    return await this.prisma.user.findMany({
+      where: {
+        following: { some: { id: id } },
+        followedBy: { some: { id: id } },
+      },
+    });
+  }
+
+  async followToUser(id: number, friendId: number) {
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        following: {
+          connect: { id: friendId },
+        },
+      },
+    });
+  }
+
+  async unfollowUser(id: number, friendId: number) {
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        following: {
+          disconnect: { id: friendId },
+        },
+      },
+    });
   }
 
   async getChats(userId: number): Promise<Chat[]> {
@@ -94,12 +140,8 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  async update(id: number, dto: UpdateUserDto) {
-    const user = await this.findOne(id);
-    if (!user) return null;
-    const updated = { ...user, ...dto };
-
-    return this.prisma.user.update({ where: { id }, data: updated });
+  async update(id: number, data: Prisma.UserUpdateInput) {
+    return this.prisma.user.update({ where: { id }, data: data });
   }
 
   async remove(id: number) {

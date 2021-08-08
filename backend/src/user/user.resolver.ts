@@ -5,6 +5,7 @@ import {
   BadRequestException,
   DefaultValuePipe,
   ParseIntPipe,
+  ConflictException,
 } from '@nestjs/common';
 import {
   Args,
@@ -55,31 +56,21 @@ export class UserResolver {
 
   @Query(() => [User], { name: 'users' })
   async findAll(
-    @Args(
-      'limit',
-      { type: () => Int, nullable: true },
-      new DefaultValuePipe(15),
-      ParseIntPipe,
-    )
-    limit,
-    @Args(
-      'offset',
-      { type: () => Int, nullable: true },
-      new DefaultValuePipe(0),
-      ParseIntPipe,
-    )
-    offset,
+    @Args('limit', { type: () => Int, nullable: true })
+    limit = 15,
+    @Args('offset', { type: () => Int, nullable: true })
+    offset = 0,
     @Args('withDeleted', { nullable: true }) withDeleted: false,
   ) {
     if (limit > 100) throw new BadRequestException();
 
-    let querry: Prisma.UserWhereInput;
+    let query: Prisma.UserWhereInput;
     if (withDeleted) {
-      querry = {
+      query = {
         deleted_at: {},
       };
     }
-    return this.userService.findAll(limit, offset, querry);
+    return this.userService.findAll(limit, offset, query);
   }
 
   @Mutation(() => User, { name: 'updateUser' })
@@ -102,6 +93,44 @@ export class UserResolver {
   @ResolveField(() => [Chat], { name: 'chats' })
   async getChat(@Parent() user: User) {
     return this.userService.getChats(user.id);
+  }
+
+  @ResolveField(() => [User], { name: 'friends' })
+  async getFriends(@Parent() user: User) {
+    return this.userService.getFriends(user.id);
+  }
+
+  @ResolveField(() => [User], { name: 'followers' })
+  async getFollowers(@Parent() user: User) {
+    return await this.userService.getFollowers(user.id);
+  }
+
+  @ResolveField(() => [User], { name: 'following' })
+  async getFollowing(@Parent() user: User) {
+    console.log(await this.userService.getFollowing(user.id));
+    return this.userService.getFollowing(user.id);
+  }
+
+  @Mutation(() => Boolean, { name: 'followToUser' })
+  async followToUser(
+    @Args('userId', { type: () => Int }) userId: number,
+    @CurrentUser() user: RequestUser,
+  ) {
+    if (user.id === userId) throw new ConflictException();
+    const updated = await this.userService.followToUser(userId, user.id);
+    if (!updated) throw new NotFoundException();
+    return true;
+  }
+
+  @Mutation(() => Boolean, { name: 'unfollowUser' })
+  async unfollowUser(
+    @Args('userId', { type: () => Int }) userId: number,
+    @CurrentUser() user: RequestUser,
+  ) {
+    if (user.id === userId) throw new ConflictException();
+    const updated = await this.userService.unfollowUser(userId, user.id);
+    if (!updated) throw new NotFoundException();
+    return true;
   }
 
   @Mutation(() => Boolean, { name: 'removeUser' })

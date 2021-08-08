@@ -12,6 +12,9 @@ type User {
   updated_at: DateTime
   avatar: [String!]!
   chats: [Chat!]!
+  friends: [User!]!
+  followers: [User!]!
+  following: [User!]!
 }
 
 enum Role {
@@ -60,7 +63,7 @@ type JwtResponse {
 type Query {
   user(id: Int!): User!
   getProfile: User!
-  users(withBanned: Boolean, offset: Int, limit: Int): [User!]!
+  users(withDeleted: Boolean, offset: Int, limit: Int): [User!]!
   login(password: String!, login: String!): JwtResponse!
   chats: [Chat!]!
   chat(id: String!): Chat!
@@ -69,6 +72,8 @@ type Query {
 type Mutation {
   createUser(input: CreateUserDto!): User!
   updateUser(input: UpdateUserDto!): User!
+  followToUser(userId: Int!): Boolean!
+  unfollowUser(userId: Int!): Boolean!
   removeUser(id: Float!): Boolean!
   restoreUser(id: Float!): Boolean!
   createChatMessage(input: CreateChatMessageInput!): Boolean!
