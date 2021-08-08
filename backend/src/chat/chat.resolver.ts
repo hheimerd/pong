@@ -124,11 +124,6 @@ export class ChatResolver {
     return this.chatService.update(input.id, input);
   }
 
-  @Mutation(() => Chat)
-  removeChat(@Args('id') id: string) {
-    return this.chatService.remove(id);
-  }
-
   private async checkIsMember(chatId, userId) {
     const isMember = await this.chatService.isChatMember(chatId, userId);
     if (!isMember) {

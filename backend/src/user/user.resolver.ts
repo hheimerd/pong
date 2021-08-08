@@ -16,6 +16,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { Prisma } from '@prisma/client';
 import { Chat } from 'src/chat/entities/chat.entity';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { Public } from 'src/common/auth/decorators/public.decorator';
@@ -47,18 +48,38 @@ export class UserResolver {
 
   @Query(() => User)
   async getProfile(@Context('req') req): Promise<User> {
-    return this.userService.findOne(req.user.id);
+    const user = await this.userService.findOne(req.user.id);
+    if (!user) throw new NotFoundException();
+    return user;
   }
 
   @Query(() => [User], { name: 'users' })
   async findAll(
-    @Args('limit', { type: () => Int }, new DefaultValuePipe(15), ParseIntPipe)
+    @Args(
+      'limit',
+      { type: () => Int, nullable: true },
+      new DefaultValuePipe(15),
+      ParseIntPipe,
+    )
     limit,
-    @Args('offset', { type: () => Int }, new DefaultValuePipe(0), ParseIntPipe)
+    @Args(
+      'offset',
+      { type: () => Int, nullable: true },
+      new DefaultValuePipe(0),
+      ParseIntPipe,
+    )
     offset,
+    @Args('withBanned', { nullable: true }) withBanned: false,
   ) {
     if (limit > 100) throw new BadRequestException();
-    return this.userService.findAll(limit, offset);
+
+    let querry: Prisma.UserWhereInput;
+    if (withBanned) {
+      querry = {
+        deleted_at: {},
+      };
+    }
+    return this.userService.findAll(limit, offset, querry);
   }
 
   @Mutation(() => User, { name: 'updateUser' })
@@ -86,6 +107,14 @@ export class UserResolver {
   @Mutation(() => Boolean, { name: 'removeUser' })
   async remove(@Args('id', ParseIntPipe) id: number) {
     await this.userService.remove(id);
+    return true;
+  }
+
+  @Mutation(() => Boolean, { name: 'restoreUser' })
+  async restore(@Args('id', ParseIntPipe) id: number) {
+    const user = await this.userService.restore(id);
+    if (!user) throw new NotFoundException();
+
     return true;
   }
 }

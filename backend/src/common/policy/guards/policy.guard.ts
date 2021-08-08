@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { RequestService } from 'src/common/request/request.service';
-import { CaslAbilityFactory } from '../casl/casl-ablilty.factory';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { POLICIES_KEY } from '../decorators/policy.decorator';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class PolicyGuard implements CanActivate {
     const { user } = this.requestService.getRequest(context);
     if (!user) throw new UnauthorizedException();
 
-    const ablilty = this.caslFactory.createForUser(user);
+    const ablilty = CaslAbilityFactory.createForUser(user);
 
     return meta.actions.every((action) => ablilty.can(action, meta.subject));
   }

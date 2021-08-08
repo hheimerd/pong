@@ -30,11 +30,14 @@ model User {
   created_at   DateTime           @default(now())
   updated_at   DateTime           @updatedAt
   avatar       String[]
+  followedBy   User[]             @relation("UserFollows", references: [id])
+  following    User[]             @relation("UserFollows", references: [id])
   chats        Chat[]             @relation("members")
   adminChats   Chat[]             @relation("admins")
   ownChats     Chat[]
   ChatMessages ChatMessage[]
   bannedChats  ChatsBannedUsers[]
+  deleted_at   DateTime?
 }
 
 model ChatsBannedUsers {

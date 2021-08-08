@@ -60,7 +60,7 @@ type JwtResponse {
 type Query {
   user(id: Int!): User!
   getProfile: User!
-  users(offset: Int!, limit: Int!): [User!]!
+  users(withBanned: Boolean, offset: Int, limit: Int): [User!]!
   login(password: String!, login: String!): JwtResponse!
   chats: [Chat!]!
   chat(id: String!): Chat!
@@ -70,13 +70,13 @@ type Mutation {
   createUser(input: CreateUserDto!): User!
   updateUser(input: UpdateUserDto!): User!
   removeUser(id: Float!): Boolean!
+  restoreUser(id: Float!): Boolean!
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
   doSomethingWithUserInChat(userId: Int!, chatId: String!): Boolean!
   banUserInChat(minutes: Int, userId: Int!, chatId: String!): Boolean!
   unbanUserInChat(userId: Int!, chatId: String!): Boolean!
   updateChat(input: UpdateChatInput!): Chat!
-  removeChat(id: String!): Chat!
 }
 
 input CreateUserDto {

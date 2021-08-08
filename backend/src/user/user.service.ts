@@ -6,11 +6,18 @@ import { StorageService } from 'src/common/storage/storage.service';
 import * as sharp from 'sharp';
 import { join } from 'path';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { Chat } from '@prisma/client';
 
 @Injectable()
 export class UserService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storageService: StorageService,
+  ) {
+    prisma.applySoftDelete('User', 'deleted_at', new Date(), null);
+  }
+
   async getChats(userId: number): Promise<Chat[]> {
     return this.prisma.chat.findMany({
       where: {
@@ -22,10 +29,15 @@ export class UserService {
       },
     });
   }
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly storageService: StorageService,
-  ) {}
+
+  async restore(id: number) {
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        deleted_at: null,
+      },
+    });
+  }
 
   async uploadAvatar(
     image: Express.Multer.File,
@@ -70,8 +82,8 @@ export class UserService {
     return user;
   }
 
-  async findAll(take = 15, skip = 0) {
-    return this.prisma.user.findMany({ take, skip });
+  async findAll(take = 15, skip = 0, whereClause?: Prisma.UserWhereInput) {
+    return this.prisma.user.findMany({ take, skip, where: whereClause });
   }
 
   async findMany(ids: number[]) {

@@ -7,9 +7,10 @@ import {
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
+import { Chat } from 'src/chat/entities/chat.entity';
 import { User } from 'src/user/entities/user.entity';
 
-export type Subjects = InferSubjects<typeof User> | 'all';
+export type Subjects = InferSubjects<typeof User | typeof Chat> | 'all';
 
 export enum Action {
   Manage = 'manage',
@@ -24,14 +25,17 @@ export type AppAbility = Ability<[Action, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User) {
+  static createForUser(user: User) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(
       Ability as AbilityClass<AppAbility>,
     );
 
     if (user.roles.includes(Role.Admin)) {
-      can(Action.ReadAll, User);
+      can(Action.Manage, User);
+      can(Action.Manage, Chat);
     }
+
+    can(Action.Manage, Chat, { owner: { id: user.id } });
 
     return build({
       detectSubjectType: (item) =>
