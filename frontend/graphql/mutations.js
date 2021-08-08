@@ -21,3 +21,25 @@ export const UPDATE_CHAT_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_USER_MUTATION = gql`
+  mutation Mutation($createUserInput: CreateUserDto!) {
+    createUser(input: $createUserInput) {
+      id
+    }
+  }
+`;
+
+export const DELETE_USER_MUTATION = gql`
+  mutation Mutation($removeUserId: Float!) {
+    removeUser(id: $removeUserId)
+  }
+`;
+
+export const UPDATE_USER_MUTATION = gql`
+  mutation Mutation($updateUserInput: UpdateUserDto!, $updateUserId: Float!) {
+    updateUser(input: $updateUserInput, id: $updateUserId) {
+      id
+    }
+  }
+`;

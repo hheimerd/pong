@@ -5,7 +5,6 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { ChatMessageProps } from "./ChatMessage.props";
 import format from "date-fns/format";
-import { parseISO } from "date-fns";
 
 export const ChatMessage = ({ onemessage }: ChatMessageProps): JSX.Element => {
   const { user, message, created_at } = onemessage;

@@ -61,7 +61,27 @@ export const USERS_QUERY = gql`
     users(offset: $usersOffset, limit: $usersLimit) {
       id
       name
+      email
+      login
+      created_at
+      updated_at
       avatar
+      roles
+    }
+  }
+`;
+
+export const USER_QUERY = gql`
+  query Query($userId: Int!) {
+    user(id: $userId) {
+      id
+      name
+      email
+      login
+      created_at
+      updated_at
+      avatar
+      roles
     }
   }
 `;
