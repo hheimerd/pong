@@ -110,7 +110,9 @@ export class ChatService {
   }
 
   async findAll(user: RequestUser) {
-    return await this.prisma.user.findUnique({ where: { id: user.id } }).chats;
+    return await this.prisma.chat.findMany({
+      where: { members: { some: { id: user.id } } },
+    });
   }
 
   async findOne(id: string) {

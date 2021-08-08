@@ -72,6 +72,7 @@ type Query {
   users(offset: Int!, limit: Int!): [User!]!
   login(password: String!, login: String!): JwtResponse!
   getProfile: RequestUser!
+  chats: [Chat!]!
   chat(id: String!): Chat!
 }
 

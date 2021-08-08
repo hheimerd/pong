@@ -38,7 +38,7 @@ export class ChatResolver {
     return this.chatService.create(createChatInput, user.id);
   }
 
-  @Query(() => [Chat], { name: 'chat' })
+  @Query(() => [Chat], { name: 'chats' })
   findAll(@CurrentUser() user: RequestUser) {
     return this.chatService.findAll(user);
   }
