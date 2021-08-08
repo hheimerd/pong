@@ -10,8 +10,6 @@ import {
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { RequestUser } from './entities/request-user.entitiy';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ObjectType()
@@ -22,10 +20,7 @@ class JwtResponse {
 
 @Resolver()
 export class AuthResolver {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -36,11 +31,5 @@ export class AuthResolver {
     @Context('req') req,
   ) {
     return this.authService.login(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Query(() => RequestUser)
-  async getProfile(@Context('req') req): Promise<RequestUser> {
-    return this.userService.findOne(req.user.id);
   }
 }

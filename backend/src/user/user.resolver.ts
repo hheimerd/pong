@@ -6,7 +6,16 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Args, Int, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Chat } from 'src/chat/entities/chat.entity';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { Public } from 'src/common/auth/decorators/public.decorator';
@@ -16,7 +25,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
-@Resolver()
+@Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
@@ -34,6 +43,11 @@ export class UserResolver {
     const user = await this.userService.findOne(userId);
     if (!user) throw new NotFoundException();
     return user;
+  }
+
+  @Query(() => User)
+  async getProfile(@Context('req') req): Promise<User> {
+    return this.userService.findOne(req.user.id);
   }
 
   @Query(() => [User], { name: 'users' })
@@ -62,6 +76,11 @@ export class UserResolver {
     if (!updated) throw new NotFoundException();
 
     return updated;
+  }
+
+  @ResolveField(() => [Chat], { name: 'chats' })
+  async getChat(@Parent() user: User) {
+    return this.userService.getChats(user.id);
   }
 
   @Mutation(() => Boolean, { name: 'removeUser' })

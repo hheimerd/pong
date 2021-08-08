@@ -7,9 +7,21 @@ import * as sharp from 'sharp';
 import { join } from 'path';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { User } from '@prisma/client';
+import { Chat } from '@prisma/client';
 
 @Injectable()
 export class UserService {
+  async getChats(userId: number): Promise<Chat[]> {
+    return this.prisma.chat.findMany({
+      where: {
+        members: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+  }
   constructor(
     private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
