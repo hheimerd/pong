@@ -66,7 +66,7 @@ export class UserController {
 
   @Post('avatar')
   @UseInterceptors(FileInterceptor('image'))
-  async updateImage(
+  async updateAvatar(
     @UploadedFile() image: Express.Multer.File,
     @CurrentUser() user: RequestUser,
   ) {

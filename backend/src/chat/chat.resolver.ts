@@ -13,7 +13,6 @@ import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
 import {
-  DefaultValuePipe,
   ForbiddenException,
   NotFoundException,
   ParseIntPipe,
@@ -27,7 +26,6 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { User } from 'src/user/entities/user.entity';
 import { ChatType } from '@prisma/client';
-import { UserService } from 'src/user/user.service';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
