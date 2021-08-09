@@ -92,3 +92,12 @@ table td a {
   padding: 0.5rem;
   color: rgba(255, 255, 255, 0.5);
 }
+
+.form {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.line {
+  margin: 1rem 0;
+}

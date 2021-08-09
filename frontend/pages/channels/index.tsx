@@ -52,7 +52,7 @@ const Channel = (): JSX.Element => {
             <td>Name</td>
             <td>Type</td>
             <td>Users count</td>
-            <td>Owner</td>
+            {/* <td>Owner</td> */}
             <td align="right"></td>
           </tr>
         </thead>
@@ -64,7 +64,7 @@ const Channel = (): JSX.Element => {
               </td>
               <td>{channel.is_private ? "Private" : "Public"}</td>
               <td>{channel.members.length}</td>
-              <td>{channel.owner ? channel.owner.name : ""}</td>
+              {/*<td>{channel.owner ? channel.owner.name : ""}</td>*/}
               <td align="right">
                 {channel.owner && channel.owner.id === current_user_id ? (
                   <Button

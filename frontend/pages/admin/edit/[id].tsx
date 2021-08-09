@@ -9,7 +9,6 @@ import {
   USERS_QUERY,
   USER_QUERY,
 } from "../../../graphql";
-import styles from "./edit.module.css";
 
 const UserAddEdit = (): JSX.Element => {
   const router = useRouter();
@@ -199,11 +198,11 @@ const UserAddEdit = (): JSX.Element => {
   if (typeof id !== "string") return null;
 
   return (
-    <div className={styles.form}>
+    <div className="form">
       <Htag tag="h1">{isCreatePage ? "Add user" : "Edit user"}</Htag>
       {errorCreateUser && <p className="error-message"> Error occured </p>}
       <form onSubmit={handleSubmit}>
-        <div className={styles.line}>
+        <div className="line">
           <TextField
             id="name"
             label="Name *"
@@ -221,7 +220,7 @@ const UserAddEdit = (): JSX.Element => {
           />
         </div>
         {isCreatePage && (
-          <div className={styles.line}>
+          <div className="line">
             <TextField
               id="password"
               label="Password"
@@ -242,7 +241,7 @@ const UserAddEdit = (): JSX.Element => {
             />
           </div>
         )}
-        <div className={styles.line}>
+        <div className="line">
           <TextField
             id="login"
             label="Login"
@@ -263,7 +262,7 @@ const UserAddEdit = (): JSX.Element => {
             }
           />
         </div>
-        <div className={styles.line}>
+        <div className="line">
           <TextField
             id="email"
             label="Email"
@@ -280,7 +279,7 @@ const UserAddEdit = (): JSX.Element => {
             helperText={!isEmailValid ? "Not valid email!" : " "}
           />
         </div>
-        <div className={styles.line}>
+        <div className="line">
           <Button appearance="primary">Submit</Button>
         </div>
       </form>

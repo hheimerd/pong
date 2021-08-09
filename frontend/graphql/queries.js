@@ -5,7 +5,24 @@ export const PROFILE_QUERY = gql`
     getProfile {
       id
       name
+      email
+      login
       avatar
+      friends {
+        id
+        name
+        avatar
+      }
+      followers {
+        id
+        name
+        avatar
+      }
+      following {
+        id
+        name
+        avatar
+      }
     }
   }
 `;
