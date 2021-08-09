@@ -105,7 +105,14 @@ export class UserService {
     const oldAvatar = user.avatar;
 
     user.avatar = paths;
-    await this.prisma.user.create({ data: user });
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        avatar: paths,
+      } 
+    });
 
     this.storageService.delete(...oldAvatar);
 
