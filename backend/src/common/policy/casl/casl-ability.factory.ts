@@ -35,7 +35,7 @@ export class CaslAbilityFactory {
       can(Action.Manage, Chat);
     }
 
-    can(Action.Manage, Chat, { owner: { id: user.id } });
+    can(Action.Manage, Chat, { ownerId: user.id });
 
     return build({
       detectSubjectType: (item) =>

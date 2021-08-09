@@ -1,8 +1,6 @@
 import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
-import { User } from 'src/user/entities/user.entity';
 import { ChatType } from '@prisma/client';
-import { Transform } from 'class-transformer';
 
 registerEnumType(ChatType, { name: 'ChatType' });
 
@@ -14,8 +12,8 @@ export class Chat {
   @Field({ nullable: true })
   name?: string;
 
-  @Field((type) => User, { nullable: true })
-  owner?: User;
+  @Field()
+  ownerId: number;
 
   @Field((type) => ChatType)
   type: ChatType;

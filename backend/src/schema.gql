@@ -37,7 +37,7 @@ type ChatMessage {
 type Chat {
   id: String!
   name: String
-  owner: User
+  ownerId: Float!
   type: ChatType!
   is_private: Boolean!
   messages(
@@ -46,6 +46,7 @@ type Chat {
     """max limit 100"""
     limit: Int
   ): [ChatMessage!]!
+  dialogName: String!
   hasPassword: Boolean!
   members: [User!]!
   banned: [User!]!

@@ -35,8 +35,7 @@ model User {
   chats        Chat[]             @relation("members")
   adminChats   Chat[]             @relation("admins")
   ownChats     Chat[]
-  // TODO: change register
-  ChatMessages ChatMessage[]
+  chatMessages ChatMessage[]
   bannedChats  ChatsBannedUsers[]
   deleted_at   DateTime?
 }
@@ -54,7 +53,7 @@ model ChatsBannedUsers {
 
 model Chat {
   id         String             @id @default(uuid()) @db.Uuid
-  name       String             @db.VarChar(32)
+  name       String?            @db.VarChar(32)
   members    User[]             @relation("members")
   admins     User[]             @relation("admins")
   owner      User               @relation(fields: [ownerId], references: [id])

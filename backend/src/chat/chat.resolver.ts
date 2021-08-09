@@ -18,24 +18,33 @@ import {
   NotFoundException,
   ParseIntPipe,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { User } from 'src/user/entities/user.entity';
+import { ChatType } from '@prisma/client';
+import { UserService } from 'src/user/user.service';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
+  @UsePipes(ValidationPipe)
   @Mutation(() => Chat)
   createChat(
-    @Args('createChatInput') createChatInput: CreateChatInput,
+    @Args('createChatInput') dto: CreateChatInput,
     @CurrentUser() user: RequestUser,
   ) {
-    return this.chatService.create(createChatInput, user.id);
+    if (dto.type == ChatType.Chat) {
+      dto.name = null;
+      dto.password = null;
+    }
+    return this.chatService.create(dto, user.id);
   }
 
   @Query(() => [Chat], { name: 'chats' })
@@ -77,6 +86,15 @@ export class ChatResolver {
   ): Promise<boolean> {
     await this.chatService.unbanUser(chatId, userId);
     return true;
+  }
+
+  @ResolveField('dialogName', () => String)
+  async getDialogName(@Parent() chat: Chat, @CurrentUser() user: RequestUser) {
+    if (chat.type === ChatType.Chat) {
+      const members = await this.getMembers(chat);
+      return members.find((member) => member.id != user.id).name;
+    }
+    return chat.name;
   }
 
   @ResolveField('messages', () => [ChatMessage])
