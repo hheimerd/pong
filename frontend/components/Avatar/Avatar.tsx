@@ -19,15 +19,16 @@ export const Avatar = ({
     image = ["/no-avatar.png", "/no-avatar.png"];
   } else {
     image = [
-      process.env.IMAGES_LINK + image[0],
-      process.env.IMAGES_LINK + image[1],
+      process.env.IMAGES_LINK + "public/" + image[0],
+      process.env.IMAGES_LINK + "public/" + image[1],
     ];
   }
   // set small or large image
   const src = size === "small" ? image[0] : image[1];
+  const date = new Date().getTime();
   return (
     <img
-      src={src}
+      src={src + "?" + date}
       className={cn(styles.avatar, className, {
         [styles.small]: size == "small",
         [styles.large]: size == "large",

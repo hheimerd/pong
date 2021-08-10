@@ -3,7 +3,7 @@ import { TextField } from "@material-ui/core";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Htag } from "../../components";
+import { Avatar, Button, Htag, OutlinedDiv } from "../../components";
 import { PROFILE_QUERY, UPDATE_USER_MUTATION } from "../../graphql";
 
 const Profile = (): JSX.Element => {
@@ -31,7 +31,7 @@ const Profile = (): JSX.Element => {
   const [name, setName] = React.useState("");
   // const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [avatar, setAvatar] = React.useState("");
+  const [avatar, setAvatar] = React.useState(["", ""]);
 
   // form fields refs
   const nameRef = useRef<HTMLInputElement | null>();
@@ -55,7 +55,7 @@ const Profile = (): JSX.Element => {
       // if (passwordRef.current) passwordRef.current.value = data.user.password;
       setEmail(data.getProfile.email);
       if (emailRef.current) emailRef.current.value = data.getProfile.email;
-      // setAvatar(data.getProfile.avatar);
+      setAvatar(data.getProfile.avatar);
       // if (avatarRef.current) avatarRef.current.value = data.getProfile.avatar;
     }
   }, [loading]);
@@ -204,14 +204,21 @@ const Profile = (): JSX.Element => {
           />
         </div>
         <div className="line">
-          <input id="avatar" type="file" ref={avatarRef} />
-          {/*
+          <OutlinedDiv label="Avatar">
+            <Avatar
+              size="large"
+              name={data.getProfile.name}
+              image={data.getProfile.avatar}
+            />
+            <input id="avatar" type="file" ref={avatarRef} />
+            {/*
           <label htmlFor="avatar">
           <Button color="primary" variant="contained" component="span">
             Upload File
           </Button>
           </label>
           */}
+          </OutlinedDiv>
         </div>
         <div className="line">
           <Button appearance="primary">Submit</Button>
