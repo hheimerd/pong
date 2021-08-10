@@ -27,7 +27,7 @@ const httpLink = createHttpLink({
 
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: "ws://localhost:3000/graphql",
+      uri: process.env.WEBSOCKET_LINK,
       options: { reconnect: true },
     })
   : null;

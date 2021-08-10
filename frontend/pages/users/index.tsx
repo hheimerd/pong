@@ -61,6 +61,7 @@ const Users = (): JSX.Element => {
             <AvatarButton
               user={user}
               link={"/users/" + user.id}
+              image={user.avatar}
               appearance="offline"
             />
           </React.Fragment>

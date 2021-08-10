@@ -11,9 +11,6 @@ export interface IUserProfile {
   is_admin?: boolean;
   created_at?: Date;
   updated_at?: Date;
-  avatar?: {
-    sm?: string;
-    lg?: string;
-  };
+  avatar?: [string, string];
   roles?: Role;
 }

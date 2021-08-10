@@ -29,7 +29,7 @@ export const ChatMessage = ({
       <div className={styles.wrapper}>
         <div className={styles.image}>
           <Avatar
-            image={user.avatar ? user.avatar.sm : ""}
+            image={user.avatar}
             alt={user.name}
             onClick={handleClick}
             aria-controls="simple-menu"
