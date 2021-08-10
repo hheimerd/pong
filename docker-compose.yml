@@ -49,3 +49,5 @@ services:
 #    command: tail -F anything
     environment:
       GRAPHQL_REMOTE: http://localhost:3000/graphql
+      WEBSOCKET_LINK: ws://localhost:3000/graphql
+      IMAGES_LINK: http://localhost:3000/
