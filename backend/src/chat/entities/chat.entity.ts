@@ -1,7 +1,11 @@
-import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+import { ObjectType, Field, registerEnumType, Int } from '@nestjs/graphql';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
-import { ChatType } from '@prisma/client';
+import { ChatType as PrismaChatType } from '@prisma/client';
 
+export enum ChatType {
+  Chat = 'Chat',
+  Channel = 'Channel',
+}
 registerEnumType(ChatType, { name: 'ChatType' });
 
 @ObjectType()
@@ -12,7 +16,7 @@ export class Chat {
   @Field({ nullable: true })
   name?: string;
 
-  @Field()
+  @Field(() => Int)
   ownerId: number;
 
   @Field((type) => ChatType)

@@ -1,7 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { genSalt, hash } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+const { genSalt, hash } = bcryptjs;
 import { StorageService } from 'src/common/storage/storage.service';
 import * as sharp from 'sharp';
 import { join } from 'path';

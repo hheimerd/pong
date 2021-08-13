@@ -16,23 +16,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   id?: number;
 
   @IsString()
-  @Length(1, 32)
-  @IsOptional()
-  @Field({ nullable: true })
-  name?: string;
-
-  @IsEmail()
-  @IsOptional()
-  @Field({ nullable: true })
-  email?: string;
-
-  @IsString()
-  @Length(6, 32)
-  @IsOptional()
-  @Field({ nullable: true })
-  login?: string;
-
-  @IsString()
   @MinLength(6)
   @IsOptional()
   @Field({ nullable: true })

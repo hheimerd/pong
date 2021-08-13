@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { compare } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+const { compare } = bcryptjs;
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { RequestUser } from './entities/request-user.entitiy';

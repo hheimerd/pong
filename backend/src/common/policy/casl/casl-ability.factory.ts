@@ -6,9 +6,8 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
 import { Chat } from 'src/chat/entities/chat.entity';
-import { User } from 'src/user/entities/user.entity';
+import { Role, User } from 'src/user/entities/user.entity';
 
 export type Subjects = InferSubjects<typeof User | typeof Chat> | 'all';
 

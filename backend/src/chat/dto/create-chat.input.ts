@@ -1,6 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import {
   ArrayMinSize,
+  ArrayUnique,
   IsBoolean,
   IsEnum,
   IsNumber,
@@ -10,7 +11,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
-import { ChatType } from '@prisma/client';
+import { ChatType } from '../entities/chat.entity';
 
 @InputType()
 export class CreateChatInput {
@@ -22,6 +23,7 @@ export class CreateChatInput {
 
   @Field((type) => [Int])
   @IsNumber({}, { each: true })
+  @ArrayUnique()
   @ArrayMinSize(2)
   members: number[];
 

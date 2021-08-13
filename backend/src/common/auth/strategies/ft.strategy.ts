@@ -3,7 +3,8 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-42"
 import { UserService } from "src/user/user.service";
 import { ftConstants } from "../auth.constants";
-import { genSaltSync } from 'bcryptjs'
+import bcryptjs from 'bcryptjs';
+const { genSalt } = bcryptjs;
 import { IFtProfile } from "../interfaces/ft-profile.interface";
 
 @Injectable()
@@ -23,7 +24,7 @@ export class FtStrategy extends PassportStrategy(Strategy) {
       email: profile.emails[0].value,
       login: profile.username,
       name: profile.name.familyName + ' ' + profile.name.familyName,
-      password: genSaltSync()
+      password: await genSalt()
     }
     console.log(dto);
     
