@@ -1,5 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { PartialType } from '@nestjs/mapped-types';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 import {
   IsEmail,
   IsOptional,
