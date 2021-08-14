@@ -115,6 +115,7 @@ input CreateChatMessageInput {
 input CreateChatInput {
   name: String
   members: [Int!]!
+  admins: [Int!]
   type: ChatType!
   is_private: Boolean!
   password: String
@@ -122,6 +123,8 @@ input CreateChatInput {
 
 input UpdateChatInput {
   name: String
+  members: [Int!]
+  admins: [Int!]
   is_private: Boolean
   password: String
   id: String!

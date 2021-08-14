@@ -139,6 +139,7 @@ export class ChatResolver {
     return this.chatService.getAdmins(chat.id);
   }
 
+  @UsePipes(ValidationPipe)
   @Mutation(() => Chat)
   updateChat(@Args('input') input: UpdateChatInput) {
     return this.chatService.update(input.id, input);

@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Length,
   MaxLength,
   MinLength,
   ValidateIf,
@@ -18,7 +19,7 @@ export class CreateChatInput {
   @Field({ nullable: true })
   @IsString()
   @ValidateIf((o) => o.type == ChatType.Channel)
-  @MaxLength(32)
+  @Length(1, 32)
   name?: string;
 
   @Field((type) => [Int])
@@ -26,6 +27,12 @@ export class CreateChatInput {
   @ArrayUnique()
   @ArrayMinSize(2)
   members: number[];
+
+  @Field((type) => [Int], { nullable: true })
+  @IsOptional()
+  @IsNumber({}, { each: true })
+  @ArrayUnique()
+  admins?: number[];
 
   @Field((type) => ChatType)
   @IsEnum(ChatType)

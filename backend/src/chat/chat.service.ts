@@ -90,6 +90,9 @@ export class ChatService {
   }
 
   async create(input: CreateChatInput, ownerId: number) {
+    const admins = input.admins?.length > 0 
+      ? input.admins 
+      : [ownerId];
     return await this.prisma.chat.create({
       data: {
         name: input.name,
@@ -97,7 +100,7 @@ export class ChatService {
         is_private: input.is_private,
         type: input.type,
         admins: {
-          connect: { id: ownerId },
+          connect: admins.map((adminId) => ({ id: adminId })),
         },
         members: {
           connect: input.members.map((memberId) => ({ id: memberId })),
@@ -123,10 +126,17 @@ export class ChatService {
   }
 
   async update(id: string, updateChatInput: UpdateChatInput) {
+    const { admins, members, ...other } = updateChatInput;
     return await this.prisma.chat.update({
       where: { id },
       data: {
-        ...updateChatInput,
+        ...other,
+        admins: {
+          set: admins?.map((adminId) => ({ id: adminId })),
+        },
+        members: {
+          set: members?.map((memberId) => ({ id: memberId })),
+        },
       },
     });
   }
