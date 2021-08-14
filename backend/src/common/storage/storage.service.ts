@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import { isAbsolute, join } from 'path';
 import { PUBLIC_PATH } from './storage.constants';
 

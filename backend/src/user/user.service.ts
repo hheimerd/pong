@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import bcryptjs from 'bcryptjs';
 const { genSalt, hash } = bcryptjs;
 import { StorageService } from 'src/common/storage/storage.service';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { join } from 'path';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';

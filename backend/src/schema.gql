@@ -94,6 +94,11 @@ input CreateUserDto {
 }
 
 input UpdateUserDto {
+  name: String
+  email: String
+  login: String
+  password: String
+
   """ADMIN ONLY"""
   id: Float
   newPassword: String
