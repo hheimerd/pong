@@ -47,7 +47,7 @@ const Profile = (): JSX.Element => {
   // on loading USER_QUERY
   useEffect(() => {
     // console.log("loading: ", loading);
-    if (!loading) {
+    if (!loading && data) {
       // console.log("data: ", data);
       setName(data.getProfile.name);
       if (nameRef.current) nameRef.current.value = data.getProfile.name;
@@ -136,7 +136,9 @@ const Profile = (): JSX.Element => {
             console.log("resp.data: ", resp.data);
             console.log("resp.status: ", resp.status);
           })
-          .catch((err) => console.error(err.config, err.response.data));
+          .catch((err) =>
+            console.error("Error avatar upload!", err.config, err.response.data)
+          );
       }
     }
   };
