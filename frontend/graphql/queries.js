@@ -83,6 +83,34 @@ export const MESSAGES_QUERY = gql`
   }
 `;
 
+export const CHATS_QUERY = gql`
+  query Query {
+    chats {
+      id
+      name
+      members {
+        name
+        id
+        avatar
+      }
+      ownerId
+      admins {
+        name
+        id
+        avatar
+      }
+      banned {
+        name
+        id
+        avatar
+      }
+      type
+      is_private
+      hasPassword
+    }
+  }
+`;
+
 export const USERS_QUERY = gql`
   query Query($usersOffset: Int!, $usersLimit: Int!) {
     users(offset: $usersOffset, limit: $usersLimit) {

@@ -48,7 +48,7 @@ const Profile = (): JSX.Element => {
   useEffect(() => {
     // console.log("loading: ", loading);
     if (!loading && data) {
-      // console.log("data: ", data);
+      console.log("data: ", data);
       setName(data.getProfile.name);
       if (nameRef.current) nameRef.current.value = data.getProfile.name;
       // setPassword(data.user.password);

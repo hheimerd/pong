@@ -2,6 +2,7 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
+  from,
   InMemoryCache,
   split,
 } from "@apollo/client";
@@ -20,6 +21,7 @@ import { UserProfileContextProvider } from "../context/userprofile/userprofile.c
 import "../styles/globals.css";
 import theme from "../theme";
 // import client from './api/apollo-client'
+import { onError } from "@apollo/client/link/error";
 
 const httpLink = createHttpLink({
   uri: process.env.GRAPHQL_REMOTE,
@@ -31,6 +33,13 @@ const wsLink = process.browser
       options: { reconnect: true },
     })
   : null;
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log("[graphQLErrors]: ", graphQLErrors);
+  }
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 // The split function takes three parameters:
 //
@@ -62,8 +71,9 @@ const getApolloClient = (token: string) => {
       },
     };
   });
+
   return new ApolloClient({
-    link: authLink.concat(splitLink),
+    link: authLink.concat(errorLink).concat(splitLink),
     cache: new InMemoryCache(),
   });
 };

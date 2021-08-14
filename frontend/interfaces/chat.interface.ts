@@ -15,5 +15,6 @@ export interface IChat {
   type?: ChatType;
   is_private?: boolean;
   password?: string;
+  hasPassword?: boolean;
   messages: [IChatMessage];
 }

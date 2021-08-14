@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import format from "date-fns/format";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, Htag } from "../../components";
@@ -91,7 +92,7 @@ const Channel = (): JSX.Element => {
             <tr key={user.login}>
               <td>{user.id}</td>
               <td>
-                <a href={"/users/" + user.id}>{user.name}</a>
+                <Link href={"/users/" + user.id}>{user.name}</Link>
               </td>
               <td>{user.login}</td>
               <td>{user.email}</td>

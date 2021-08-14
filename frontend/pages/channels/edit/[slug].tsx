@@ -61,6 +61,8 @@ const ChannelRoom = (): JSX.Element => {
   const [usersInputReset, setUsersInputReset] = React.useState("");
   const [adminsInputReset, setAdminsInputReset] = React.useState("");
 
+  const [isUsersValid, setIsUsersValid] = useState(true);
+  const [isAdminsValid, setIsAdminsValid] = useState(true);
   const [isNameValid, setIsNameValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
 
@@ -115,7 +117,6 @@ const ChannelRoom = (): JSX.Element => {
       nameRef.current.focus();
       return false;
     }
-    console.log("password", password);
     if (
       typeof password === "undefined" ||
       password === "" ||
@@ -125,6 +126,12 @@ const ChannelRoom = (): JSX.Element => {
     } else {
       setIsPasswordValid(false);
       passwordRef.current.focus();
+      return false;
+    }
+    if (usersValue.length >= 2) {
+      setIsUsersValid(true);
+    } else {
+      setIsUsersValid(false);
       return false;
     }
     return true;
@@ -140,10 +147,10 @@ const ChannelRoom = (): JSX.Element => {
       }, []);
 
       // convert Objects array to Array of [id]
-      // const adminsIdArr = adminsValue.reduce((a, {id}) => {
-      //     if (id) a.push(id);
-      //     return a;
-      // }, []);
+      const adminsIdArr = adminsValue.reduce((a, { id }) => {
+        if (id) a.push(id);
+        return a;
+      }, []);
 
       // console.log(
       //   name +
@@ -162,6 +169,7 @@ const ChannelRoom = (): JSX.Element => {
             createChatCreateChatInput: {
               name: name,
               members: membersIdArr,
+              admins: adminsIdArr,
               type: ChatType.Channel,
               is_private: isPrivate,
               ...((typeof password === "undefined" || password !== "") && {
@@ -176,7 +184,8 @@ const ChannelRoom = (): JSX.Element => {
             updateChatInput: {
               id: getChannel().id,
               name: name,
-              // members: membersIdArr,
+              members: membersIdArr,
+              admins: adminsIdArr,
               is_private: isPrivate,
               ...((typeof password === "undefined" || password !== "") && {
                 password: password,
@@ -239,6 +248,12 @@ const ChannelRoom = (): JSX.Element => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                error={!isUsersValid}
+                helperText={
+                  !isUsersValid
+                    ? "Members must contain at least 2 elements!"
+                    : " "
+                }
               />
             )}
           />
