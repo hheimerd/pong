@@ -23,11 +23,29 @@ export const PROFILE_QUERY = gql`
         name
         avatar
       }
+      chats {
+        id
+        name
+        members {
+          name
+          id
+          avatar
+        }
+        ownerId
+        admins {
+          name
+          id
+          avatar
+        }
+        type
+        is_private
+        hasPassword
+      }
     }
   }
 `;
 
-export const CHATS_QUERY = gql`
+export const MY_CHATS_QUERY = gql`
   query {
     getProfile {
       id
@@ -39,11 +57,7 @@ export const CHATS_QUERY = gql`
           id
           avatar
         }
-        owner {
-          name
-          id
-          avatar
-        }
+        ownerId
         admins {
           name
           id

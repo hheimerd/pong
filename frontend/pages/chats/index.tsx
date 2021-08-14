@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
 import { AvatarButton, Htag } from "../../components";
-import { CHATS_QUERY } from "../../graphql";
+import { MY_CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 
 const Chat = (): JSX.Element => {
-  const { loading, error, data } = useQuery(CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
 
   // wait while data loading
   if (loading) return <p>Loading user profile from graphql...</p>;

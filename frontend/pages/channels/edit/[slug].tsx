@@ -1,25 +1,48 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { Chip, FormControlLabel, Switch } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Htag } from '../../../components';
-import { CHATS_QUERY, CREATE_CHAT_MUTATION, USERS_QUERY } from '../../../graphql';
-import { ChatType, IChat } from '../../../interfaces/chat.interface';
-import { IUserProfile } from '../../../interfaces/userprofile.interface';
-import styles from './edit.module.css';
+import { useMutation, useQuery } from "@apollo/client";
+import { Chip, FormControlLabel, Switch } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Htag } from "../../../components";
+import {
+  CREATE_CHAT_MUTATION,
+  MY_CHATS_QUERY,
+  UPDATE_CHAT_MUTATION,
+  USERS_QUERY,
+} from "../../../graphql";
+import { ChatType, IChat } from "../../../interfaces/chat.interface";
+import { IUserProfile } from "../../../interfaces/userprofile.interface";
+import styles from "./edit.module.css";
 
 const ChannelRoom = (): JSX.Element => {
-  const { data: dataR, error: errorR, loading: loadingR } = useQuery(USERS_QUERY, { variables: {usersOffset: 0, usersLimit: 100}});
-  const [createChat, { data: dataM, loading: loadingM, error: errorM }] = useMutation(
-    CREATE_CHAT_MUTATION, {
-    refetchQueries: [
-        { query: CHATS_QUERY }
-      ]
+  const {
+    data: dataR,
+    error: errorR,
+    loading: loadingR,
+  } = useQuery(USERS_QUERY, { variables: { usersOffset: 0, usersLimit: 100 } });
+
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
+
+  const [createChat, { data: dataM, loading: loadingM }] = useMutation(
+    CREATE_CHAT_MUTATION,
+    {
+      refetchQueries: [{ query: MY_CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+      },
     }
   );
-  const { loading, error, data } = useQuery(CHATS_QUERY);
+
+  const [updateChat, { data: dataU, loading: loadingU }] = useMutation(
+    UPDATE_CHAT_MUTATION,
+    {
+      refetchQueries: [{ query: MY_CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+      },
+    }
+  );
   const router = useRouter();
   const { slug } = router.query;
 
@@ -28,17 +51,18 @@ const ChannelRoom = (): JSX.Element => {
   const [adminsValue, setAdminsValue] = React.useState<Array<IUserProfile>>();
   const [isPrivate, setPrivate] = React.useState(false);
   const privateRef = useRef();
-  const [name, setName] = React.useState('');
+  const [name, setName] = React.useState("");
   const nameRef = useRef();
-  const [password, setPassword] = React.useState('');
+  const [password, setPassword] = React.useState("");
   const passwordRef = useRef();
 
   // Hack to redraw Autocomplete
   // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
-  const [usersInputReset, setUsersInputReset] = React.useState('');
-  const [adminsInputReset, setAdminsInputReset] = React.useState('');
+  const [usersInputReset, setUsersInputReset] = React.useState("");
+  const [adminsInputReset, setAdminsInputReset] = React.useState("");
 
   const [isNameValid, setIsNameValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
 
   // get current channel from current user profile
   const getChannel = () => {
@@ -50,12 +74,10 @@ const ChannelRoom = (): JSX.Element => {
 
   // on loading CHATS_QUERY
   useEffect(() => {
-    if (!loading && slug !== "create")
-    {
+    if (!loading && slug !== "create") {
       setName(getChannel().name);
       // update name input field default value
-      if (nameRef.current)
-        nameRef.current.value = getChannel().name;
+      if (nameRef.current) nameRef.current.value = getChannel().name;
       setUsersValue(getChannel().members);
       setAdminsValue(getChannel().admins);
       setPrivate(getChannel().is_private);
@@ -64,7 +86,7 @@ const ChannelRoom = (): JSX.Element => {
       setPassword(getChannel().password);
       if (passwordRef.current)
         passwordRef.current.value = getChannel().password;
-      console.log("getChannel: ", getChannel());
+      // console.log("getChannel: ", getChannel());
 
       // Hack to redraw Autocomplete
       // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
@@ -75,11 +97,11 @@ const ChannelRoom = (): JSX.Element => {
 
   // on submit
   useEffect(() => {
-    if (typeof dataM !== "undefined") {
+    if (typeof dataM !== "undefined" || typeof dataU !== "undefined") {
       console.log("mutation: ", dataM);
-      router.push('/channels');
+      router.push("/channels");
     }
-  }, [loadingM]);
+  }, [loadingM, loadingU]);
 
   // wait fetching data
   if (loading || loadingR) return <p>Loading user profile from graphql...</p>;
@@ -93,6 +115,18 @@ const ChannelRoom = (): JSX.Element => {
       nameRef.current.focus();
       return false;
     }
+    console.log("password", password);
+    if (
+      typeof password === "undefined" ||
+      password === "" ||
+      password.length >= 6
+    ) {
+      setIsPasswordValid(true);
+    } else {
+      setIsPasswordValid(false);
+      passwordRef.current.focus();
+      return false;
+    }
     return true;
   };
 
@@ -100,16 +134,26 @@ const ChannelRoom = (): JSX.Element => {
     event.preventDefault();
     if (isFormValid()) {
       // convert Objects array to Array of [id]
-      const membersIdArr = usersValue.reduce((a, {id}) => {  
-          if (id) a.push(id);
-          return a;  
+      const membersIdArr = usersValue.reduce((a, { id }) => {
+        if (id) a.push(id);
+        return a;
       }, []);
 
       // convert Objects array to Array of [id]
-      // const adminsIdArr = adminsValue.reduce((a, {id}) => {  
+      // const adminsIdArr = adminsValue.reduce((a, {id}) => {
       //     if (id) a.push(id);
-      //     return a;  
+      //     return a;
       // }, []);
+
+      // console.log(
+      //   name +
+      //     ", " +
+      //     membersIdArr.join("|") +
+      //     ", " +
+      //     isPrivate +
+      //     ", " +
+      //     password
+      // );
 
       // send message to backend via mutation CREATE_CHAT_MUTATION
       if (slug === "create") {
@@ -118,18 +162,29 @@ const ChannelRoom = (): JSX.Element => {
             createChatCreateChatInput: {
               name: name,
               members: membersIdArr,
-              // admins not realized in backend yet
-              // admins: adminsIdArr,
               type: ChatType.Channel,
               is_private: isPrivate,
-              password: password
+              ...((typeof password === "undefined" || password !== "") && {
+                password: password,
+              }),
+            },
+          },
+        });
+      } else {
+        updateChat({
+          variables: {
+            updateChatInput: {
+              id: getChannel().id,
+              name: name,
+              // members: membersIdArr,
+              is_private: isPrivate,
+              ...((typeof password === "undefined" || password !== "") && {
+                password: password,
+              }),
             },
           },
         });
       }
-
-      // console.log(name + ", " + usersValue.join(", ") + ", " + adminsValue.join(", ") + ", " + isPrivate + ", " + password);
-
     }
   };
 
@@ -138,32 +193,34 @@ const ChannelRoom = (): JSX.Element => {
 
   return (
     <div className={styles.form}>
-      <Htag tag='h1'>Edit channel</Htag>
+      <Htag tag="h1">Edit channel</Htag>
       <form onSubmit={handleSubmit}>
         <div className={styles.line}>
-          <TextField 
-            id="outlined-size-normal" 
-            label="Name *" 
-            fullWidth 
-            size="small" 
+          <TextField
+            id="outlined-size-normal"
+            label="Name *"
+            fullWidth
+            size="small"
             variant="outlined"
-            onChange={event => setName(event.target.value)} 
+            onChange={(event) => setName(event.target.value)}
             InputLabelProps={{
               shrink: true,
             }}
             defaultValue={name}
             inputRef={nameRef}
             error={!isNameValid}
-            helperText={!isNameValid ? 'Empty field!' : ' '}
+            helperText={!isNameValid ? "Empty field!" : " "}
           />
         </div>
         <div className={styles.line}>
-          <Autocomplete fullWidth multiple id="usersArr-tags" value={usersValue}
+          <Autocomplete
+            fullWidth
+            multiple
+            id="usersArr-tags"
+            value={usersValue}
             key={usersInputReset}
             onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
-              setUsersValue([
-                ...newValue,
-              ]);
+              setUsersValue([...newValue]);
             }}
             options={dataR.users}
             getOptionLabel={(option) => option.name}
@@ -174,10 +231,11 @@ const ChannelRoom = (): JSX.Element => {
               ))
             }
             renderInput={(params) => (
-              <TextField{...params}
+              <TextField
+                {...params}
                 label="Users"
-                placeholder="Add user" 
-                variant="outlined" 
+                placeholder="Add user"
+                variant="outlined"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -186,12 +244,14 @@ const ChannelRoom = (): JSX.Element => {
           />
         </div>
         <div className={styles.line}>
-          <Autocomplete fullWidth multiple id="admins-tags" value={adminsValue}
+          <Autocomplete
+            fullWidth
+            multiple
+            id="admins-tags"
+            value={adminsValue}
             key={adminsInputReset}
             onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
-              setAdminsValue([
-                ...newValue,
-              ]);
+              setAdminsValue([...newValue]);
             }}
             options={dataR.users}
             getOptionLabel={(option) => option.name}
@@ -202,10 +262,11 @@ const ChannelRoom = (): JSX.Element => {
               ))
             }
             renderInput={(params) => (
-              <TextField{...params}
+              <TextField
+                {...params}
                 label="Admins"
-                placeholder="Add admin" 
-                variant="outlined" 
+                placeholder="Add admin"
+                variant="outlined"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -214,37 +275,44 @@ const ChannelRoom = (): JSX.Element => {
           />
         </div>
         <div className={styles.line}>
-          <FormControlLabel 
+          <FormControlLabel
             control={
-              <Switch 
+              <Switch
                 checked={isPrivate}
-                onChange={event => setPrivate(event.target.checked)} 
-                name="checkedA" 
+                onChange={(event) => setPrivate(event.target.checked)}
+                name="checkedA"
                 color="primary"
                 inputRef={privateRef}
               />
             }
-            label="Private" />
+            label="Private"
+          />
         </div>
-        { isPrivate ? 
-          <div className={styles.line}>
-            <TextField id="outlined-size-normal2" label="Password" fullWidth 
-              size="small"
-              type="password"
-              variant="outlined"
-              defaultValue={password}
-              InputLabelProps={{ shrink: true, }}
-              onChange={event => setPassword(event.target.value)}
-              inputRef={passwordRef}
-            />
-          </div>
-          : null 
-        }
+        <div className={styles.line}>
+          <TextField
+            id="outlined-size-normal2"
+            label="Password"
+            fullWidth
+            size="small"
+            type="password"
+            variant="outlined"
+            defaultValue={password}
+            InputLabelProps={{ shrink: true }}
+            onChange={(event) => setPassword(event.target.value)}
+            inputRef={passwordRef}
+            error={!isPasswordValid}
+            helperText={
+              !isPasswordValid
+                ? "Password must be longer than or equal to 4 characters"
+                : " "
+            }
+          />
+        </div>
         <div className={styles.line}>
           <Button appearance="primary">Submit</Button>
         </div>
       </form>
-    </ div>
+    </div>
   );
 };
 

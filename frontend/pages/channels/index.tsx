@@ -2,12 +2,12 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, Htag } from "../../components";
-import { CHATS_QUERY } from "../../graphql";
+import { MY_CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
-  const { loading, error, data } = useQuery(CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
 
   // wait while data loading
   if (loading) return <p>Loading user profile from graphql...</p>;
@@ -66,7 +66,7 @@ const Channel = (): JSX.Element => {
               <td>{channel.members.length}</td>
               {/*<td>{channel.owner ? channel.owner.name : ""}</td>*/}
               <td align="right">
-                {channel.owner && channel.owner.id === current_user_id ? (
+                {channel.ownerId && channel.ownerId === current_user_id ? (
                   <Button
                     appearance="ghost"
                     onClick={() => handleEdit(channel)}

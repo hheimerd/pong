@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
 import { AvatarButton, Button, Htag } from "../../components";
 import {
-  CHATS_QUERY,
+  MY_CHATS_QUERY,
   CREATE_CHAT_MUTATION,
   PROFILE_QUERY,
   USERS_QUERY,
@@ -10,10 +10,11 @@ import {
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
 const Users = (): JSX.Element => {
+  // get my profile
   const {
-    loading: loadingUser,
-    error: errorUser,
-    data: dataUser,
+    data: dataProfile,
+    error: errorProfile,
+    loading: loadingProfile,
   } = useQuery(PROFILE_QUERY);
 
   const { loading, error, data } = useQuery(USERS_QUERY, {
@@ -23,31 +24,9 @@ const Users = (): JSX.Element => {
     },
   });
 
-  const [
-    deleteUser,
-    {
-      data: dataDeleteUser,
-      loading: loadingDeleteUser,
-      error: errorDeleteUser,
-    },
-  ] = useMutation(CREATE_CHAT_MUTATION, {
-    refetchQueries: [
-      {
-        query: CHATS_QUERY,
-        variables: {
-          usersOffset: 0,
-          usersLimit: 100,
-        },
-      },
-    ],
-    onError(err) {
-      console.log(err);
-    },
-  });
-
   // wait while data loading
-  if (loading || loadingUser) return <p>Loading data from graphql...</p>;
-  if (error || errorUser)
+  if (loading || loadingProfile) return <p>Loading data from graphql...</p>;
+  if (error || errorProfile)
     return <p>Error: can't fetching data from graphql :(</p>;
 
   // if (!rows) return null;
@@ -56,16 +35,17 @@ const Users = (): JSX.Element => {
   const UsersList = (users: [IUserProfile]) => {
     if (typeof users !== "undefined") {
       return Array.from(users).map((user: IUserProfile, i: number) => {
-        return (
-          <React.Fragment key={i}>
-            <AvatarButton
-              user={user}
-              link={"/users/" + user.id}
-              image={user.avatar}
-              appearance="offline"
-            />
-          </React.Fragment>
-        );
+        if (user.id != dataProfile.getProfile.id) {
+          return (
+            <React.Fragment key={i}>
+              <AvatarButton
+                user={user}
+                link={"/users/" + user.id}
+                appearance="offline"
+              />
+            </React.Fragment>
+          );
+        }
       });
     }
     return undefined;

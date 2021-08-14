@@ -1,5 +1,5 @@
 export { PROFILE_QUERY } from "./queries";
-export { CHATS_QUERY } from "./queries";
+export { MY_CHATS_QUERY } from "./queries";
 export { USERS_QUERY } from "./queries";
 export { USER_QUERY } from "./queries";
 export { CREATE_MESSAGE_MUTATION } from "./mutations";
@@ -9,3 +9,5 @@ export { MESSAGES_SUBSCRIPTION } from "./subscriptions";
 export { CREATE_USER_MUTATION } from "./mutations";
 export { DELETE_USER_MUTATION } from "./mutations";
 export { UPDATE_USER_MUTATION } from "./mutations";
+export { FOLLOW_TO_USER } from "./mutations";
+export { UNFOLLOW_TO_USER } from "./mutations";

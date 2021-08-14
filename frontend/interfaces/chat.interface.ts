@@ -11,7 +11,7 @@ export interface IChat {
   name?: string;
   members?: IUserProfile[];
   admins?: IUserProfile[];
-  owner?: IUserProfile;
+  ownerId?: number;
   type?: ChatType;
   is_private?: boolean;
   password?: string;

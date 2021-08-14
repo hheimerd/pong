@@ -1,28 +1,25 @@
-import { useQuery } from '@apollo/client';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import { Chat, ChatForm, ChatMessageList, Htag } from '../../../components';
-import { ChatContextProvider } from '../../../context/chat/chat.context';
-import { CHATS_QUERY } from '../../../graphql';
-import { IChat } from '../../../interfaces/chat.interface';
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { Chat, ChatForm, ChatMessageList, Htag } from "../../../components";
+import { ChatContextProvider } from "../../../context/chat/chat.context";
+import { MY_CHATS_QUERY } from "../../../graphql";
+import { IChat } from "../../../interfaces/chat.interface";
 
 const ChannelRoom = (): JSX.Element => {
-  const { loading, error, data } = useQuery(CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
   const router = useRouter();
   const { id } = router.query;
 
   // get current channel from current user profile
   const getChannel = () => {
-    const channel = data.getProfile.chats.filter(
-      (x: IChat) => x.id === id
-    )[0];
+    const channel = data.getProfile.chats.filter((x: IChat) => x.id === id)[0];
     return channel;
   };
 
   // on loading
   useEffect(() => {
-    if (!loading)
-      document.title = "Channel: " + getChannel().name;
+    if (!loading) document.title = "Channel: " + getChannel().name;
   }, [loading]);
 
   // wait while data loading
@@ -34,10 +31,10 @@ const ChannelRoom = (): JSX.Element => {
 
   return (
     <ChatContextProvider>
-      <Htag tag='h1'>{getChannel().name}</Htag>
+      <Htag tag="h1">{getChannel().name}</Htag>
       <Chat>
-        <ChatMessageList id={id}/>
-        <ChatForm id={id}/>
+        <ChatMessageList id={id} />
+        <ChatForm id={id} />
       </Chat>
     </ChatContextProvider>
   );

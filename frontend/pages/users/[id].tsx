@@ -1,8 +1,15 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Avatar, Button, Htag } from "../../components";
-import { USER_QUERY } from "../../graphql";
+import {
+  CREATE_CHAT_MUTATION,
+  FOLLOW_TO_USER,
+  PROFILE_QUERY,
+  UNFOLLOW_TO_USER,
+  USER_QUERY,
+} from "../../graphql";
+import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import styles from "./users.module.css";
 
@@ -10,55 +17,208 @@ const UserProfile = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
 
-  // get user
-  const { data, error, loading } = useQuery(USER_QUERY, {
-    variables: { userId: +id },
+  // get my profile
+  const {
+    data: dataProfile,
+    error: errorProfile,
+    loading: loadingProfile,
+  } = useQuery(PROFILE_QUERY);
+
+  // get viewed user
+  const {
+    data: dataVProfile,
+    error: errorVProfile,
+    loading: loadingVProfile,
+  } = useQuery(USER_QUERY, {
+    variables: {
+      skip: !id,
+      fetchPolicy: "cache-and-network",
+      userId: +id,
+    },
   });
 
+  // follow to user
+  const [followUser, { loading: loadingF }] = useMutation(FOLLOW_TO_USER, {
+    refetchQueries: [{ query: PROFILE_QUERY }],
+  });
+
+  // follow to user
+  const [unfollowUser, { loading: loadingU, error: errorU }] = useMutation(
+    UNFOLLOW_TO_USER,
+    {
+      refetchQueries: [{ query: PROFILE_QUERY }],
+      onError(err) {
+        console.log(err);
+      },
+    }
+  );
+
+  // create chat mutation
+  const [createChat, { data: dataCreateChat, loading: loadingCreateChat }] =
+    useMutation(CREATE_CHAT_MUTATION, {
+      refetchQueries: [{ query: PROFILE_QUERY }],
+      onError(err) {
+        console.log(err);
+      },
+    });
+
+  // on submit message button
+  useEffect(() => {
+    if (dataCreateChat) {
+      router.push("/chats/room/" + dataCreateChat.createChat.id);
+    }
+  }, [loadingCreateChat]);
+
   // wait fetching data
-  if (loading) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loadingVProfile || loadingProfile || loadingF || loadingU)
+    return <p>Loading user profile from graphql...</p>;
+  if (errorVProfile || errorProfile || errorU)
+    return <p>Error: can't fetching data from graphql :(</p>;
 
-  const handleFriends = (values: IUserProfile) => {
-    console.log("handleFriends", values);
+  const isUserFriend = () => {
+    return (
+      dataProfile.getProfile.friends.filter(
+        (x: IUserProfile) => x.id === dataVProfile.user.id
+      ).length != 0
+    );
   };
 
-  const handleBlock = (values: IUserProfile) => {
-    console.log("handleBlock", values);
+  const isUserInFollowers = () => {
+    return (
+      dataProfile.getProfile.followers.filter(
+        (x: IUserProfile) => x.id === dataVProfile.user.id
+      ).length != 0
+    );
   };
 
-  const handleMessage = (values: IUserProfile) => {
-    console.log("handleMessage", values);
+  const isUserInFollowings = () => {
+    return (
+      dataProfile.getProfile.following.filter(
+        (x: IUserProfile) => x.id === dataVProfile.user.id
+      ).length != 0
+    );
   };
+
+  const handleFriends = () => {
+    console.log("isUserInFollowings", isUserInFollowings());
+    if (isUserFriend())
+      return unfollowUser({
+        variables: {
+          unfollowUserUserId: dataVProfile.user.id,
+        },
+      });
+    if (isUserInFollowers())
+      return followUser({
+        variables: {
+          followToUserUserId: dataVProfile.user.id,
+        },
+      });
+    if (isUserInFollowings())
+      return unfollowUser({
+        variables: {
+          unfollowUserUserId: dataVProfile.user.id,
+        },
+      });
+    followUser({
+      variables: {
+        followToUserUserId: dataVProfile.user.id,
+      },
+    });
+  };
+
+  // const handleBlock = () => {
+  //   console.log("handleBlock");
+  // };
+
+  const createChatWithUser = () => {
+    const membersIdArr = [dataProfile.getProfile.id, +id];
+    createChat({
+      variables: {
+        createChatCreateChatInput: {
+          name: dataVProfile.user.name,
+          members: membersIdArr,
+          type: ChatType.Chat,
+          is_private: false,
+        },
+      },
+    });
+  };
+
+  const get_chats_with_user = () => {
+    return dataProfile.getProfile.chats.filter(
+      (x: IChat) =>
+        x.type === ChatType.Chat &&
+        x.members.filter((y: IUserProfile) => y.id === dataVProfile.user.id)
+          .length != 0
+    );
+  };
+
+  const handleMessage = () => {
+    // filter chats only with ChatType == Chat
+    console.log("handleMessage", get_chats_with_user());
+    if (get_chats_with_user().length != 0) {
+      router.push("/chats/room/" + get_chats_with_user()[0].id);
+    } else {
+      createChatWithUser();
+    }
+  };
+
+  const getFriendButton = () => {
+    // console.log("isUserInFollowings: ", isUserInFollowings());
+    if (isUserFriend())
+      return (
+        <Button appearance="ghost" onClick={() => handleFriends()}>
+          Remove from friend
+        </Button>
+      );
+    if (isUserInFollowers())
+      return (
+        <Button appearance="ghost" onClick={() => handleFriends()}>
+          Add to friend
+        </Button>
+      );
+    if (isUserInFollowings())
+      return (
+        <Button appearance="primary" onClick={() => handleFriends()}>
+          Unfollow
+        </Button>
+      );
+    return (
+      <Button appearance="ghost" onClick={() => handleFriends()}>
+        Add to friend
+      </Button>
+    );
+  };
+
+  const isThisPageForMyProfile = dataProfile.getProfile.id == +id;
 
   return (
     <div>
-      <Htag tag="h1">{data.user.name}</Htag>
+      <Htag tag="h1">{dataVProfile.user.name}</Htag>
       <div className={styles.container}>
         <div>
-          <Avatar size="large" name={data.user.name} image={data.user.avatar} />
+          <Avatar
+            size="large"
+            name={dataVProfile.user.name}
+            image={dataVProfile.user.avatar}
+          />
         </div>
         <div>
           Status: ?<br />
           Rank: ?<br />
           Wins: ?<br />
-          Lose: ?<br />
+          Loses: ?<br />
         </div>
-        <div>
-          <Button appearance="ghost" onClick={() => handleFriends(data.user)}>
-            Add to friends
-          </Button>
-          <br />
-          <br />
-          <Button appearance="ghost" onClick={() => handleBlock(data.user)}>
-            Add to black list
-          </Button>
-          <br />
-          <br />
-          <Button appearance="ghost" onClick={() => handleMessage(data.user)}>
-            Message
-          </Button>
-        </div>
+        {!isThisPageForMyProfile && (
+          <div>
+            {getFriendButton()}
+            <br />
+            <br />
+            <Button appearance="ghost" onClick={() => handleMessage()}>
+              Message
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

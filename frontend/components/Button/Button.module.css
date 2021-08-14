@@ -17,8 +17,8 @@
 
 .button:hover {
   -webkit-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);
-  -moz-box-shadow:    2px 2px 13px 0px rgba(50, 50, 50, 0.5);
-  box-shadow:         2px 2px 13px 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);
 }
 
 .primary {
@@ -31,10 +31,7 @@
 }
 
 .ghost {
-  margin: 0 0.4rem;
-
   color: var(--black);
-
   background-color: var(--green-light);
 }
 
@@ -44,7 +41,6 @@
 
 .arrow {
   display: inline-block;
-
   margin-left: 10px;
 }
 

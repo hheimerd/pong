@@ -7,16 +7,17 @@ export const CREATE_MESSAGE_MUTATION = gql`
 `;
 
 export const CREATE_CHAT_MUTATION = gql`
-  mutation Mutation($createChatCreateChatInput: CreateChatInput!) {
+  mutation NameMutation($createChatCreateChatInput: CreateChatInput!) {
     createChat(createChatInput: $createChatCreateChatInput) {
-      id
+      name
+      ownerId
     }
   }
 `;
 
 export const UPDATE_CHAT_MUTATION = gql`
-  mutation Mutation($updateChatInput: UpdateChatInput!) {
-    updateChatInput(input: $updateChatInput) {
+  mutation NameMutation($updateChatInput: UpdateChatInput!) {
+    updateChat(input: $updateChatInput) {
       id
     }
   }
@@ -41,5 +42,17 @@ export const UPDATE_USER_MUTATION = gql`
     updateUser(input: $updateUserInput) {
       id
     }
+  }
+`;
+
+export const FOLLOW_TO_USER = gql`
+  mutation Mutation($followToUserUserId: Int!) {
+    followToUser(userId: $followToUserUserId)
+  }
+`;
+
+export const UNFOLLOW_TO_USER = gql`
+  mutation UnfollowUserMutation($unfollowUserUserId: Int!) {
+    unfollowUser(userId: $unfollowUserUserId)
   }
 `;

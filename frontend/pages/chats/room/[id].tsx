@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Chat, ChatForm, ChatMessageList, Htag } from "../../../components";
 import { ChatContextProvider } from "../../../context/chat/chat.context";
-import { CHATS_QUERY, USERS_QUERY } from "../../../graphql/queries";
+import { MY_CHATS_QUERY, USERS_QUERY } from "../../../graphql/queries";
 import { IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
 
 const ChatRoom = (): JSX.Element => {
-  const { loading, error, data } = useQuery(CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
   const router = useRouter();
   const { id } = router.query;
 
