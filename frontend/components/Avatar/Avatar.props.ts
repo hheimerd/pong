@@ -6,6 +6,6 @@ export interface AvatarProps
     HTMLImageElement
   > {
   image?: [string, string];
-  size?: "small" | "large";
+  size?: "xxsmall" | "xsmall" | "small" | "large";
   name?: string;
 }

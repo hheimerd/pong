@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Chip, FormControlLabel, Switch } from "@material-ui/core";
+import { Avatar, Chip, FormControlLabel, Switch } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useRouter } from "next/router";
@@ -200,6 +200,8 @@ const ChannelRoom = (): JSX.Element => {
   // check router variable type
   if (typeof slug !== "string") return null;
 
+  console.log(dataR.users);
+
   return (
     <div className={styles.form}>
       <Htag tag="h1">Edit channel</Htag>
@@ -236,7 +238,18 @@ const ChannelRoom = (): JSX.Element => {
             getOptionSelected={(option, value) => option.name === value.name}
             renderTags={(tagValue, getTagProps) =>
               tagValue.map((option, index) => (
-                <Chip label={option.name} {...getTagProps({ index })} />
+                <Chip
+                  avatar={
+                    <Avatar
+                      alt={option.name}
+                      src={
+                        process.env.IMAGES_LINK + "public/" + option.avatar[0]
+                      }
+                    />
+                  }
+                  label={option.name}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (
@@ -273,7 +286,18 @@ const ChannelRoom = (): JSX.Element => {
             getOptionSelected={(option, value) => option.name === value.name}
             renderTags={(tagValue, getTagProps) =>
               tagValue.map((option, index) => (
-                <Chip label={option.name} {...getTagProps({ index })} />
+                <Chip
+                  avatar={
+                    <Avatar
+                      alt={option.name}
+                      src={
+                        process.env.IMAGES_LINK + "public/" + option.avatar[0]
+                      }
+                    />
+                  }
+                  label={option.name}
+                  {...getTagProps({ index })}
+                />
               ))
             }
             renderInput={(params) => (

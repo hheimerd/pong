@@ -2,6 +2,20 @@
   display: inline-block;
 }
 
+.xxsmall {
+  width: 16px;
+  height: 16px;
+
+  border-radius: 8px;
+}
+
+.xsmall {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 16px;
+}
+
 .small {
   width: 48px;
   height: 48px;

@@ -30,6 +30,8 @@ export const Avatar = ({
     <img
       src={src + "?" + date}
       className={cn(styles.avatar, className, {
+        [styles.xxsmall]: size == "xxsmall",
+        [styles.xsmall]: size == "xsmall",
         [styles.small]: size == "small",
         [styles.large]: size == "large",
         [styles.pointer]: onClick,

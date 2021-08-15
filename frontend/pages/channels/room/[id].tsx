@@ -1,10 +1,17 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { Chat, ChatForm, ChatMessageList, Htag } from "../../../components";
+import {
+  ChannelUserChip,
+  Chat,
+  ChatForm,
+  ChatMessageList,
+  Htag,
+} from "../../../components";
 import { ChatContextProvider } from "../../../context/chat/chat.context";
 import { MY_CHATS_QUERY } from "../../../graphql";
 import { IChat } from "../../../interfaces/chat.interface";
+import { IUserProfile } from "../../../interfaces/userprofile.interface";
 
 const ChannelRoom = (): JSX.Element => {
   const { loading, error, data } = useQuery(MY_CHATS_QUERY);
@@ -12,7 +19,7 @@ const ChannelRoom = (): JSX.Element => {
   const { id } = router.query;
 
   // get current channel from current user profile
-  const getChannel = () => {
+  const getChannel = (): IChat => {
     const channel = data.getProfile.chats.filter((x: IChat) => x.id === id)[0];
     return channel;
   };
@@ -32,6 +39,11 @@ const ChannelRoom = (): JSX.Element => {
   return (
     <ChatContextProvider>
       <Htag tag="h1">{getChannel().name}</Htag>
+      {getChannel().members.map((user: IUserProfile) => (
+        <ChannelUserChip user={user} current_user_id={data.getProfile.id} />
+      ))}
+      <br />
+      <br />
       <Chat>
         <ChatMessageList id={id} />
         <ChatForm id={id} />
