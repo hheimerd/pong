@@ -3,7 +3,7 @@ import format from "date-fns/format";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Button, Htag } from "../../components";
+import { Avatar, Button, Htag } from "../../components";
 import { DELETE_USER_MUTATION, USERS_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
@@ -77,12 +77,12 @@ const Channel = (): JSX.Element => {
         <thead>
           <tr>
             <td>Id</td>
+            <td>Avatar</td>
             <td>Name</td>
             <td>Login</td>
             <td>Email</td>
             <td>Created</td>
             <td>Updated</td>
-            <td>Avatar</td>
             <td>Roles</td>
             <td align="right"></td>
           </tr>
@@ -92,18 +92,21 @@ const Channel = (): JSX.Element => {
             <tr key={user.login}>
               <td>{user.id}</td>
               <td>
+                <Avatar size="small" name={user.name} image={user.avatar} />
+              </td>
+              <td>
                 <Link href={"/users/" + user.id}>{user.name}</Link>
               </td>
               <td>{user.login}</td>
               <td>{user.email}</td>
               <td>{format(new Date(user.created_at), "dd MMM yyyy H:mm")}</td>
               <td>{format(new Date(user.updated_at), "dd MMM yyyy H:mm")}</td>
-              <td>{user.avatar}</td>
               <td>{user.roles}</td>
               <td align="right">
                 <Button appearance="ghost" onClick={() => handleEdit(user)}>
                   Edit
                 </Button>
+                &nbsp; &nbsp;
                 <Button appearance="ghost" onClick={() => handleDelete(user)}>
                   Delete
                 </Button>
