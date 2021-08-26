@@ -12,6 +12,7 @@ import { ChatContextProvider } from "../../../context/chat/chat.context";
 import { MY_CHATS_QUERY } from "../../../graphql";
 import { IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../../layout/InnerPageLayout";
 
 const ChannelRoom = (): JSX.Element => {
   const { loading, error, data } = useQuery(MY_CHATS_QUERY);
@@ -37,18 +38,20 @@ const ChannelRoom = (): JSX.Element => {
   if (typeof id !== "string") return null;
 
   return (
-    <ChatContextProvider>
-      <Htag tag="h1">{getChannel().name}</Htag>
-      {getChannel().members.map((user: IUserProfile) => (
-        <ChannelUserChip user={user} current_user_id={data.getProfile.id} />
-      ))}
-      <br />
-      <br />
-      <Chat>
-        <ChatMessageList id={id} />
-        <ChatForm id={id} />
-      </Chat>
-    </ChatContextProvider>
+    <InnerPageLayout>
+      <ChatContextProvider>
+        <Htag tag="h1">{getChannel().name}</Htag>
+        {getChannel().members.map((user: IUserProfile) => (
+          <ChannelUserChip user={user} current_user_id={data.getProfile.id} />
+        ))}
+        <br />
+        <br />
+        <Chat>
+          <ChatMessageList id={id} />
+          <ChatForm id={id} />
+        </Chat>
+      </ChatContextProvider>
+    </InnerPageLayout>
   );
 };
 

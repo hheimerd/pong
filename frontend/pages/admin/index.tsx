@@ -6,6 +6,7 @@ import React from "react";
 import { Avatar, Button, Htag } from "../../components";
 import { DELETE_USER_MUTATION, USERS_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
@@ -66,7 +67,7 @@ const Channel = (): JSX.Element => {
   // if (!rows) return null;
 
   return (
-    <>
+    <InnerPageLayout>
       <Htag tag="h1">Users</Htag>
       <div style={{ textAlign: "center", marginBottom: "1rem" }}>
         <Button appearance="primary" onClick={() => handleCreate()}>
@@ -115,7 +116,7 @@ const Channel = (): JSX.Element => {
           ))}
         </tbody>
       </table>
-    </>
+    </InnerPageLayout>
   );
 };
 

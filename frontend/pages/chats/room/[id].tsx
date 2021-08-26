@@ -3,9 +3,10 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Chat, ChatForm, ChatMessageList, Htag } from "../../../components";
 import { ChatContextProvider } from "../../../context/chat/chat.context";
-import { MY_CHATS_QUERY, USERS_QUERY } from "../../../graphql/queries";
+import { MY_CHATS_QUERY } from "../../../graphql/queries";
 import { IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../../layout/InnerPageLayout";
 
 const ChatRoom = (): JSX.Element => {
   const { loading, error, data } = useQuery(MY_CHATS_QUERY);
@@ -36,13 +37,15 @@ const ChatRoom = (): JSX.Element => {
   // console.log(chats);
 
   return (
-    <ChatContextProvider>
-      <Htag tag="h1">Chat: {getFriendName()}</Htag>
-      <Chat>
-        <ChatMessageList id={id} />
-        <ChatForm id={id} />
-      </Chat>
-    </ChatContextProvider>
+    <InnerPageLayout>
+      <ChatContextProvider>
+        <Htag tag="h1">Chat: {getFriendName()}</Htag>
+        <Chat>
+          <ChatMessageList id={id} />
+          <ChatForm id={id} />
+        </Chat>
+      </ChatContextProvider>
+    </InnerPageLayout>
   );
 };
 

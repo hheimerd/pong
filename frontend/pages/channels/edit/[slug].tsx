@@ -13,6 +13,7 @@ import {
 } from "../../../graphql";
 import { ChatType, IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../../layout/InnerPageLayout";
 import styles from "./edit.module.css";
 
 const ChannelRoom = (): JSX.Element => {
@@ -203,155 +204,163 @@ const ChannelRoom = (): JSX.Element => {
   console.log(dataR.users);
 
   return (
-    <div className={styles.form}>
-      <Htag tag="h1">Edit channel</Htag>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.line}>
-          <TextField
-            id="outlined-size-normal"
-            label="Name *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setName(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={name}
-            inputRef={nameRef}
-            error={!isNameValid}
-            helperText={!isNameValid ? "Empty field!" : " "}
-          />
-        </div>
-        <div className={styles.line}>
-          <Autocomplete
-            fullWidth
-            multiple
-            id="usersArr-tags"
-            value={usersValue}
-            key={usersInputReset}
-            onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
-              setUsersValue([...newValue]);
-            }}
-            options={dataR.users}
-            getOptionLabel={(option) => option.name}
-            getOptionSelected={(option, value) => option.name === value.name}
-            renderTags={(tagValue, getTagProps) =>
-              tagValue.map((option, index) => (
-                <Chip
-                  avatar={
-                    <Avatar
-                      alt={option.name}
-                      src={
-                        process.env.IMAGES_LINK + "public/" + option.avatar[0]
-                      }
-                    />
+    <InnerPageLayout>
+      <div className={styles.form}>
+        <Htag tag="h1">Edit channel</Htag>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.line}>
+            <TextField
+              id="outlined-size-normal"
+              label="Name *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setName(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={name}
+              inputRef={nameRef}
+              error={!isNameValid}
+              helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className={styles.line}>
+            <Autocomplete
+              fullWidth
+              multiple
+              id="usersArr-tags"
+              value={usersValue}
+              key={usersInputReset}
+              onChange={(
+                _event: React.ChangeEvent,
+                newValue: IUserProfile[]
+              ) => {
+                setUsersValue([...newValue]);
+              }}
+              options={dataR.users}
+              getOptionLabel={(option) => option.name}
+              getOptionSelected={(option, value) => option.name === value.name}
+              renderTags={(tagValue, getTagProps) =>
+                tagValue.map((option, index) => (
+                  <Chip
+                    avatar={
+                      <Avatar
+                        alt={option.name}
+                        src={
+                          process.env.IMAGES_LINK + "public/" + option.avatar[0]
+                        }
+                      />
+                    }
+                    label={option.name}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Users"
+                  placeholder="Add user"
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  error={!isUsersValid}
+                  helperText={
+                    !isUsersValid
+                      ? "Members must contain at least 2 elements!"
+                      : " "
                   }
-                  label={option.name}
-                  {...getTagProps({ index })}
                 />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Users"
-                placeholder="Add user"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                error={!isUsersValid}
-                helperText={
-                  !isUsersValid
-                    ? "Members must contain at least 2 elements!"
-                    : " "
-                }
-              />
-            )}
-          />
-        </div>
-        <div className={styles.line}>
-          <Autocomplete
-            fullWidth
-            multiple
-            id="admins-tags"
-            value={adminsValue}
-            key={adminsInputReset}
-            onChange={(_event: React.ChangeEvent, newValue: IUserProfile[]) => {
-              setAdminsValue([...newValue]);
-            }}
-            options={dataR.users}
-            getOptionLabel={(option) => option.name}
-            getOptionSelected={(option, value) => option.name === value.name}
-            renderTags={(tagValue, getTagProps) =>
-              tagValue.map((option, index) => (
-                <Chip
-                  avatar={
-                    <Avatar
-                      alt={option.name}
-                      src={
-                        process.env.IMAGES_LINK + "public/" + option.avatar[0]
-                      }
-                    />
-                  }
-                  label={option.name}
-                  {...getTagProps({ index })}
+              )}
+            />
+          </div>
+          <div className={styles.line}>
+            <Autocomplete
+              fullWidth
+              multiple
+              id="admins-tags"
+              value={adminsValue}
+              key={adminsInputReset}
+              onChange={(
+                _event: React.ChangeEvent,
+                newValue: IUserProfile[]
+              ) => {
+                setAdminsValue([...newValue]);
+              }}
+              options={dataR.users}
+              getOptionLabel={(option) => option.name}
+              getOptionSelected={(option, value) => option.name === value.name}
+              renderTags={(tagValue, getTagProps) =>
+                tagValue.map((option, index) => (
+                  <Chip
+                    avatar={
+                      <Avatar
+                        alt={option.name}
+                        src={
+                          process.env.IMAGES_LINK + "public/" + option.avatar[0]
+                        }
+                      />
+                    }
+                    label={option.name}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Admins"
+                  placeholder="Add admin"
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
-              ))
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Admins"
-                placeholder="Add admin"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            )}
-          />
-        </div>
-        <div className={styles.line}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isPrivate}
-                onChange={(event) => setPrivate(event.target.checked)}
-                name="checkedA"
-                color="primary"
-                inputRef={privateRef}
-              />
-            }
-            label="Private"
-          />
-        </div>
-        <div className={styles.line}>
-          <TextField
-            id="outlined-size-normal2"
-            label="Password"
-            fullWidth
-            size="small"
-            type="password"
-            variant="outlined"
-            defaultValue={password}
-            InputLabelProps={{ shrink: true }}
-            onChange={(event) => setPassword(event.target.value)}
-            inputRef={passwordRef}
-            error={!isPasswordValid}
-            helperText={
-              !isPasswordValid
-                ? "Password must be longer than or equal to 4 characters"
-                : " "
-            }
-          />
-        </div>
-        <div className={styles.line}>
-          <Button appearance="primary">Submit</Button>
-        </div>
-      </form>
-    </div>
+              )}
+            />
+          </div>
+          <div className={styles.line}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isPrivate}
+                  onChange={(event) => setPrivate(event.target.checked)}
+                  name="checkedA"
+                  color="primary"
+                  inputRef={privateRef}
+                />
+              }
+              label="Private"
+            />
+          </div>
+          <div className={styles.line}>
+            <TextField
+              id="outlined-size-normal2"
+              label="Password"
+              fullWidth
+              size="small"
+              type="password"
+              variant="outlined"
+              defaultValue={password}
+              InputLabelProps={{ shrink: true }}
+              onChange={(event) => setPassword(event.target.value)}
+              inputRef={passwordRef}
+              error={!isPasswordValid}
+              helperText={
+                !isPasswordValid
+                  ? "Password must be longer than or equal to 4 characters"
+                  : " "
+              }
+            />
+          </div>
+          <div className={styles.line}>
+            <Button appearance="primary">Submit</Button>
+          </div>
+        </form>
+      </div>
+    </InnerPageLayout>
   );
 };
 

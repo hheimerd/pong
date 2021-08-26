@@ -1,13 +1,9 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React from "react";
-import { AvatarButton, Button, Htag } from "../../components";
-import {
-  MY_CHATS_QUERY,
-  CREATE_CHAT_MUTATION,
-  PROFILE_QUERY,
-  USERS_QUERY,
-} from "../../graphql";
+import { AvatarButton, Htag } from "../../components";
+import { PROFILE_QUERY, USERS_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Users = (): JSX.Element => {
   // get my profile
@@ -52,7 +48,7 @@ const Users = (): JSX.Element => {
   };
 
   return (
-    <>
+    <InnerPageLayout>
       <div>
         <Htag tag="h1">All users</Htag>
         {typeof UsersList(data.users) === "undefined" ||
@@ -62,7 +58,7 @@ const Users = (): JSX.Element => {
           UsersList(data.users)
         )}
       </div>
-    </>
+    </InnerPageLayout>
   );
 };
 

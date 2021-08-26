@@ -9,6 +9,7 @@ import {
   USERS_QUERY,
   USER_QUERY,
 } from "../../../graphql";
+import { InnerPageLayout } from "../../../layout/InnerPageLayout";
 
 const UserAddEdit = (): JSX.Element => {
   const router = useRouter();
@@ -198,92 +199,94 @@ const UserAddEdit = (): JSX.Element => {
   if (typeof id !== "string") return null;
 
   return (
-    <div className="form">
-      <Htag tag="h1">{isCreatePage ? "Add user" : "Edit user"}</Htag>
-      {errorCreateUser && <p className="error-message"> Error occured </p>}
-      <form onSubmit={handleSubmit}>
-        <div className="line">
-          <TextField
-            id="name"
-            label="Name *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setName(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={name}
-            inputRef={nameRef}
-            error={!isNameValid}
-            helperText={!isNameValid ? "Empty field!" : " "}
-          />
-        </div>
-        {isCreatePage && (
+    <InnerPageLayout>
+      <div className="form">
+        <Htag tag="h1">{isCreatePage ? "Add user" : "Edit user"}</Htag>
+        {errorCreateUser && <p className="error-message"> Error occured </p>}
+        <form onSubmit={handleSubmit}>
           <div className="line">
             <TextField
-              id="password"
-              label="Password"
+              id="name"
+              label="Name *"
               fullWidth
               size="small"
-              type="password"
               variant="outlined"
-              defaultValue={password}
-              InputLabelProps={{ shrink: true }}
-              onChange={(event) => setPassword(event.target.value)}
-              inputRef={passwordRef}
-              error={!isPasswordValid}
+              onChange={(event) => setName(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={name}
+              inputRef={nameRef}
+              error={!isNameValid}
+              helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          {isCreatePage && (
+            <div className="line">
+              <TextField
+                id="password"
+                label="Password"
+                fullWidth
+                size="small"
+                type="password"
+                variant="outlined"
+                defaultValue={password}
+                InputLabelProps={{ shrink: true }}
+                onChange={(event) => setPassword(event.target.value)}
+                inputRef={passwordRef}
+                error={!isPasswordValid}
+                helperText={
+                  !isPasswordValid
+                    ? "Must be longer than or equal to 6 characters!"
+                    : " "
+                }
+              />
+            </div>
+          )}
+          <div className="line">
+            <TextField
+              id="login"
+              label="Login"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setLogin(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={login}
+              inputRef={loginRef}
+              error={!isLoginValid}
               helperText={
-                !isPasswordValid
+                !isLoginValid
                   ? "Must be longer than or equal to 6 characters!"
                   : " "
               }
             />
           </div>
-        )}
-        <div className="line">
-          <TextField
-            id="login"
-            label="Login"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setLogin(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={login}
-            inputRef={loginRef}
-            error={!isLoginValid}
-            helperText={
-              !isLoginValid
-                ? "Must be longer than or equal to 6 characters!"
-                : " "
-            }
-          />
-        </div>
-        <div className="line">
-          <TextField
-            id="email"
-            label="Email"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setEmail(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={email}
-            inputRef={emailRef}
-            error={!isEmailValid}
-            helperText={!isEmailValid ? "Not valid email!" : " "}
-          />
-        </div>
-        <div className="line">
-          <Button appearance="primary">Submit</Button>
-        </div>
-      </form>
-    </div>
+          <div className="line">
+            <TextField
+              id="email"
+              label="Email"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setEmail(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={email}
+              inputRef={emailRef}
+              error={!isEmailValid}
+              helperText={!isEmailValid ? "Not valid email!" : " "}
+            />
+          </div>
+          <div className="line">
+            <Button appearance="primary">Submit</Button>
+          </div>
+        </form>
+      </div>
+    </InnerPageLayout>
   );
 };
 

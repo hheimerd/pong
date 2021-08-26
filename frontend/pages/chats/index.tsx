@@ -3,6 +3,7 @@ import React from "react";
 import { AvatarButton, Htag } from "../../components";
 import { MY_CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Chat = (): JSX.Element => {
   const { loading, error, data } = useQuery(MY_CHATS_QUERY);
@@ -37,7 +38,7 @@ const Chat = (): JSX.Element => {
   };
 
   return (
-    <>
+    <InnerPageLayout>
       <div>
         <Htag tag="h1">Chats</Htag>
         {typeof ChatList(chats) === "undefined" || chats.length === 0 ? (
@@ -46,7 +47,7 @@ const Chat = (): JSX.Element => {
           ChatList(chats)
         )}
       </div>
-    </>
+    </InnerPageLayout>
   );
 };
 

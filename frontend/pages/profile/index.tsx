@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { Avatar, Button, Htag, OutlinedDiv } from "../../components";
 import { PROFILE_QUERY, UPDATE_USER_MUTATION } from "../../graphql";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Profile = (): JSX.Element => {
   const router = useRouter();
@@ -144,28 +145,29 @@ const Profile = (): JSX.Element => {
   };
 
   return (
-    <div className="form">
-      <Htag tag="h1">Edit my profile</Htag>
-      {errorUpdateUser && <p className="error-message"> Error occured </p>}
-      <form onSubmit={handleSubmit}>
-        <div className="line">
-          <TextField
-            id="name"
-            label="Name *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setName(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={name}
-            inputRef={nameRef}
-            error={!isNameValid}
-            helperText={!isNameValid ? "Empty field!" : " "}
-          />
-        </div>
-        {/* 
+    <InnerPageLayout>
+      <div className="form">
+        <Htag tag="h1">Edit my profile</Htag>
+        {errorUpdateUser && <p className="error-message"> Error occured </p>}
+        <form onSubmit={handleSubmit}>
+          <div className="line">
+            <TextField
+              id="name"
+              label="Name *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setName(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={name}
+              inputRef={nameRef}
+              error={!isNameValid}
+              helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          {/* 
           <div className={styles.line}>
             <TextField
               id="password"
@@ -188,45 +190,46 @@ const Profile = (): JSX.Element => {
           </div>
 
         */}
-        <div className="line">
-          <TextField
-            id="email"
-            label="Email"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setEmail(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={email}
-            inputRef={emailRef}
-            error={!isEmailValid}
-            helperText={!isEmailValid ? "Not valid email!" : " "}
-          />
-        </div>
-        <div className="line">
-          <OutlinedDiv label="Avatar">
-            <Avatar
-              size="large"
-              name={data.getProfile.name}
-              image={data.getProfile.avatar}
+          <div className="line">
+            <TextField
+              id="email"
+              label="Email"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setEmail(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={email}
+              inputRef={emailRef}
+              error={!isEmailValid}
+              helperText={!isEmailValid ? "Not valid email!" : " "}
             />
-            <input id="avatar" type="file" ref={avatarRef} />
-            {/*
+          </div>
+          <div className="line">
+            <OutlinedDiv label="Avatar">
+              <Avatar
+                size="large"
+                name={data.getProfile.name}
+                image={data.getProfile.avatar}
+              />
+              <input id="avatar" type="file" ref={avatarRef} />
+              {/*
           <label htmlFor="avatar">
           <Button color="primary" variant="contained" component="span">
             Upload File
           </Button>
           </label>
           */}
-          </OutlinedDiv>
-        </div>
-        <div className="line">
-          <Button appearance="primary">Submit</Button>
-        </div>
-      </form>
-    </div>
+            </OutlinedDiv>
+          </div>
+          <div className="line">
+            <Button appearance="primary">Submit</Button>
+          </div>
+        </form>
+      </div>
+    </InnerPageLayout>
   );
 };
 

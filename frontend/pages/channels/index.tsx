@@ -9,6 +9,7 @@ import {
   UPDATE_CHAT_MUTATION,
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
@@ -133,7 +134,7 @@ const Channel = (): JSX.Element => {
   // if (!rows) return null;
 
   return (
-    <>
+    <InnerPageLayout>
       <Htag tag="h1">Channels</Htag>
       <div style={{ textAlign: "center", marginBottom: "1rem" }}>
         <Button appearance="primary" onClick={() => handleCreate()}>
@@ -165,7 +166,7 @@ const Channel = (): JSX.Element => {
           ))}
         </tbody>
       </table>
-    </>
+    </InnerPageLayout>
   );
 };
 

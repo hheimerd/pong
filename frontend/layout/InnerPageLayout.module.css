@@ -1,0 +1,10 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr;
+  grid-template-rows: auto;
+  gap: 0px 20px;
+  grid-auto-flow: row;
+  grid-template-areas: ". .";
+}
+.navi {
+}

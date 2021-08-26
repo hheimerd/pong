@@ -11,6 +11,7 @@ import {
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
+import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./users.module.css";
 
 const UserProfile = (): JSX.Element => {
@@ -193,34 +194,36 @@ const UserProfile = (): JSX.Element => {
   const isThisPageForMyProfile = dataProfile.getProfile.id == +id;
 
   return (
-    <div>
-      <Htag tag="h1">{dataVProfile.user.name}</Htag>
-      <div className={styles.container}>
-        <div>
-          <Avatar
-            size="large"
-            name={dataVProfile.user.name}
-            image={dataVProfile.user.avatar}
-          />
-        </div>
-        <div>
-          Status: ?<br />
-          Rank: ?<br />
-          Wins: ?<br />
-          Loses: ?<br />
-        </div>
-        {!isThisPageForMyProfile && (
+    <InnerPageLayout>
+      <div>
+        <Htag tag="h1">{dataVProfile.user.name}</Htag>
+        <div className={styles.container}>
           <div>
-            {getFriendButton()}
-            <br />
-            <br />
-            <Button appearance="ghost" onClick={() => handleMessage()}>
-              Message
-            </Button>
+            <Avatar
+              size="large"
+              name={dataVProfile.user.name}
+              image={dataVProfile.user.avatar}
+            />
           </div>
-        )}
+          <div>
+            Status: ?<br />
+            Rank: ?<br />
+            Wins: ?<br />
+            Loses: ?<br />
+          </div>
+          {!isThisPageForMyProfile && (
+            <div>
+              {getFriendButton()}
+              <br />
+              <br />
+              <Button appearance="ghost" onClick={() => handleMessage()}>
+                Message
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </InnerPageLayout>
   );
 };
 
