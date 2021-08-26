@@ -15,6 +15,18 @@
   font-size: 14px;
 }
 
+.button img {
+  height: 32px;
+  vertical-align: middle;
+  margin-right: 1rem;
+}
+
+.large {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .button:hover {
   -webkit-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);
   -moz-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.5);

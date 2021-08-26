@@ -3,6 +3,7 @@ export { MY_CHATS_QUERY } from "./queries";
 export { USERS_QUERY } from "./queries";
 export { USER_QUERY } from "./queries";
 export { CHATS_QUERY } from "./queries";
+export { USER_LOGIN } from "./queries";
 export { CREATE_MESSAGE_MUTATION } from "./mutations";
 export { CREATE_CHAT_MUTATION } from "./mutations";
 export { UPDATE_CHAT_MUTATION } from "./mutations";

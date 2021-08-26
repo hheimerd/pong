@@ -2,11 +2,12 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
-  from,
   InMemoryCache,
   split,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+// import client from './api/apollo-client'
+import { onError } from "@apollo/client/link/error";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { CssBaseline } from "@material-ui/core";
@@ -15,13 +16,15 @@ import { Provider } from "next-auth/client";
 import { AppProps } from "next/dist/next-server/lib/router/router";
 import Head from "next/head";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
+import {
+  PersonalTokenContext,
+  PersonalTokenContextProvider,
+} from "../context/personaltoken/personaltoken.context";
 // import styles from "../styles/MainPage.module.css";
 import { UserProfileContextProvider } from "../context/userprofile/userprofile.context";
 import "../styles/globals.css";
 import theme from "../theme";
-// import client from './api/apollo-client'
-import { onError } from "@apollo/client/link/error";
 
 const httpLink = createHttpLink({
   uri: process.env.GRAPHQL_REMOTE,
@@ -79,14 +82,23 @@ const getApolloClient = (token: string) => {
 };
 
 const ApolloClientProvider = (props: any) => {
-  console.log("token: ", props.token);
-  const client = getApolloClient(props.token);
+  const { token } = useContext(PersonalTokenContext);
+  const tokenRef = useRef();
+
+  // Whenever the token changes, the component re-renders, thus updating the ref.
+  tokenRef.current = token;
+  console.log("[app.tsx] token: ", tokenRef.current);
+  // Ensure that the client is only created once.
+  // const client = useMemo(() => {
+  //   return getApolloClient(tokenRef.current);
+  // }, [tokenRef]);
+  const client = getApolloClient(tokenRef.current);
   return <ApolloProvider client={client} {...props} />;
 };
 
 function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props;
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -95,37 +107,39 @@ function MyApp(props: AppProps): JSX.Element {
       jssStyles.parentElement.removeChild(jssStyles);
     }
     // get the authentication token from local storage if it exists
-    setToken(localStorage.getItem("token"));
+    // setToken(localStorage.getItem("token"));
   }, []);
 
   return (
-    <ApolloClientProvider token={token}>
-      <Provider session={pageProps.session}>
-        <UserProfileContextProvider>
-          <Head>
-            <title>My Top</title>
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link
-              rel="preconnect"
-              href="https://fonts.gstatic.com"
-              crossOrigin="true"
-            />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-              rel="stylesheet"
-            />
-          </Head>
-          <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </UserProfileContextProvider>
-      </Provider>
-    </ApolloClientProvider>
+    <PersonalTokenContextProvider>
+      <ApolloClientProvider>
+        <Provider session={pageProps.session}>
+          <UserProfileContextProvider>
+            <Head>
+              <title>My Top</title>
+              <link rel="icon" href="/favicon.ico" />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link
+                rel="preconnect"
+                href="https://fonts.gstatic.com"
+                crossOrigin="true"
+              />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link rel="preconnect" href="https://fonts.gstatic.com" />
+              <link
+                href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+                rel="stylesheet"
+              />
+            </Head>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </UserProfileContextProvider>
+        </Provider>
+      </ApolloClientProvider>
+    </PersonalTokenContextProvider>
   );
 }
 

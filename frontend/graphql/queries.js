@@ -140,3 +140,11 @@ export const USER_QUERY = gql`
     }
   }
 `;
+
+export const USER_LOGIN = gql`
+  query Query($loginPassword: String!, $loginLogin: String!) {
+    login(password: $loginPassword, login: $loginLogin) {
+      access_token
+    }
+  }
+`;

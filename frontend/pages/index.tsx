@@ -1,30 +1,26 @@
-import { getProviders, signIn, signOut, useSession } from "next-auth/client";
 import Image from "next/image";
 import pingPong from "../public/Ping_Pong_Icon.png";
-import logo42 from "../public/42_Logo.svg";
+import table from "../public/table.png";
 import styles from "../styles/MainPage.module.css";
 import {
   Box,
   Drawer,
   Grid,
-  Button,
   ListItemText,
   List,
   ListItem,
   ListItemIcon,
   makeStyles,
-  Avatar,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
-import theme from "../theme";
 import Router from "next/router";
 
 import { gql, useMutation, useQuery } from "@apollo/client";
-import client from "./api/apollo-client";
 
 import { GET_USERS } from "./api/queries/users";
 import { CREATE_USER } from "./api/mutations/users";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Button } from "../components";
 
 export default function MainPage({ provider }) {
   // const [ session, loading ] = useSession();
@@ -120,29 +116,32 @@ export default function MainPage({ provider }) {
 
                   <div className={styles.sign_in_school}>
                     <Button
-                      style={{
-                        color: "black",
-                        backgroundColor: "orange",
-                        marginTop: "40px",
-                        maxWidth: "1000px",
-                        minWidth: "100%",
-                      }}
-                      startIcon={
-                        <Image
-                          layout="fixed"
-                          width="65px"
-                          height="65px"
-                          src={logo42}
-                        />
-                      }
+                      appearance="primary"
+                      image="/42_Logo.svg"
+                      size="large"
                       onClick={() =>
                         Router.push(
                           "https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3040%2Fintra_callback&response_type=code"
                         )
                       }
-                      // onClick={() => signIn(provider.id)}
                     >
-                      Вход через аккаунт Школы
+                      OAuth
+                    </Button>{" "}
+                    &nbsp;
+                    <Button
+                      size="large"
+                      appearance="primary"
+                      onClick={() => Router.push("/account/login")}
+                    >
+                      Login
+                    </Button>
+                    &nbsp;
+                    <Button
+                      size="large"
+                      appearance="primary"
+                      onClick={() => Router.push("/account/register")}
+                    >
+                      Registration
                     </Button>
                   </div>
                 </Grid>
@@ -160,6 +159,7 @@ export default function MainPage({ provider }) {
                 <Grid item xs={4}>
                   <div className={styles.title_3}>
                     Классический Pong 1972 года
+                    <Image src={table} />
                   </div>
                 </Grid>
 
