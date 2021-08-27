@@ -3,11 +3,14 @@
   grid-template-rows: 1fr 82px;
   grid-template-columns: 1fr;
 
-  background-color: #005D58;
-  color: rgba(255, 255, 255, 0.5);;
+  background-color: #005d58;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 1.2rem;
-  border: 1px solid #68CFBF;
+  border: 1px solid #68cfbf;
   box-sizing: border-box;
   border-radius: 12px;
+  height: 70%;
+  height: -webkit-calc(80vh - 82px);
+  height: -moz-calc(80vh - 82px);
   height: calc(80vh - 82px);
 }

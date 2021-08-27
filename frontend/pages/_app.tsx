@@ -116,7 +116,7 @@ function MyApp(props: AppProps): JSX.Element {
         <Provider session={pageProps.session}>
           <UserProfileContextProvider>
             <Head>
-              <title>My Top</title>
+              <title>Pong Online</title>
               <link rel="icon" href="/favicon.ico" />
               <link rel="preconnect" href="https://fonts.googleapis.com" />
               <link

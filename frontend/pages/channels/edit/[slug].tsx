@@ -205,7 +205,7 @@ const ChannelRoom = (): JSX.Element => {
 
   return (
     <InnerPageLayout>
-      <div className={styles.form}>
+      <div className="form">
         <Htag tag="h1">Edit channel</Htag>
         <form onSubmit={handleSubmit}>
           <div className={styles.line}>
@@ -225,7 +225,7 @@ const ChannelRoom = (): JSX.Element => {
               helperText={!isNameValid ? "Empty field!" : " "}
             />
           </div>
-          <div className={styles.line}>
+          <div className="line">
             <Autocomplete
               fullWidth
               multiple
@@ -276,7 +276,7 @@ const ChannelRoom = (): JSX.Element => {
               )}
             />
           </div>
-          <div className={styles.line}>
+          <div className="line">
             <Autocomplete
               fullWidth
               multiple
@@ -321,7 +321,7 @@ const ChannelRoom = (): JSX.Element => {
               )}
             />
           </div>
-          <div className={styles.line}>
+          <div className="line">
             <FormControlLabel
               control={
                 <Switch
@@ -335,7 +335,7 @@ const ChannelRoom = (): JSX.Element => {
               label="Private"
             />
           </div>
-          <div className={styles.line}>
+          <div className="line">
             <TextField
               id="outlined-size-normal2"
               label="Password"
@@ -355,7 +355,7 @@ const ChannelRoom = (): JSX.Element => {
               }
             />
           </div>
-          <div className={styles.line}>
+          <div className="line">
             <Button appearance="primary">Submit</Button>
           </div>
         </form>

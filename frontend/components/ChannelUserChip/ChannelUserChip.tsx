@@ -1,16 +1,19 @@
 import { Avatar, Chip, Menu, MenuItem } from "@material-ui/core";
 import { useRouter } from "next/router";
 import React from "react";
+import { IChat } from "../../interfaces/chat.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
 interface UserChipProps {
   user: IUserProfile;
   current_user_id: number;
+  current_channel: IChat;
 }
 
 export const ChannelUserChip = ({
   user,
   current_user_id,
+  current_channel,
 }: UserChipProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
@@ -26,6 +29,26 @@ export const ChannelUserChip = ({
   if (!user) return null;
 
   const isCurrentUser = user.id === current_user_id ? true : false;
+
+  const getMenues = () => {
+    const adminsIdArr = current_channel.admins.reduce((a, { id }) => {
+      if (id) a.push(id);
+      return a;
+    }, []);
+    if (
+      user.id !== current_user_id &&
+      ((current_channel.ownerId &&
+        current_channel.ownerId === current_user_id) ||
+        adminsIdArr.includes(current_user_id))
+    ) {
+      return (
+        <MenuItem onClick={handleClose}>
+          Ban for 10 minutes {user.name}
+        </MenuItem>
+      );
+    }
+  };
+  console.log("current_channel: ", current_channel.admins);
   return (
     <>
       <Chip
@@ -53,12 +76,14 @@ export const ChannelUserChip = ({
         <MenuItem onClick={() => router.push("/users/" + user.id)}>
           View user profile
         </MenuItem>
-        <MenuItem onClick={() => router.push("/game/join/" + user.id)}>
-          Start game
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          Ban for 10 minutes {user.name}
-        </MenuItem>
+        {user.id !== current_user_id ? (
+          <MenuItem onClick={() => router.push("/game/join/" + user.id)}>
+            Start game
+          </MenuItem>
+        ) : (
+          ""
+        )}
+        {getMenues()}
       </Menu>
       &nbsp;
     </>

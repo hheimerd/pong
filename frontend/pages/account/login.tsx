@@ -5,8 +5,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Htag } from "../../components";
 import { PersonalTokenContext } from "../../context/personaltoken/personaltoken.context";
 import { USER_LOGIN } from "../../graphql";
+import { HomePageLayout } from "../../layout/HomePageLayout";
 
-const Profile = (): JSX.Element => {
+const UserLogin = (): JSX.Element => {
   const { token, setToken } = useContext(PersonalTokenContext);
   const router = useRouter();
 
@@ -31,7 +32,7 @@ const Profile = (): JSX.Element => {
       localStorage.setItem("token", data.login.access_token);
       setToken(data.login.access_token);
       if (localStorage.getItem("token") !== "") {
-        console.log("token: ", localStorage.getItem("token"));
+        console.log("localStorage token: ", localStorage.getItem("token"));
         router.push("/profile");
       }
     }
@@ -77,53 +78,58 @@ const Profile = (): JSX.Element => {
   };
 
   return (
-    <div className="form">
-      <Htag tag="h1">Login</Htag>
-      {error && <p className="error-message"> Error: {error.message} </p>}
-      <form onSubmit={handleSubmit}>
-        <div className="line">
-          <TextField
-            id="name"
-            label="Name *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setName(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={name}
-            inputRef={nameRef}
-            error={!isNameValid}
-            helperText={!isNameValid ? "Empty field!" : " "}
-          />
-        </div>
-        <div className="line">
-          <TextField
-            id="password"
-            label="Password"
-            fullWidth
-            size="small"
-            type="password"
-            variant="outlined"
-            defaultValue={password}
-            InputLabelProps={{ shrink: true }}
-            onChange={(event) => setPassword(event.target.value)}
-            inputRef={passwordRef}
-            error={!isPasswordValid}
-            helperText={
-              !isPasswordValid
-                ? "Must be longer than or equal to 6 characters!"
-                : " "
-            }
-          />
-        </div>
-        <div className="line">
-          <Button appearance="primary">Submit</Button>
-        </div>
-      </form>
-    </div>
+    <HomePageLayout>
+      <div className="loginform">
+        <span className="backlink" onClick={() => router.back()}>
+          &lt; Back
+        </span>
+        <Htag tag="h2">Login</Htag>
+        {error && <p className="error-message"> Error: {error.message} </p>}
+        <form onSubmit={handleSubmit}>
+          <div className="line">
+            <TextField
+              id="name"
+              label="Name *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setName(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={name}
+              inputRef={nameRef}
+              error={!isNameValid}
+              helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className="line">
+            <TextField
+              id="password"
+              label="Password"
+              fullWidth
+              size="small"
+              type="password"
+              variant="outlined"
+              defaultValue={password}
+              InputLabelProps={{ shrink: true }}
+              onChange={(event) => setPassword(event.target.value)}
+              inputRef={passwordRef}
+              error={!isPasswordValid}
+              helperText={
+                !isPasswordValid
+                  ? "Must be longer than or equal to 6 characters!"
+                  : " "
+              }
+            />
+          </div>
+          <div className="line">
+            <Button appearance="primary">Submit</Button>
+          </div>
+        </form>
+      </div>
+    </HomePageLayout>
   );
 };
 
-export default Profile;
+export default UserLogin;

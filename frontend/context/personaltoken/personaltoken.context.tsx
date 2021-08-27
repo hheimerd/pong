@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 
-export const PersonalTokenContext = createContext(null);
+export const PersonalTokenContext = createContext({});
 
 export const PersonalTokenContextProvider: React.FC = ({ children }) => {
   const [token, setToken] = useState<string>({} as string);

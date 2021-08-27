@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Htag } from "../../components";
 import { CREATE_USER_MUTATION } from "../../graphql/mutations";
+import { HomePageLayout } from "../../layout/HomePageLayout";
 
 const Register = (): JSX.Element => {
   const [createUser, { data, loading, error }] =
@@ -108,86 +109,91 @@ const Register = (): JSX.Element => {
   };
 
   return (
-    <div className="form">
-      <Htag tag="h1">Registration</Htag>
-      {error && <p className="error-message"> Error: {error.message} </p>}
-      <form onSubmit={handleSubmit}>
-        <div className="line">
-          <TextField
-            id="name"
-            label="Name *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setName(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={name}
-            inputRef={nameRef}
-            error={!isNameValid}
-            helperText={!isNameValid ? "Empty field!" : " "}
-          />
-        </div>
-        <div className="line">
-          <TextField
-            id="login"
-            label="Login *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setLogin(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={login}
-            inputRef={loginRef}
-            error={!isLoginValid}
-            helperText={!isLoginValid ? "Empty field!" : " "}
-          />
-        </div>
-        <div className="line">
-          <TextField
-            id="email"
-            label="Email *"
-            fullWidth
-            size="small"
-            variant="outlined"
-            onChange={(event) => setEmail(event.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            defaultValue={email}
-            inputRef={emailRef}
-            error={!isEmailValid}
-            helperText={!isEmailValid ? "Empty field!" : " "}
-          />
-        </div>
-        <div className="line">
-          <TextField
-            id="password"
-            label="Password"
-            fullWidth
-            size="small"
-            type="password"
-            variant="outlined"
-            defaultValue={password}
-            InputLabelProps={{ shrink: true }}
-            onChange={(event) => setPassword(event.target.value)}
-            inputRef={passwordRef}
-            error={!isPasswordValid}
-            helperText={
-              !isPasswordValid
-                ? "Must be longer than or equal to 6 characters!"
-                : " "
-            }
-          />
-        </div>
-        <div className="line">
-          <Button appearance="primary">Submit</Button>
-        </div>
-      </form>
-    </div>
+    <HomePageLayout>
+      <div className="loginform">
+        <span className="backlink" onClick={() => router.back()}>
+          &lt; Back
+        </span>
+        <Htag tag="h2">Registration</Htag>
+        {error && <p className="error-message"> Error: {error.message} </p>}
+        <form onSubmit={handleSubmit}>
+          <div className="line">
+            <TextField
+              id="name"
+              label="Name *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setName(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={name}
+              inputRef={nameRef}
+              error={!isNameValid}
+              helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className="line">
+            <TextField
+              id="login"
+              label="Login *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setLogin(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={login}
+              inputRef={loginRef}
+              error={!isLoginValid}
+              helperText={!isLoginValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className="line">
+            <TextField
+              id="email"
+              label="Email *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setEmail(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={email}
+              inputRef={emailRef}
+              error={!isEmailValid}
+              helperText={!isEmailValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className="line">
+            <TextField
+              id="password"
+              label="Password"
+              fullWidth
+              size="small"
+              type="password"
+              variant="outlined"
+              defaultValue={password}
+              InputLabelProps={{ shrink: true }}
+              onChange={(event) => setPassword(event.target.value)}
+              inputRef={passwordRef}
+              error={!isPasswordValid}
+              helperText={
+                !isPasswordValid
+                  ? "Must be longer than or equal to 6 characters!"
+                  : " "
+              }
+            />
+          </div>
+          <div className="line">
+            <Button appearance="primary">Submit</Button>
+          </div>
+        </form>
+      </div>
+    </HomePageLayout>
   );
 };
 

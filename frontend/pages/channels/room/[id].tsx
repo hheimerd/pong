@@ -42,7 +42,11 @@ const ChannelRoom = (): JSX.Element => {
       <ChatContextProvider>
         <Htag tag="h1">{getChannel().name}</Htag>
         {getChannel().members.map((user: IUserProfile) => (
-          <ChannelUserChip user={user} current_user_id={data.getProfile.id} />
+          <ChannelUserChip
+            user={user}
+            current_user_id={data.getProfile.id}
+            current_channel={getChannel()}
+          />
         ))}
         <br />
         <br />

@@ -1,10 +1,16 @@
 .wrapper {
   display: grid;
   grid-template-columns: 0.5fr 2fr;
-  grid-template-rows: auto;
+  grid-template-rows: 1fr;
   gap: 0px 20px;
   grid-auto-flow: row;
   grid-template-areas: ". .";
+  height: 100%;
 }
-.navi {
+.aside {
+  background-color: var(--black);
+  padding: 1rem;
+}
+.content {
+  padding: 2rem;
 }

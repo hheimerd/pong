@@ -7,6 +7,10 @@ body {
   background: var(--green);
 
   font-family: "Roboto", sans-serif;
+  height: 100%;
+}
+#__next {
+  height: 100%;
 }
 
 a {
@@ -98,6 +102,40 @@ table td a {
   width: 80%;
 }
 
+.loginform {
+  width: 14vw;
+  min-width: 300px;
+}
+
 .line {
   margin: 1rem 0;
+}
+
+.home__h2 {
+  margin: 4rem 0 2rem;
+}
+
+.home__list {
+  margin: 2rem 0 4rem;
+  padding: 0;
+}
+
+.home__list li {
+  background: url("/li.png") no-repeat 0 0;
+  list-style-type: none;
+  padding-left: 3rem;
+  margin: 1rem 0;
+}
+
+.home__table_image {
+  float: left;
+  margin-right: 4rem;
+  margin-bottom: 4rem;
+}
+
+.backlink {
+  color: var(--green-light);
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 1rem 0 2rem;
 }

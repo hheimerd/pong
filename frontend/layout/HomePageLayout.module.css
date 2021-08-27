@@ -1,34 +1,36 @@
-.bg {
-  background: #057a68;
+.wrapper {
+  background: url(../public/Ping_Pong_Icon.png) top right no-repeat;
+  background-size: 35vw;
+  margin: 0 6vw;
 }
 
-.title {
+.h1 {
   font-family: Roboto;
   font-weight: bold;
-  font-size: 130px;
-  line-height: 152px;
+  font-size: 8rem;
   letter-spacing: -0.04em;
+  margin: 0;
+  padding: 0;
 
-  color: #ffffff;
+  color: var(--white);
 }
 
-.title_2 {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.desc {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 32px;
   line-height: 94.4%;
-  /* or 30px */
+  margin: 0 0 4rem;
+  padding: 0;
 
   letter-spacing: 0.04em;
   text-transform: uppercase;
 
-  color: #5fceb2;
+  color: var(--green-light);
 }
 
-.title_3 {
+.h2 {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -36,17 +38,14 @@
   line-height: 42px;
   letter-spacing: -0.04em;
 
-  color: #ffffff;
+  color: var(--white);
 }
 
 .pp_icon {
   float: right;
 }
 
-.sign_in_school {
-}
-
-.decr_text {
+.content {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -54,10 +53,10 @@
   line-height: 28px;
   letter-spacing: -0.04em;
 
-  color: #ffffff;
+  color: var(--white);
 }
 
-.game_field {
-  background: rgba(0, 0, 0, 0.75);
-  border-radius: 16px;
+.table_image {
+  float: left;
+  margin-right: 2rem;
 }
