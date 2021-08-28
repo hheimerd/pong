@@ -3,10 +3,34 @@ import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { PasswordService } from 'src/common/password/password.service';
+import { arrayToObjectMap } from 'src/utils';
 
 @Injectable()
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
+  
+  async addToChat(chatId: string, userId: number) {
+    await this.prisma.chat.update({
+      data: {
+        members: {
+          connect: { id: userId }
+        }
+      },
+      where: { id: chatId},
+    })
+  }
+
+  async removeFromChat(chatId: string, userId: number) {
+    await this.prisma.chat.update({
+      data: {
+        members: {
+          disconnect: { id: userId }
+        }
+      },
+      where: { id: chatId},
+    })
+  }
 
   async unbanUser(chatId: string, userId: number) {
     await this.prisma.chatsBannedUsers.delete({
@@ -89,6 +113,21 @@ export class ChatService {
     return !!result;
   }
 
+  async isChatAdmin(chatId: string, userId: number): Promise<boolean> {
+    const result = await this.prisma.chat.count({
+      where: {
+        id: chatId,
+        admins: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    return !!result;
+  }
+
   async create(input: CreateChatInput, ownerId: number) {
     const admins = input.admins?.length > 0 
       ? input.admins 
@@ -96,7 +135,7 @@ export class ChatService {
     return await this.prisma.chat.create({
       data: {
         name: input.name,
-        password: input.password,
+        password: await PasswordService.hash(input.password),
         is_private: input.is_private,
         type: input.type,
         admins: {
@@ -112,16 +151,24 @@ export class ChatService {
     });
   }
 
-  async findAll(whereClause: Prisma.ChatWhereInput) {
+  async findAll(whereClause: Prisma.ChatWhereInput, limit?: number, offset?: number) {
     return await this.prisma.chat.findMany({
       where: whereClause,
+      take: limit,
+      skip: offset,
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, include?: string[]) {
     return await this.prisma.chat.findUnique({
       where: { id: id },
-      include: { owner: true },
+      include: {
+        admins: include?.includes('admins'),
+        banned: include?.includes('banned'),
+        members: include?.includes('members'),
+        messages: include?.includes('messages'),
+        owner: include?.includes('owner')
+      }
     });
   }
 

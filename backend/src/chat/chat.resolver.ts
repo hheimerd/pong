@@ -15,7 +15,6 @@ import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
 import {
   ForbiddenException,
   NotFoundException,
-  ParseIntPipe,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -32,8 +31,8 @@ export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
   @UsePipes(ValidationPipe)
-  @Mutation(() => Chat)
-  createChat(
+  @Mutation(() => Chat, { name: 'createChat' })
+  create(
     @Args('createChatInput') dto: CreateChatInput,
     @CurrentUser() user: RequestUser,
   ) {
@@ -45,17 +44,15 @@ export class ChatResolver {
   }
 
   @Query(() => [Chat], { name: 'chats' })
-  findAll() {
-    return this.chatService.findAll({ is_private: false });
-  }
-
-  @Mutation(() => Boolean)
-  async doSomethingWithUserInChat(
-    @Args('chatId') chatId: string,
-    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
-    @CurrentUser() user: RequestUser,
+  findAll(
+    @Args('limit', {type: () => Int, nullable: true, description: 'max limit 100'})
+    limit = 15,
+    @Args('offset', { type: () => Int, nullable: true })
+    offset?: number,
   ) {
-    return true || false;
+    if (limit > 100) limit = 100;
+    if (limit < 0) limit = 15;
+    return this.chatService.findAll({ is_private: false}, limit, offset);
   }
 
   @Query(() => Chat, { name: 'chat' })
@@ -66,25 +63,13 @@ export class ChatResolver {
     return chat;
   }
 
-  @Mutation(() => Boolean)
-  async banUserInChat(
-    @Args('chatId') chatId: string,
-    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
-    @Args('minutes', { type: () => Int, nullable: true }) minutes = 5,
-  ): Promise<boolean> {
-    await this.chatService.banUser(chatId, userId, minutes);
-    return true;
+  private async throwUnlessMember(chatId, userId) {
+    const isMember = await this.chatService.isChatMember(chatId, userId);
+    if (!isMember) {
+      throw new ForbiddenException();
+    }
   }
-
-  @Mutation(() => Boolean)
-  async unbanUserInChat(
-    @Args('chatId') chatId: string,
-    @Args('userId', { type: () => Int }, ParseIntPipe) userId: number,
-  ): Promise<boolean> {
-    await this.chatService.unbanUser(chatId, userId);
-    return true;
-  }
-
+ 
   @ResolveField('dialogName', () => String)
   async getDialogName(@Parent() chat: Chat, @CurrentUser() user: RequestUser) {
     if (chat.type === ChatType.Chat) {
@@ -97,11 +82,7 @@ export class ChatResolver {
   @ResolveField('messages', () => [ChatMessage])
   async getMessages(
     @Parent() chat: Chat,
-    @Args('limit', {
-      type: () => Int,
-      nullable: true,
-      description: 'max limit 100',
-    })
+    @Args('limit', { type: () => Int, nullable: true, description: 'max limit 100' })
     limit = 15,
     @Args('offset', { type: () => Int, nullable: true })
     offset?: number,
@@ -110,7 +91,7 @@ export class ChatResolver {
     if (limit > 100) limit = 100;
     if (limit < 0) limit = 15;
 
-    await this.checkIsMember(chat.id, user.id);
+    await this.throwUnlessMember(chat.id, user.id);
 
     return this.chatService.getMessages(chat.id, limit, offset);
   }
@@ -122,16 +103,12 @@ export class ChatResolver {
 
   @ResolveField('members', () => [User])
   async getMembers(@Parent() chat: Chat) {
-    const members = await this.chatService.getMembers(chat.id);
-
-    return members;
+    return await this.chatService.getMembers(chat.id);
   }
 
   @ResolveField('banned', () => [User])
   async getBanned(@Parent() chat: Chat) {
-    const banned = await this.chatService.getbanned(chat.id);
-
-    return banned;
+    return await this.chatService.getbanned(chat.id);
   }
 
   @ResolveField('admins', () => [User])
@@ -145,10 +122,4 @@ export class ChatResolver {
     return this.chatService.update(input.id, input);
   }
 
-  private async checkIsMember(chatId, userId) {
-    const isMember = await this.chatService.isChatMember(chatId, userId);
-    if (!isMember) {
-      throw new ForbiddenException();
-    }
-  }
 }

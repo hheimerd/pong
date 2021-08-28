@@ -67,7 +67,12 @@ type Query {
   getProfile: User!
   users(withDeleted: Boolean, offset: Int, limit: Int): [User!]!
   login(password: String!, login: String!): JwtResponse!
-  chats: [Chat!]!
+  chats(
+    offset: Int
+
+    """max limit 100"""
+    limit: Int
+  ): [Chat!]!
   chat(id: String!): Chat!
 }
 
@@ -80,10 +85,15 @@ type Mutation {
   restoreUser(id: Float!): Boolean!
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
-  doSomethingWithUserInChat(userId: Int!, chatId: String!): Boolean!
+  updateChat(input: UpdateChatInput!): Chat!
   banUserInChat(minutes: Int, userId: Int!, chatId: String!): Boolean!
   unbanUserInChat(userId: Int!, chatId: String!): Boolean!
-  updateChat(input: UpdateChatInput!): Chat!
+  addMemberToChat(password: String, userId: Int, chatId: String!): Boolean!
+  removeMemberFromChat(
+    """default: current user"""
+    userId: Int
+    chatId: String!
+  ): Boolean!
 }
 
 input CreateUserDto {

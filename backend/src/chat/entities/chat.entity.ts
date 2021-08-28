@@ -1,6 +1,9 @@
 import { ObjectType, Field, registerEnumType, Int } from '@nestjs/graphql';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { ChatType as PrismaChatType } from '@prisma/client';
+import { ChatService } from '../chat.service';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 
 export enum ChatType {
   Chat = 'Chat',
@@ -10,6 +13,8 @@ registerEnumType(ChatType, { name: 'ChatType' });
 
 @ObjectType()
 export class Chat {
+  constructor(chatService: ChatService) {}
+
   @Field()
   id: string;
 
@@ -29,4 +34,5 @@ export class Chat {
   messages: ChatMessage[];
 
   password: string;
+
 }

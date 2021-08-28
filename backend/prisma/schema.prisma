@@ -21,48 +21,58 @@ enum ChatType {
 }
 
 model User {
-  id           Int                @id @default(autoincrement())
-  name         String             @db.VarChar(32)
-  email        String             @unique @db.VarChar(128)
-  login        String             @unique @db.VarChar(24)
-  password     String             @db.VarChar(64)
+  id           Int              @id @default(autoincrement())
+  name         String           @db.VarChar(32)
+  email        String           @unique @db.VarChar(128)
+  login        String           @unique @db.VarChar(24)
+  password     String           @db.VarChar(64)
   roles        Role[]
-  created_at   DateTime           @default(now())
-  updated_at   DateTime           @updatedAt
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
   avatar       String[]
-  followedBy   User[]             @relation("UserFollows", references: [id])
-  following    User[]             @relation("UserFollows", references: [id])
-  chats        Chat[]             @relation("members")
-  adminChats   Chat[]             @relation("admins")
+  followedBy   User[]           @relation("UserFollows", references: [id])
+  following    User[]           @relation("UserFollows", references: [id])
+  chats        Chat[]           @relation("members")
+  adminChats   Chat[]           @relation("admins")
   ownChats     Chat[]
+  chatPunish   ChatPunishment[] @relation("chatPunish")
+  chatPunished ChatPunishment[] @relation("chatPunished")
   chatMessages ChatMessage[]
-  bannedChats  ChatsBannedUsers[]
   deleted_at   DateTime?
 }
 
-model ChatsBannedUsers {
-  banned_at DateTime @default(now())
-  minutes   Int      @default(1)
-  banned    User     @relation(fields: [userId], references: [id])
-  chats     Chat     @relation(fields: [chatId], references: [id])
-  userId    Int
-  chatId    String   @db.Uuid
+enum PunishmentDegree {
+  BAN
+  MUTE
+  SELF_MUTE
+}
 
-  @@id([userId, chatId])
+model ChatPunishment {
+  chat       Chat             @relation("punishments", fields: [chatId], references: [id])
+  chatId     String           @db.Uuid
+  fromUser   User             @relation("chatPunish", fields: [fromUserId], references: [id])
+  fromUserId Int
+  toUser     User             @relation("chatPunished", fields: [toUserId], references: [id])
+  toUserId   Int
+  degree     PunishmentDegree
+  created_at DateTime         @default(now())
+  minutes    Int              @default(1)
+
+  @@id([chatId, fromUserId, toUserId, degree])
 }
 
 model Chat {
-  id         String             @id @default(uuid()) @db.Uuid
-  name       String?            @db.VarChar(32)
-  members    User[]             @relation("members")
-  admins     User[]             @relation("admins")
-  owner      User               @relation(fields: [ownerId], references: [id])
-  banned     ChatsBannedUsers[]
-  ownerId    Int
-  type       ChatType
-  is_private Boolean
-  password   String?            @db.VarChar(64)
-  messages   ChatMessage[]
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String?          @db.VarChar(32)
+  members     User[]           @relation("members")
+  admins      User[]           @relation("admins")
+  owner       User             @relation(fields: [ownerId], references: [id])
+  punishments ChatPunishment[] @relation("punishments")
+  ownerId     Int
+  type        ChatType
+  is_private  Boolean
+  password    String?          @db.VarChar(64)
+  messages    ChatMessage[]
 }
 
 model ChatMessage {

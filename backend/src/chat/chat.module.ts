@@ -5,10 +5,11 @@ import { PolicyModule } from 'src/common/policy/policy.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthModule } from 'src/common/auth/auth.module';
 import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { ChatActionsResolver } from './chat-actions.resolver';
 
 @Module({
   imports: [PolicyModule, UserModule, AuthModule, PrismaModule],
-  providers: [ChatResolver, ChatService],
+  providers: [ChatResolver, ChatActionsResolver, ChatService],
   exports: [ChatService],
 })
 export class ChatModule {}

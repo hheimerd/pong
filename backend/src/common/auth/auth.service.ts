@@ -1,8 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import bcryptjs from 'bcryptjs';
-const { compare } = bcryptjs;
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { PasswordService } from '../password/password.service';
 import { RequestUser } from './entities/request-user.entitiy';
 
 @Injectable()
@@ -25,7 +24,7 @@ export class AuthService {
 
     if (!user) return null;
 
-    const isValid = await compare(pass, user.password);
+    const isValid = await  await PasswordService.isValid(pass, user.password);
 
     if (!isValid) return null;
 

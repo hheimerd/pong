@@ -92,15 +92,15 @@ export class UserService {
   ): Promise<string[]> {
     const user = await this.findOne(userId);
 
-    const sharpLarge = sharp(image.buffer).resize(512).toFormat('webp');
+    const sharpLarge = sharp(image.buffer).resize(512).jpeg({ progressive: true });
     const sharpIco = sharpLarge.clone().resize(64, 64);
 
     const uploadPath = join('avatars', user.id.toString(), 'avatar');
 
     const put = this.storageService.put.bind(this.storageService);
     const paths = await Promise.all([
-      put(await sharpIco.toBuffer(), uploadPath + '_ico' + '.webp'),
-      put(await sharpLarge.toBuffer(), uploadPath + '.webp'),
+      put(await sharpIco.toBuffer(), uploadPath + '_ico' + '.jpeg'),
+      put(await sharpLarge.toBuffer(), uploadPath + '.jpeg'),
     ]);
 
     const oldAvatar = user.avatar;
