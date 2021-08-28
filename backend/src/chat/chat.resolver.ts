@@ -106,11 +106,6 @@ export class ChatResolver {
     return await this.chatService.getMembers(chat.id);
   }
 
-  @ResolveField('banned', () => [User])
-  async getBanned(@Parent() chat: Chat) {
-    return await this.chatService.getbanned(chat.id);
-  }
-
   @ResolveField('admins', () => [User])
   async getAdmins(@Parent() chat: Chat) {
     return this.chatService.getAdmins(chat.id);

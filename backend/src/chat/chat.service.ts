@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, PunishmentDegree as PrismaPunishmentDegree } from '@prisma/client';
 import { PasswordService } from 'src/common/password/password.service';
-import { arrayToObjectMap } from 'src/utils';
+import { PunishmentDegree } from './entities/chat.entity';
 
 @Injectable()
 export class ChatService {
@@ -32,34 +32,57 @@ export class ChatService {
     })
   }
 
-  async unbanUser(chatId: string, userId: number) {
-    await this.prisma.chatsBannedUsers.delete({
+   
+  async getPunishments(chatId: string, degree?: PunishmentDegree) {
+    return await this.prisma.chatPunishment.findMany({
       where: {
-        userId_chatId: {
+        chatId,
+        degree
+      }
+    })
+  }
+
+  async isPunished(chatId: string, userId: number, degree?: PunishmentDegree) {
+    return await this.prisma.chatPunishment.count({
+      where: {
+        chatId,
+        degree,
+        toUserId: userId
+      }
+    })
+  }
+
+  async removePunishment(
+    chatId: string,
+    punisherId: number,
+    degree: PunishmentDegree,
+    punishedId: number
+  ) {
+    await this.prisma.chatPunishment.delete({
+      where: {
+        chatId_fromUserId_toUserId_degree: {
           chatId,
-          userId,
-        },
+          fromUserId: punisherId,
+          degree,
+          toUserId: punishedId
+        }
       },
     });
   }
 
-  async getbanned(chatId: string) {
-    return await this.prisma.user.findMany({
-      where: {
-        bannedChats: {
-          some: {
-            chatId: chatId,
-          },
-        },
-      },
-    });
-  }
-
-  async banUser(chatId: string, userId: number, minutes: number) {
-    await this.prisma.chatsBannedUsers.create({
+  async addPunishment(
+    chatId: string,
+    punisherId: number,
+    degree: PunishmentDegree,
+    punishedId: number,
+    minutes: number
+  ) {
+    await this.prisma.chatPunishment.create({
       data: {
-        userId: userId,
-        chatId: chatId,
+        chatId,
+        fromUserId: punisherId,
+        degree,
+        toUserId: punishedId,
         minutes: minutes,
       },
     });
@@ -164,7 +187,6 @@ export class ChatService {
       where: { id: id },
       include: {
         admins: include?.includes('admins'),
-        banned: include?.includes('banned'),
         members: include?.includes('members'),
         messages: include?.includes('messages'),
         owner: include?.includes('owner')

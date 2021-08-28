@@ -49,7 +49,6 @@ type Chat {
   dialogName: String!
   hasPassword: Boolean!
   members: [User!]!
-  banned: [User!]!
   admins: [User!]!
 }
 
@@ -60,6 +59,15 @@ enum ChatType {
 
 type JwtResponse {
   access_token: String!
+}
+
+type ChatPunishment {
+  chatId: String!
+  fromUserId: Int!
+  toUserId: Int!
+  degree: String!
+  created_at: DateTime!
+  minutes: Int!
 }
 
 type Query {
@@ -74,6 +82,7 @@ type Query {
     limit: Int
   ): [Chat!]!
   chat(id: String!): Chat!
+  getPunishments(chatId: String!): ChatPunishment!
 }
 
 type Mutation {
@@ -86,8 +95,8 @@ type Mutation {
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
   updateChat(input: UpdateChatInput!): Chat!
-  banUserInChat(minutes: Int, userId: Int!, chatId: String!): Boolean!
-  unbanUserInChat(userId: Int!, chatId: String!): Boolean!
+  addUserPunishmentInChat(minutes: Int, degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
+  removeUserPunishmentInChat(degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
   addMemberToChat(password: String, userId: Int, chatId: String!): Boolean!
   removeMemberFromChat(
     """default: current user"""
@@ -138,6 +147,12 @@ input UpdateChatInput {
   is_private: Boolean
   password: String
   id: String!
+}
+
+enum PunishmentDegree {
+  BAN
+  MUTE
+  SELF_MUTE
 }
 
 type Subscription {
