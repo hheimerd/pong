@@ -5,11 +5,42 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma, PunishmentDegree as PrismaPunishmentDegree } from '@prisma/client';
 import { PasswordService } from 'src/common/password/password.service';
 import { PunishmentDegree } from './entities/chat.entity';
+import moment from 'moment';
 
 @Injectable()
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
   
+  async clearOldPunishments() {
+    const lastWeek = moment().subtract(7, 'days');
+
+    const allLastPunishments = await this.prisma.chatPunishment.findMany({
+      where: { 
+        created_at: {
+          gte: lastWeek.toDate(),
+        }
+      }
+    })
+    
+    const invalidPunishments = allLastPunishments.filter(p => {
+      const invalidateTime = moment(p.created_at).add(p.minutes, 'minutes');
+      if (invalidateTime < moment()) {
+        return true;
+      }
+      return false;
+    });
+
+    const idForRemove = invalidPunishments.map((p) => p.id);
+    this.prisma.chatPunishment.deleteMany({
+      where: {
+        id: {
+          in: idForRemove
+        }
+      }
+    })
+
+  }
+
   async addToChat(chatId: string, userId: number) {
     await this.prisma.chat.update({
       data: {
