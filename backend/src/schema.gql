@@ -47,7 +47,7 @@ type Chat {
     limit: Int
   ): [ChatMessage!]!
   dialogName: String!
-  punishment(degree: PunishmentDegree): [ChatPunishment!]!
+  punishments(degree: PunishmentDegree): [ChatPunishment!]!
   hasPassword: Boolean!
   members: [User!]!
   admins: [User!]!

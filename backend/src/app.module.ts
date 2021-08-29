@@ -9,6 +9,7 @@ import { StorageModule } from './common/storage/storage.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './common/storage/storage.constants';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
         credentials: true,
       },
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     PolicyModule,
     ChatMessageModule,

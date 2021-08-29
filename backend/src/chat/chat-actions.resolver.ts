@@ -1,5 +1,6 @@
 import { NotFoundException, ParseIntPipe, UnauthorizedException } from "@nestjs/common";
 import { Args, Int, Mutation, Resolver, Query } from "@nestjs/graphql";
+import { Cron } from "@nestjs/schedule";
 import { Chat } from "@prisma/client";
 import { CurrentUser } from "src/common/auth/decorators/current-user.decorator";
 import { RequestUser } from "src/common/auth/entities/request-user.entitiy";
@@ -13,6 +14,12 @@ import { PunishmentDegree } from "./entities/chat.entity";
 export class ChatActionsResolver {
   constructor(private readonly chatService: ChatService) {}
  
+  // @Cron('1 * * * * *')
+  // clearOldPunishments() {
+  //   this.chat
+  // }
+
+
   async canPunish(
     chat: Chat,
     punisherId: number,
@@ -20,7 +27,8 @@ export class ChatActionsResolver {
     targetId: number
   ): Promise<boolean> {
     if (degree === PunishmentDegree.SELF_MUTE) return true;
-   
+    if (punisherId == chat.ownerId) return true;
+
     if (targetId == chat.ownerId) return false;
 
     const punisherIsAdmin = await this.chatService.isChatAdmin(chat.id, punisherId);
