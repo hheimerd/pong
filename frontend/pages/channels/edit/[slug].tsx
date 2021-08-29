@@ -14,7 +14,6 @@ import {
 import { ChatType, IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../../layout/InnerPageLayout";
-import styles from "./edit.module.css";
 
 const ChannelRoom = (): JSX.Element => {
   const {
@@ -208,7 +207,7 @@ const ChannelRoom = (): JSX.Element => {
       <div className="form">
         <Htag tag="h1">Edit channel</Htag>
         <form onSubmit={handleSubmit}>
-          <div className={styles.line}>
+          <div className="line">
             <TextField
               id="outlined-size-normal"
               label="Name *"

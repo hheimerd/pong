@@ -56,3 +56,17 @@ export const UNFOLLOW_TO_USER = gql`
     unfollowUser(userId: $unfollowUserUserId)
   }
 `;
+
+export const BAN_USER_MUTATION = gql`
+  mutation BanUserInChatMutation(
+    $banUserInChatUserId: Int!
+    $banUserInChatChatId: String!
+    $banUserInChatMinutes: Int
+  ) {
+    banUserInChat(
+      userId: $banUserInChatUserId
+      chatId: $banUserInChatChatId
+      minutes: $banUserInChatMinutes
+    )
+  }
+`;
