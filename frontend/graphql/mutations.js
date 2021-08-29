@@ -57,16 +57,31 @@ export const UNFOLLOW_TO_USER = gql`
   }
 `;
 
-export const BAN_USER_MUTATION = gql`
-  mutation BanUserInChatMutation(
-    $banUserInChatUserId: Int!
-    $banUserInChatChatId: String!
-    $banUserInChatMinutes: Int
+export const PUNISHMENT_USER_MUTATION = gql`
+  mutation Mutation(
+    $addUserPunishmentInChatDegree: PunishmentDegree!
+    $addUserPunishmentInChatTargetUserId: Int!
+    $addUserPunishmentInChatChatId: String!
+    $addUserPunishmentInChatMinutes: Int
   ) {
-    banUserInChat(
-      userId: $banUserInChatUserId
-      chatId: $banUserInChatChatId
-      minutes: $banUserInChatMinutes
+    addUserPunishmentInChat(
+      degree: $addUserPunishmentInChatDegree
+      targetUserId: $addUserPunishmentInChatTargetUserId
+      chatId: $addUserPunishmentInChatChatId
+      minutes: $addUserPunishmentInChatMinutes
+    )
+  }
+`;
+export const UNPUNISHMENT_USER_MUTATION = gql`
+  mutation Mutation(
+    $removeUserPunishmentInChatDegree: PunishmentDegree!
+    $removeUserPunishmentInChatTargetUserId: Int!
+    $removeUserPunishmentInChatChatId: String!
+  ) {
+    removeUserPunishmentInChat(
+      degree: $removeUserPunishmentInChatDegree
+      targetUserId: $removeUserPunishmentInChatTargetUserId
+      chatId: $removeUserPunishmentInChatChatId
     )
   }
 `;

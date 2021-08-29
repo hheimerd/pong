@@ -17,4 +17,5 @@ export interface IChat {
   password?: string;
   hasPassword?: boolean;
   messages: [IChatMessage];
+  punishments: [IChatPunishment];
 }
