@@ -27,7 +27,9 @@ const ChannelRoom = (): JSX.Element => {
 
   // on loading
   useEffect(() => {
-    if (!loading) document.title = "Channel: " + getChannel().name;
+    if (!loading && typeof data !== "undefined") {
+      document.title = "Channel: " + getChannel().name;
+    }
   }, [loading]);
 
   // wait while data loading
@@ -36,6 +38,7 @@ const ChannelRoom = (): JSX.Element => {
 
   // check slug type
   if (typeof id !== "string") return null;
+  if (typeof data === "undefined") return null;
 
   return (
     <InnerPageLayout>

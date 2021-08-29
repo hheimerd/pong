@@ -99,11 +99,6 @@ export const CHATS_QUERY = gql`
         id
         avatar
       }
-      banned {
-        name
-        id
-        avatar
-      }
       type
       is_private
       hasPassword

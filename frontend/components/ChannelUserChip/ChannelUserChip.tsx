@@ -1,6 +1,9 @@
+import { useMutation } from "@apollo/client";
 import { Avatar, Chip, Menu, MenuItem } from "@material-ui/core";
 import { useRouter } from "next/router";
 import React from "react";
+import { MY_CHATS_QUERY } from "../../graphql";
+import { BAN_USER_MUTATION } from "../../graphql/mutations";
 import { IChat } from "../../interfaces/chat.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
@@ -18,6 +21,11 @@ export const ChannelUserChip = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
 
+  // ban user
+  const [banUser, { data, loading, error }] = useMutation(BAN_USER_MUTATION, {
+    refetchQueries: [{ query: MY_CHATS_QUERY }],
+  });
+
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,9 +34,20 @@ export const ChannelUserChip = ({
     setAnchorEl(null);
   };
 
+  const handleBan = () => {
+    banUser({
+      variables: {
+        banUserInChatUserId: user.id,
+        banUserInChatChatId: current_channel.id,
+        banUserInChatMinutes: 2,
+      },
+    });
+    setAnchorEl(null);
+  };
+
   if (!user) return null;
 
-  const isCurrentUser = user.id === current_user_id ? true : false;
+  // const isCurrentUser = user.id === current_user_id ? true : false;
 
   const getMenues = () => {
     const adminsIdArr = current_channel.admins.reduce((a, { id }) => {
@@ -42,9 +61,7 @@ export const ChannelUserChip = ({
         adminsIdArr.includes(current_user_id))
     ) {
       return (
-        <MenuItem onClick={handleClose}>
-          Ban for 10 minutes {user.name}
-        </MenuItem>
+        <MenuItem onClick={handleBan}>Ban for 2 minutes {user.name}</MenuItem>
       );
     }
   };
