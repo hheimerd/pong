@@ -32,11 +32,6 @@ export class ChatActionsResolver {
     return true;
   }
 
-  @Query(() => ChatPunishment)
-  async getPunishments(@Args("chatId") chatId: string) {
-    return await this.chatService.getPunishments(chatId)
-  }
-
   @Mutation(() => Boolean)
   async addUserPunishmentInChat(
     @Args('chatId') chatId: string,
@@ -74,7 +69,7 @@ export class ChatActionsResolver {
 
     if (!canPunish) throw new UnauthorizedException();
 
-    await this.chatService.removePunishment(chat.id, user.id, degree, targetUserId);
+    await this.chatService.removePunishmentByParams(chat.id, user.id, degree, targetUserId);
     return true;
   }
 

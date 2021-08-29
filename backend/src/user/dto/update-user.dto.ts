@@ -7,6 +7,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
+import { Role } from '../entities/user.entity';
 import { CreateUserDto } from './create-user.dto';
 
 @InputType()
@@ -28,4 +29,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     description: 'required if change email or password',
   })
   oldPassword?: string;
+
+  @Field(() => [Role], { nullable: true, description: 'ADMIN ONLY' })
+  roles: Role[];
 }

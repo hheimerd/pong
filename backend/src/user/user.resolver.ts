@@ -6,6 +6,7 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   ConflictException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   Args,
@@ -24,7 +25,7 @@ import { Public } from 'src/common/auth/decorators/public.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { Role, User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
@@ -80,10 +81,14 @@ export class UserResolver {
     @CurrentUser() user: RequestUser,
   ) {
     let id = user.id;
-    if (dto.id) {
-      // TODO: check ablilty
-      id = dto.id;
+
+    if (dto.id || dto.roles) {
+      const isAdmin = user.roles.includes(Role.Admin);
+      if (!isAdmin) throw new UnauthorizedException();
+      
+      if (dto.id) id = dto.id;
     }
+
     const updated = await this.userService.update(id, dto);
     if (!updated) throw new NotFoundException();
 
@@ -107,7 +112,6 @@ export class UserResolver {
 
   @ResolveField(() => [User], { name: 'following' })
   async getFollowing(@Parent() user: User) {
-    console.log(await this.userService.getFollowing(user.id));
     return this.userService.getFollowing(user.id);
   }
 

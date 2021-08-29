@@ -52,7 +52,7 @@ export class ChatService {
     })
   }
 
-  async removePunishment(
+  async removePunishmentByParams(
     chatId: string,
     punisherId: number,
     degree: PunishmentDegree,

@@ -16,8 +16,6 @@ export class LocalAuthGuard extends AuthGuard('local') {
       req.body = context.getArgByIndex(1);
     }
 
-    console.log(req.body);
-
     return super.canActivate(new ExecutionContextHost([req]));
   }
 }
