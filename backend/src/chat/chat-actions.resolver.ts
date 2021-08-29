@@ -14,10 +14,10 @@ import { PunishmentDegree } from "./entities/chat.entity";
 export class ChatActionsResolver {
   constructor(private readonly chatService: ChatService) {}
  
-  // @Cron('1 * * * * *')
-  // clearOldPunishments() {
-  //   this.chat
-  // }
+  @Cron('0 1 * * * *')
+  clearOldPunishments() {
+    this.chatService.clearOldPunishments();
+  }
 
 
   async canPunish(
