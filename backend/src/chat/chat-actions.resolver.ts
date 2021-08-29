@@ -14,7 +14,7 @@ import { PunishmentDegree } from "./entities/chat.entity";
 export class ChatActionsResolver {
   constructor(private readonly chatService: ChatService) {}
  
-  @Cron('0 1 * * * *')
+  @Cron('60 * * * * *')
   clearOldPunishments() {
     this.chatService.clearOldPunishments();
   }
@@ -107,7 +107,7 @@ export class ChatActionsResolver {
     
     const bannedPunishments = await this.chatService.getPunishments(chat.id, PunishmentDegree.BAN);
     const isBanned = bannedPunishments.find((p) => p.toUserId == user.id);
-    if (!isBanned) throw new UnauthorizedException("You banned");
+    if (isBanned) throw new UnauthorizedException("You banned");
 
     await this.chatService.addToChat(chat.id, userId)
     return true;
