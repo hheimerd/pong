@@ -8,7 +8,7 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { ChatService } from './chat.service';
-import { Chat, ChatType } from './entities/chat.entity';
+import { Chat, ChatType, PunishmentDegree } from './entities/chat.entity';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
 import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
@@ -24,6 +24,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { User } from 'src/user/entities/user.entity';
+import { ChatPunishment } from './entities/chat-punishment.entity';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
@@ -94,6 +95,14 @@ export class ChatResolver {
     await this.throwUnlessMember(chat.id, user.id);
 
     return this.chatService.getMessages(chat.id, limit, offset);
+  }
+
+  @ResolveField('punishments', () => [ChatPunishment])
+  async getPunishments(
+    @Parent() chat: Chat, 
+    @Args('degree', { type: () => PunishmentDegree, nullable: true}) degree: PunishmentDegree
+  ) {
+    return await this.chatService.getPunishments(chat.id, degree);
   }
 
   @ResolveField('hasPassword', () => Boolean)

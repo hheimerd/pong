@@ -47,6 +47,7 @@ type Chat {
     limit: Int
   ): [ChatMessage!]!
   dialogName: String!
+  punishment(degree: PunishmentDegree): [ChatPunishment!]!
   hasPassword: Boolean!
   members: [User!]!
   admins: [User!]!
@@ -55,6 +56,12 @@ type Chat {
 enum ChatType {
   Chat
   Channel
+}
+
+enum PunishmentDegree {
+  BAN
+  MUTE
+  SELF_MUTE
 }
 
 type JwtResponse {
@@ -82,7 +89,6 @@ type Query {
     limit: Int
   ): [Chat!]!
   chat(id: String!): Chat!
-  getPunishments(chatId: String!): ChatPunishment!
 }
 
 type Mutation {
@@ -124,6 +130,9 @@ input UpdateUserDto {
 
   """required if change email or password"""
   oldPassword: String
+
+  """ADMIN ONLY"""
+  roles: [Role!]
 }
 
 input CreateChatMessageInput {
@@ -147,12 +156,6 @@ input UpdateChatInput {
   is_private: Boolean
   password: String
   id: String!
-}
-
-enum PunishmentDegree {
-  BAN
-  MUTE
-  SELF_MUTE
 }
 
 type Subscription {

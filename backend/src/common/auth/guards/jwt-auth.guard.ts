@@ -35,7 +35,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       try {
         return await this.authService.verifyToken(token);
       } catch (e) {
-        console.log(e.message);
+        console.error(e);
         return false;
       }
     }

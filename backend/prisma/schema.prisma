@@ -48,6 +48,7 @@ enum PunishmentDegree {
 }
 
 model ChatPunishment {
+  id         String           @id @default(uuid()) @db.Uuid
   chat       Chat             @relation("punishments", fields: [chatId], references: [id])
   chatId     String           @db.Uuid
   fromUser   User             @relation("chatPunish", fields: [fromUserId], references: [id])
@@ -58,7 +59,7 @@ model ChatPunishment {
   created_at DateTime         @default(now())
   minutes    Int              @default(1)
 
-  @@id([chatId, fromUserId, toUserId, degree])
+  @@unique([chatId, fromUserId, toUserId, degree])
 }
 
 model Chat {

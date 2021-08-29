@@ -36,3 +36,4 @@ export class User {
   @Field(() => [String])
   avatar?: string[];
 }
+

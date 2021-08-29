@@ -18,7 +18,6 @@ export class FtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken, refreshToken, profile: IFtProfile, cb) {
-    console.log(profile);
     
     const dto = {
       email: profile.emails[0].value,
@@ -26,7 +25,6 @@ export class FtStrategy extends PassportStrategy(Strategy) {
       name: profile.name.familyName + ' ' + profile.name.familyName,
       password: await genSalt()
     }
-    console.log(dto);
     
     return this.userService.findOrCreate(dto);
   }
