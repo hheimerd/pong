@@ -9,6 +9,7 @@ import {
   UPDATE_CHAT_MUTATION,
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
+import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
@@ -82,11 +83,18 @@ const Channel = (): JSX.Element => {
   };
 
   const getButtons = (channel: IChat) => {
+    const isBanned = channel.punishments
+      .filter((x: IChatPunishment) => x.degree == "BAN")
+      .filter((x: IChatPunishment) => x.toUserId === current_user_id).length;
+    console.log("isBanned", isBanned);
+    if (isBanned) {
+      return <p>You are banned</p>;
+    }
+    // console.log("punishments", channel.punishments);
     const membersIdArr = channel.members.reduce((a, { id }) => {
       if (id) a.push(id);
       return a;
     }, []);
-    // console.log("values", membersIdArr);
     if (channel.ownerId && channel.ownerId === current_user_id) {
       return (
         <Button appearance="primary" onClick={() => handleEdit(channel)}>

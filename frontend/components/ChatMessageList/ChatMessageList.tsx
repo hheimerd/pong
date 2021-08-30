@@ -1,5 +1,7 @@
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef } from "react";
+import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { MESSAGES_SUBSCRIPTION } from "../../graphql";
 import { MESSAGES_QUERY, USERS_QUERY } from "../../graphql/queries";
 import { IChatMessage } from "../../interfaces/message.interface";
@@ -7,8 +9,8 @@ import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { ChatMessage } from "../ChatMessage/ChatMessage";
 import styles from "./ChatMessageList.module.css";
 import { ChatMessageListProps } from "./ChatMessageList.props";
-
 export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
+  const router = useRouter();
   const {
     loading: loadingUsers,
     error: errorUsers,
@@ -22,6 +24,7 @@ export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
   const { loading, error, data, subscribeToMore } = useQuery(MESSAGES_QUERY, {
     variables: { chatId: id },
   });
+  const { updateSnackBarMessage } = useSnackBar();
 
   // Make ref for scrolling to down of message list
   // const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -87,8 +90,10 @@ export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
   // if(!state) return null;
   if (loading || loadingUsers)
     return <p>Loading user profile from graphql...</p>;
-  if (error || errorUsers)
-    return <p>Error: can't fetching data from graphql :(</p>;
+  if (error || errorUsers) {
+    router.push("/channels");
+    return <p>Error: {error.message || errorUsers.message}</p>;
+  }
 
   // console.log(data.chat.messages);
 

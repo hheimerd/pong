@@ -110,6 +110,14 @@ export const CHATS_QUERY = gql`
       type
       is_private
       hasPassword
+      punishments {
+        chatId
+        fromUserId
+        toUserId
+        degree
+        created_at
+        minutes
+      }
     }
   }
 `;
