@@ -88,13 +88,11 @@ export class ChatService {
     degree: PunishmentDegree,
     punishedId: number
   ) {
-    await this.prisma.chatPunishment.delete({
+    await this.prisma.chatPunishment.deleteMany({
       where: {
-        chatId_fromUserId_toUserId_degree: {
-          chatId,
-          degree,
-          toUserId: punishedId
-        }
+        chatId,
+        degree,
+        toUserId: punishedId
       },
     });
   }
