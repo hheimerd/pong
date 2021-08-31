@@ -76,11 +76,11 @@ const Channel = (): JSX.Element => {
   const handleJoin = (channel: IChat, membersIdArr: Array<number>) => {
     if (channel.hasPassword) {
       const pass = prompt("Please enter password for channel " + channel.name);
-      console.log("password", channel.password);
+      console.log("password", pass);
       addToChat({
         variables: {
           addMemberToChatChatId: channel.id,
-          members: pass,
+          addMemberToChatPassword: pass,
         },
       });
     } else {
