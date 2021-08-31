@@ -97,11 +97,11 @@ export class ChatActionsResolver {
       const isAdmin = userId && await this.chatService.isChatAdmin(chatId, user.id);
 
       if (!isAdmin) {
-        if (chat.is_private) throw new UnauthorizedException();
-        if (!password?.length) throw new UnauthorizedException();
+        if (chat.is_private) throw new UnauthorizedException("Chat is private");
+        if (!password?.length) throw new UnauthorizedException("Password required");
 
         const isValid = await PasswordService.isValid(password, chat.password);
-        if (!isValid) throw new UnauthorizedException();
+        if (!isValid) throw new UnauthorizedException("Incorrect password");
       }  
     }
     
