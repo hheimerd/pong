@@ -55,7 +55,7 @@ const ChannelRoom = (): JSX.Element => {
         <br />
         <br />
         <Chat>
-          <ChatMessageList id={id} />
+          <ChatMessageList id={id} current_user_id={data.getProfile.id} />
           <ChatForm id={id} />
         </Chat>
       </ChatContextProvider>

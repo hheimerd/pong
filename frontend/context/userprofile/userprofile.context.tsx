@@ -1,6 +1,4 @@
-import { useQuery } from "@apollo/client";
 import React, { createContext, useEffect, useState } from "react";
-import { PROFILE_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
 export const UserProfileContext = createContext({} as IUserProfile);

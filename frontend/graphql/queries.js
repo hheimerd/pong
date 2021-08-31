@@ -87,6 +87,14 @@ export const MESSAGES_QUERY = gql`
         message
         userId
       }
+      punishments {
+        chatId
+        fromUserId
+        toUserId
+        degree
+        created_at
+        minutes
+      }
     }
   }
 `;
