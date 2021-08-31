@@ -77,7 +77,7 @@ export class ChatActionsResolver {
 
     if (!canPunish) throw new UnauthorizedException();
 
-    await this.chatService.removePunishmentByParams(chat.id, user.id, degree, targetUserId);
+    await this.chatService.removePunishmentByParams(chat.id, degree, targetUserId);
     return true;
   }
 
