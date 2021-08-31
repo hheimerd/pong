@@ -10,7 +10,37 @@
 .aside {
   background-color: var(--black);
   padding: 1rem;
+  color: var(--gray);
 }
 .content {
   padding: 2rem;
+}
+.user {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 0px 1rem;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.navi {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.navi li {
+  margin: 5px;
+  padding: 0;
+}
+.navi li a {
+  display: block;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+.navi li.active a:hover,
+.navi li.active a {
+  background: rgba(76, 84, 84, 0.5);
+}
+.navi li a:hover {
+  background: rgba(76, 84, 84, 0.3);
 }

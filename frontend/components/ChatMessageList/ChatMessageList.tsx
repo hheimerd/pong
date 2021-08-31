@@ -5,11 +5,15 @@ import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { MESSAGES_SUBSCRIPTION } from "../../graphql";
 import { MESSAGES_QUERY, USERS_QUERY } from "../../graphql/queries";
 import { IChatMessage } from "../../interfaces/message.interface";
+import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { ChatMessage } from "../ChatMessage/ChatMessage";
 import styles from "./ChatMessageList.module.css";
 import { ChatMessageListProps } from "./ChatMessageList.props";
-export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
+export const ChatMessageList = ({
+  id,
+  current_user_id,
+}: ChatMessageListProps): JSX.Element => {
   const router = useRouter();
   const {
     loading: loadingUsers,
@@ -105,11 +109,21 @@ export const ChatMessageList = ({ id }: ChatMessageListProps): JSX.Element => {
       const user = dataUsers.users.find(
         (x: IUserProfile) => x.id === onemessage.userId
       );
-      return (
-        <React.Fragment key={i}>
-          <ChatMessage onemessage={onemessage} user={user} />
-        </React.Fragment>
-      );
+
+      const isBlocked = data.chat.punishments
+        .filter((x: IChatPunishment) => x.degree == "SELF_MUTE")
+        .filter((x: IChatPunishment) => x.fromUserId == current_user_id)
+        .filter(
+          (x: IChatPunishment) => x.toUserId === onemessage.userId
+        ).length;
+
+      if (!isBlocked) {
+        return (
+          <React.Fragment key={i}>
+            <ChatMessage onemessage={onemessage} user={user} />
+          </React.Fragment>
+        );
+      }
     });
   return (
     <div className={styles.wrapper}>

@@ -1,7 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { Chat, ChatForm, ChatMessageList, Htag } from "../../../components";
+import {
+  ChannelUserChip,
+  Chat,
+  ChatForm,
+  ChatMessageList,
+  Htag,
+} from "../../../components";
 import { ChatContextProvider } from "../../../context/chat/chat.context";
 import { MY_CHATS_QUERY } from "../../../graphql/queries";
 import { IChat } from "../../../interfaces/chat.interface";
@@ -40,8 +46,17 @@ const ChatRoom = (): JSX.Element => {
     <InnerPageLayout>
       <ChatContextProvider>
         <Htag tag="h1">Chat: {getFriendName()}</Htag>
+        {chats[0].members.map((user: IUserProfile) => (
+          <ChannelUserChip
+            user={user}
+            current_user_id={data.getProfile.id}
+            current_channel={chats[0]}
+          />
+        ))}
+        <br />
+        <br />
         <Chat>
-          <ChatMessageList id={id} />
+          <ChatMessageList id={id} current_user_id={data.getProfile.id} />
           <ChatForm id={id} />
         </Chat>
       </ChatContextProvider>

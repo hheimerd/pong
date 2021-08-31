@@ -7,7 +7,7 @@ import {
   PUNISHMENT_USER_MUTATION,
   UNPUNISHMENT_USER_MUTATION,
 } from "../../graphql/mutations";
-import { IChat } from "../../interfaces/chat.interface";
+import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 
@@ -57,24 +57,24 @@ export const ChannelUserChip = ({
     setAnchorEl(null);
   };
 
-  const handleBan = () => {
-    banUser({
-      variables: {
-        addUserPunishmentInChatDegree: "BAN",
-        addUserPunishmentInChatTargetUserId: user.id,
-        addUserPunishmentInChatChatId: current_channel.id,
-        addUserPunishmentInChatMinutes: 2,
-      },
-    });
-    setAnchorEl(null);
-  };
-
   const handleUnMute = () => {
     unbanUser({
       variables: {
         removeUserPunishmentInChatDegree: "MUTE",
         removeUserPunishmentInChatTargetUserId: user.id,
         removeUserPunishmentInChatChatId: current_channel.id,
+      },
+    });
+    setAnchorEl(null);
+  };
+
+  const handleBan = () => {
+    banUser({
+      variables: {
+        addUserPunishmentInChatDegree: "BAN",
+        addUserPunishmentInChatTargetUserId: user.id,
+        addUserPunishmentInChatChatId: current_channel.id,
+        addUserPunishmentInChatMinutes: 20000,
       },
     });
     setAnchorEl(null);
@@ -91,11 +91,52 @@ export const ChannelUserChip = ({
     setAnchorEl(null);
   };
 
+  const handleBlock = () => {
+    banUser({
+      variables: {
+        addUserPunishmentInChatDegree: "SELF_MUTE",
+        addUserPunishmentInChatTargetUserId: user.id,
+        addUserPunishmentInChatChatId: current_channel.id,
+      },
+    });
+    setAnchorEl(null);
+    router.replace(router.asPath);
+  };
+
+  const handleUnBlock = () => {
+    unbanUser({
+      variables: {
+        removeUserPunishmentInChatDegree: "SELF_MUTE",
+        removeUserPunishmentInChatTargetUserId: user.id,
+        removeUserPunishmentInChatChatId: current_channel.id,
+      },
+    });
+    setAnchorEl(null);
+    router.replace(router.asPath);
+  };
+
   if (!user) return null;
 
   // const isCurrentUser = user.id === current_user_id ? true : false;
 
-  const getMenues = () => {
+  const getBlockMenues = () => {
+    const isBlocked = current_channel.punishments
+      .filter((x: IChatPunishment) => x.degree == "SELF_MUTE")
+      .filter((x: IChatPunishment) => x.toUserId === user.id).length;
+    console.log("isBlocked", isBlocked);
+    if (isBlocked) {
+      return (
+        <MenuItem onClick={handleUnBlock}>
+          Unblock {user.name} messages
+        </MenuItem>
+      );
+    }
+    return (
+      <MenuItem onClick={handleBlock}>Block {user.name} messages</MenuItem>
+    );
+  };
+
+  const getAdminMenues = () => {
     const adminsIdArr = current_channel.admins.reduce((a, { id }) => {
       if (id) a.push(id);
       return a;
@@ -122,22 +163,33 @@ export const ChannelUserChip = ({
           {isBanned ? (
             <MenuItem onClick={handleUnBan}>Unban</MenuItem>
           ) : (
-            <MenuItem onClick={handleBan}>
-              Ban for 2 minutes {user.name}
-            </MenuItem>
+            <MenuItem onClick={handleBan}>Kick and ban {user.name}</MenuItem>
           )}
           {isMuted ? (
             <MenuItem onClick={handleUnMute}>Unmute</MenuItem>
           ) : (
-            <MenuItem onClick={handleMute}>
-              Mute for 2 minutes {user.name}
-            </MenuItem>
+            <MenuItem onClick={handleMute}>Mute {user.name}</MenuItem>
           )}
         </>
       );
     }
   };
-  console.log("current_channel: ", current_channel.admins);
+
+  console.log("current_channel: ", current_channel);
+  const getChipUserName = () => {
+    let chipUserName = user.name;
+    if (current_channel.ownerId === user.id) {
+      chipUserName += " [owner]";
+    }
+    const isMuted = current_channel.punishments
+      .filter((x: IChatPunishment) => x.degree == "MUTE")
+      .filter((x: IChatPunishment) => x.toUserId === user.id).length;
+    if (isMuted) {
+      chipUserName += " [muted]";
+    }
+    return chipUserName;
+  };
+
   return (
     <>
       <Chip
@@ -147,8 +199,8 @@ export const ChannelUserChip = ({
             src={process.env.IMAGES_LINK + "public/" + user.avatar[0]}
           />
         }
-        label={user.name}
-        color="secondary"
+        label={getChipUserName()}
+        color={current_channel.ownerId === user.id ? "primary" : "secondary"}
         onClick={handleClick}
       />
       <Menu
@@ -172,7 +224,11 @@ export const ChannelUserChip = ({
         ) : (
           ""
         )}
-        {getMenues()}
+        {current_channel.type === ChatType.Channel &&
+          current_channel.ownerId !== user.id &&
+          user.id !== current_user_id &&
+          getAdminMenues()}
+        {user.id !== current_user_id && getBlockMenues()}
       </Menu>
       &nbsp;
     </>
