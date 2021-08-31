@@ -85,7 +85,6 @@ export class ChatService {
 
   async removePunishmentByParams(
     chatId: string,
-    punisherId: number,
     degree: PunishmentDegree,
     punishedId: number
   ) {
@@ -93,7 +92,6 @@ export class ChatService {
       where: {
         chatId_fromUserId_toUserId_degree: {
           chatId,
-          fromUserId: punisherId,
           degree,
           toUserId: punishedId
         }
