@@ -1,10 +1,12 @@
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import React from "react";
 import { Button } from "../components";
 import { HomePageLayout } from "../layout/HomePageLayout";
-import styles from "../styles/MainPage.module.css";
 
 const MainPage = (): JSX.Element => {
+  const router = useRouter();
+  if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
+    router.push("/dashboard");
   return (
     <HomePageLayout>
       <ul className="home__list">

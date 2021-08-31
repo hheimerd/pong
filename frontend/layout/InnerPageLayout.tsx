@@ -7,12 +7,18 @@ import { PROFILE_QUERY } from "../graphql";
 import styles from "./InnerPageLayout.module.css";
 
 export const InnerPageLayout = ({ children }): JSX.Element => {
+  const router = useRouter();
   // get user
   const { data, error, loading } = useQuery(PROFILE_QUERY);
 
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
+
+  const handleLogout = () => {
+    localStorage.clear();
+    router.push("/");
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -23,15 +29,30 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             alt={data.getProfile.name}
             aria-controls="simple-menu"
           />
-          <p>
+          <p className={styles.stats}>
             {data.getProfile.name}
             <br />
-            R: 0 W: 0 L: 0
+            <span>
+              <img src="/rank.png" alt="Rank" title="Rank" />0
+            </span>
+            <span>
+              <img src="/wins.png" alt="Wins" title="Wins" />0
+            </span>
+            <span>
+              <img src="/loses.png" alt="Loses" title="Loses" />0
+            </span>
           </p>
         </div>
         <ul className={styles.navi}>
           <li className={router.pathname == "/" ? styles.active : ""}>
-            <Link href="/">Home</Link>
+            <Link href="/dashboard">Home</Link>
+          </li>
+          <li
+            className={
+              router.pathname.startsWith("/friends") ? styles.active : ""
+            }
+          >
+            <Link href="/friends">Friends</Link>
           </li>
           <li
             className={
@@ -67,7 +88,7 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             <Link href="/channels">Channels</Link>
           </li>
           <li>
-            <Link href="/logout">Logout</Link>
+            <span onClick={() => handleLogout()}>Logout</span>
           </li>
         </ul>
         <hr />
