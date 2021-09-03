@@ -18,7 +18,7 @@ const MainPage = (): JSX.Element => {
       console.log("token intra", url_token);
       localStorage.setItem("token", url_token);
       setToken(url_token);
-      router.replace("/profile");
+      window.location.replace("/profile");
     }
   }
 
