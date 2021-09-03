@@ -5,32 +5,27 @@ function getAccessToken(code: string) {
   console.log("token");
   console.log(`${process.env.ACCESS_TOKEN_URL_42}`);
   const bodyFormData = new FormData();
-
-  bodyFormData.append("grant_type", "authorization_code");
-  bodyFormData.append(
-    "client_id",
-    "874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5"
-  );
-  bodyFormData.append(
-    "client_secret",
-    "2f8f9fd78e51df4f69d6934c009e8fff9b5fe291c79dfc22dbfd4cc1b29a249a"
-  );
   bodyFormData.append("code", `${code}`);
-  bodyFormData.append("redirect_uri", "http://localhost:3040/intra_callback");
-
-  axios({
-    method: "post",
-    url: "https://api.intra.42.fr/oauth/token",
+  const token = axios({
+    method: "POST",
+    url: "http://localhost:3000/auth/login42",
     data: bodyFormData,
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
-    .then(function (response) {
-      return response;
+    .then(function (resp) {
+      console.log("resp.data: ", resp.data);
+      console.log("resp.status: ", resp.status);
+      return resp;
     })
-    .catch(function (error) {
-      return error;
+    .catch(function (err) {
+      if (err.response) {
+        console.error("Error:", err.config, err.response.data);
+      }
+      return err;
     });
-  return "resp";
+  return token;
 }
 
 function ActiveLink() {
@@ -40,7 +35,7 @@ function ActiveLink() {
 
   if (router.isReady) {
     const resp = getAccessToken(code.toString());
-    console.log(resp);
+    console.log("resp", resp);
   }
   return <h1>{code}</h1>;
 }

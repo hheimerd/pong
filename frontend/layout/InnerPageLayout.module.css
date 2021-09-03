@@ -1,6 +1,6 @@
 .wrapper {
   display: grid;
-  grid-template-columns: 0.5fr 2fr;
+  grid-template-columns: minmax(200px, 0.5fr) 2fr;
   grid-template-rows: 1fr;
   gap: 0px 20px;
   grid-auto-flow: row;
