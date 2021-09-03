@@ -1,21 +1,24 @@
 import Router, { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "../components";
+import { PersonalTokenContext } from "../context/personaltoken/personaltoken.context";
 import { HomePageLayout } from "../layout/HomePageLayout";
 
 const MainPage = (): JSX.Element => {
   const router = useRouter();
+  const { setToken } = useContext(PersonalTokenContext);
 
   if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
     router.push("/dashboard");
 
-  const token = router.query.token as string;
+  const url_token = router.query.token as string;
 
   if (router.isReady) {
-    if (typeof token !== "undefined") {
-      console.log("token intra", token);
-      localStorage.setItem("token", token);
-      router.push("/profile");
+    if (typeof url_token !== "undefined") {
+      console.log("token intra", url_token);
+      localStorage.setItem("token", url_token);
+      setToken(url_token);
+      router.replace("/profile");
     }
   }
 
