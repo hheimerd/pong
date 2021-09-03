@@ -1,10 +1,27 @@
-import Router from "next/router";
-import React from "react";
+import Router, { useRouter } from "next/router";
+import React, { useContext } from "react";
 import { Button } from "../components";
+import { PersonalTokenContext } from "../context/personaltoken/personaltoken.context";
 import { HomePageLayout } from "../layout/HomePageLayout";
-import styles from "../styles/MainPage.module.css";
 
 const MainPage = (): JSX.Element => {
+  const router = useRouter();
+  const { setToken } = useContext(PersonalTokenContext);
+
+  if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
+    router.push("/dashboard");
+
+  const url_token = router.query.token as string;
+
+  if (router.isReady) {
+    if (typeof url_token !== "undefined") {
+      console.log("token intra", url_token);
+      localStorage.setItem("token", url_token);
+      setToken(url_token);
+      window.location.replace("/profile");
+    }
+  }
+
   return (
     <HomePageLayout>
       <ul className="home__list">
@@ -19,11 +36,7 @@ const MainPage = (): JSX.Element => {
           appearance="primary"
           image="/42_Logo.svg"
           size="large"
-          onClick={() =>
-            Router.push(
-              "https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3040%2Fintra_callback&response_type=code"
-            )
-          }
+          onClick={() => Router.push("http://localhost:3000/auth/login42")}
         >
           OAuth
         </Button>{" "}

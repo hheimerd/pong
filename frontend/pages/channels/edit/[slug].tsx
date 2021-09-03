@@ -85,10 +85,10 @@ const ChannelRoom = (): JSX.Element => {
       setPrivate(getChannel().is_private);
       if (privateRef.current)
         privateRef.current.value = getChannel().is_private;
-      setPassword(getChannel().password);
+      setPassword("test__");
       if (passwordRef.current)
         passwordRef.current.value = getChannel().password;
-      // console.log("getChannel: ", getChannel());
+      console.log("getChannel.password: ", getChannel().password);
 
       // Hack to redraw Autocomplete
       // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
@@ -134,6 +134,12 @@ const ChannelRoom = (): JSX.Element => {
       setIsUsersValid(false);
       return false;
     }
+    if (adminsValue.length >= 1) {
+      setIsAdminsValid(true);
+    } else {
+      setIsAdminsValid(false);
+      return false;
+    }
     return true;
   };
 
@@ -163,6 +169,7 @@ const ChannelRoom = (): JSX.Element => {
       // );
 
       // send message to backend via mutation CREATE_CHAT_MUTATION
+      console.log("pass before submit", password);
       if (slug === "create") {
         createChat({
           variables: {
@@ -187,9 +194,10 @@ const ChannelRoom = (): JSX.Element => {
               members: membersIdArr,
               admins: adminsIdArr,
               is_private: isPrivate,
-              ...((typeof password === "undefined" || password !== "") && {
-                password: password,
-              }),
+              password: password,
+              // ...((typeof password === "undefined" || password !== "") && {
+              //   password: password,
+              // }),
             },
           },
         });
@@ -316,6 +324,12 @@ const ChannelRoom = (): JSX.Element => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  error={!isAdminsValid}
+                  helperText={
+                    !isAdminsValid
+                      ? "Members must contain at least 1 elements!"
+                      : " "
+                  }
                 />
               )}
             />
@@ -334,26 +348,28 @@ const ChannelRoom = (): JSX.Element => {
               label="Private"
             />
           </div>
-          <div className="line">
-            <TextField
-              id="outlined-size-normal2"
-              label="Password"
-              fullWidth
-              size="small"
-              type="password"
-              variant="outlined"
-              defaultValue={password}
-              InputLabelProps={{ shrink: true }}
-              onChange={(event) => setPassword(event.target.value)}
-              inputRef={passwordRef}
-              error={!isPasswordValid}
-              helperText={
-                !isPasswordValid
-                  ? "Password must be longer than or equal to 4 characters"
-                  : " "
-              }
-            />
-          </div>
+          {!isPrivate && (
+            <div className="line">
+              <TextField
+                id="outlined-size-normal2"
+                label="Password"
+                fullWidth
+                size="small"
+                type="password"
+                variant="outlined"
+                defaultValue={password}
+                InputLabelProps={{ shrink: true }}
+                onChange={(event) => setPassword(event.target.value)}
+                inputRef={passwordRef}
+                error={!isPasswordValid}
+                helperText={
+                  !isPasswordValid
+                    ? "Password must be longer than or equal to 4 characters"
+                    : " "
+                }
+              />
+            </div>
+          )}
           <div className="line">
             <Button appearance="primary">Submit</Button>
           </div>

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, Htag } from "../../components";
+import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import {
+  ADD_MEMBER_TO_CHAT_MUTATION,
   CHATS_QUERY,
   PROFILE_QUERY,
   UPDATE_CHAT_MUTATION,
@@ -13,6 +15,7 @@ import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
+  const { updateSnackBarMessage } = useSnackBar();
   const router = useRouter();
   const { loading, error, data } = useQuery(PROFILE_QUERY);
   const {
@@ -30,6 +33,15 @@ const Channel = (): JSX.Element => {
     }
   );
 
+  const [addToChat, { data: dataA, loading: loadingA, error: errorA }] =
+    useMutation(ADD_MEMBER_TO_CHAT_MUTATION, {
+      refetchQueries: [{ query: CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+        updateSnackBarMessage(err.message);
+      },
+    });
+
   // wait while data loading
   if (loading || loadingU || loadingC)
     return <p>Loading user profile from graphql...</p>;
@@ -41,7 +53,12 @@ const Channel = (): JSX.Element => {
   const channels = dataC.chats.filter(
     (x: IChat) => x.type === ChatType.Channel
   );
-  console.log("channels", channels);
+  // console.log("channels", channels);
+  // filter chats only with ChatType == Channel
+  const private_channels = data.getProfile.chats
+    .filter((x: IChat) => x.type === ChatType.Channel)
+    .filter((x: IChat) => x.is_private === true);
+  console.log("private_channels", private_channels);
 
   const handleLeave = (channel: IChat, membersIdArr: Array<number>) => {
     membersIdArr = membersIdArr.filter((n) => n != current_user_id);
@@ -59,18 +76,25 @@ const Channel = (): JSX.Element => {
   const handleJoin = (channel: IChat, membersIdArr: Array<number>) => {
     if (channel.hasPassword) {
       const pass = prompt("Please enter password for channel " + channel.name);
-      if (pass != channel.password) return;
-    }
-    membersIdArr.push(current_user_id);
-    console.log("values", membersIdArr);
-    updateChat({
-      variables: {
-        updateChatInput: {
-          id: channel.id,
-          members: membersIdArr,
+      console.log("password", pass);
+      addToChat({
+        variables: {
+          addMemberToChatChatId: channel.id,
+          addMemberToChatPassword: pass,
         },
-      },
-    });
+      });
+    } else {
+      membersIdArr.push(current_user_id);
+      console.log("values", membersIdArr);
+      updateChat({
+        variables: {
+          updateChatInput: {
+            id: channel.id,
+            members: membersIdArr,
+          },
+        },
+      });
+    }
   };
 
   const handleEdit = (channel: IChat) => {
@@ -139,16 +163,9 @@ const Channel = (): JSX.Element => {
     return <Link href={"/channels/room/" + channel.id}>{channel.name}</Link>;
   };
 
-  // if (!rows) return null;
-
-  return (
-    <InnerPageLayout>
-      <Htag tag="h1">Channels</Htag>
-      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-        <Button appearance="primary" onClick={() => handleCreate()}>
-          Add channel
-        </Button>
-      </div>
+  const getTable = (channels: [IChat]) => {
+    if (!channels.length) return;
+    return (
       <table>
         <thead>
           <tr>
@@ -174,6 +191,24 @@ const Channel = (): JSX.Element => {
           ))}
         </tbody>
       </table>
+    );
+  };
+  // if (!rows) return null;
+
+  return (
+    <InnerPageLayout>
+      <Htag tag="h1">Channels</Htag>
+      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <Button appearance="primary" onClick={() => handleCreate()}>
+          Add channel
+        </Button>
+      </div>
+      <Htag tag="h2">Public</Htag>
+      {!channels.length ? "No chats available" : ""}
+      {getTable(channels)}
+      <Htag tag="h2">Private</Htag>
+      {!private_channels.length ? "No chats available" : ""}
+      {getTable(private_channels)}
     </InnerPageLayout>
   );
 };

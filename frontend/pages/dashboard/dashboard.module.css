@@ -1,0 +1,8 @@
+.grid {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  align-content: start;
+  align-items: start;
+}

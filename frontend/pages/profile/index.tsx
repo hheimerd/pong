@@ -31,19 +31,19 @@ const Profile = (): JSX.Element => {
   // form fields states
   const [name, setName] = React.useState("");
   // const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  // const [email, setEmail] = React.useState("");
   const [avatar, setAvatar] = React.useState(["", ""]);
 
   // form fields refs
   const nameRef = useRef<HTMLInputElement | null>();
   // const passwordRef = useRef<HTMLInputElement | null>();
-  const emailRef = useRef<HTMLInputElement | null>();
+  // const emailRef = useRef<HTMLInputElement | null>();
   const avatarRef = useRef<HTMLInputElement | null>();
 
   // form fields validation states
   const [isNameValid, setIsNameValid] = useState(true);
   // const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [isEmailValid, setIsEmailValid] = useState(true);
+  // const [isEmailValid, setIsEmailValid] = useState(true);
 
   // on loading USER_QUERY
   useEffect(() => {
@@ -54,8 +54,8 @@ const Profile = (): JSX.Element => {
       if (nameRef.current) nameRef.current.value = data.getProfile.name;
       // setPassword(data.user.password);
       // if (passwordRef.current) passwordRef.current.value = data.user.password;
-      setEmail(data.getProfile.email);
-      if (emailRef.current) emailRef.current.value = data.getProfile.email;
+      // setEmail(data.getProfile.email);
+      // if (emailRef.current) emailRef.current.value = data.getProfile.email;
       setAvatar(data.getProfile.avatar);
       // if (avatarRef.current) avatarRef.current.value = data.getProfile.avatar;
     }
@@ -78,9 +78,9 @@ const Profile = (): JSX.Element => {
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
 
-  const emailIsValid = (email: string) => {
-    return /\S+@\S+\.\S+/.test(email);
-  };
+  // const emailIsValid = (email: string) => {
+  //   return /\S+@\S+\.\S+/.test(email);
+  // };
 
   const isFormValid = (): boolean => {
     if (name !== "") {
@@ -97,13 +97,13 @@ const Profile = (): JSX.Element => {
     //   passwordRef.current.focus();
     //   return false;
     // }
-    if (emailIsValid(email)) {
-      setIsEmailValid(true);
-    } else {
-      setIsEmailValid(false);
-      emailRef.current.focus();
-      return false;
-    }
+    // if (emailIsValid(email)) {
+    //   setIsEmailValid(true);
+    // } else {
+    //   setIsEmailValid(false);
+    //   emailRef.current.focus();
+    //   return false;
+    // }
     return true;
   };
 
@@ -114,9 +114,10 @@ const Profile = (): JSX.Element => {
       updateUser({
         variables: {
           updateUserInput: {
-            id: data.getProfile.id,
             name: name,
-            email: email,
+            // email: email,
+            // oldPassword: oldPassword,
+            // newPassword: newPassword,
             // avatar: avatar,
             // ...(typeof password !== "undefined" && { newPassword: password }),
           },
@@ -189,7 +190,6 @@ const Profile = (): JSX.Element => {
             />
           </div>
 
-        */}
           <div className="line">
             <TextField
               id="email"
@@ -207,6 +207,7 @@ const Profile = (): JSX.Element => {
               helperText={!isEmailValid ? "Not valid email!" : " "}
             />
           </div>
+        */}
           <div className="line">
             <OutlinedDiv label="Avatar">
               <Avatar
