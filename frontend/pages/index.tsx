@@ -5,8 +5,20 @@ import { HomePageLayout } from "../layout/HomePageLayout";
 
 const MainPage = (): JSX.Element => {
   const router = useRouter();
+
   if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
     router.push("/dashboard");
+
+  const token = router.query.token as string;
+
+  if (router.isReady) {
+    if (typeof token !== "undefined") {
+      console.log("token intra", token);
+      localStorage.setItem("token", token);
+      router.push("/profile");
+    }
+  }
+
   return (
     <HomePageLayout>
       <ul className="home__list">
@@ -21,11 +33,7 @@ const MainPage = (): JSX.Element => {
           appearance="primary"
           image="/42_Logo.svg"
           size="large"
-          onClick={() =>
-            Router.push(
-              "https://api.intra.42.fr/oauth/authorize?client_id=874cf6bced4726f43e3c5c674a133dbdf8d51cbf3c9476189828170183c98be5&redirect_uri=http%3A%2F%2Flocalhost%3A3040%2Fintra_callback&response_type=code"
-            )
-          }
+          onClick={() => Router.push("http://localhost:3000/auth/login42")}
         >
           OAuth
         </Button>{" "}
