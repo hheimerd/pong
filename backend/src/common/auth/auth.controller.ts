@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { RequestUser } from './entities/request-user.entitiy';
@@ -26,8 +27,9 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   @Public()
   @Get('login42')
-  async login42(@Request() req) {
+  async login42(@Request() req, @Res() res: Response) {
     const payload = plainToClass(RequestUser, req.user);
-    return this.authService.login(payload);
+    const token = (await this.authService.login(payload)).access_token;
+    res.redirect('/?token=' + token);
   }
 }
