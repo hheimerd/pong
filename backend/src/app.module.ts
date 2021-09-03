@@ -10,6 +10,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_PATH } from './common/storage/storage.constants';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -34,5 +35,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     StorageModule,
     PrismaModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

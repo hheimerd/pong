@@ -74,6 +74,6 @@ export class UserController {
     if (!mime.startsWith('image/')) {
       throw new BadRequestException();
     }
-    return await this.userService.uploadAvatar(image, user.id);
+    return await this.userService.uploadAvatar(image.buffer, user.id);
   }
 }

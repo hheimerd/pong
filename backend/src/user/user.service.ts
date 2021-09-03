@@ -9,6 +9,7 @@ import { join } from 'path';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Chat } from '@prisma/client';
+import { generateImage, generateRandomBgImage } from 'src/common/helpers/image-generator.lib';
 
 @Injectable()
 export class UserService {
@@ -87,20 +88,20 @@ export class UserService {
   }
 
   async uploadAvatar(
-    image: Express.Multer.File,
+    image: Buffer,
     userId: number,
   ): Promise<string[]> {
     const user = await this.findOne(userId);
 
-    const sharpLarge = sharp(image.buffer).resize(512).jpeg({ progressive: true });
+    const sharpLarge = sharp(image).resize(512).png({ progressive: true });
     const sharpIco = sharpLarge.clone().resize(64, 64);
 
     const uploadPath = join('avatars', user.id.toString(), 'avatar');
 
     const put = this.storageService.put.bind(this.storageService);
     const paths = await Promise.all([
-      put(await sharpIco.toBuffer(), uploadPath + '_ico' + '.jpeg'),
-      put(await sharpLarge.toBuffer(), uploadPath + '.jpeg'),
+      put(await sharpIco.toBuffer(), uploadPath + '_ico' + '.png'),
+      put(await sharpLarge.toBuffer(), uploadPath + '.png'),
     ]);
 
     const oldAvatar = user.avatar;
@@ -120,19 +121,21 @@ export class UserService {
     return user.avatar;
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(dto: CreateUserDto) {
     const exists = await this.count({
-      email: createUserDto.email,
-      login: createUserDto.login,
+      email: dto.email,
+      login: dto.login,
     });
 
     if (exists != 0) throw new ConflictException();
 
     const salt = await genSalt(10);
-    const password = await hash(createUserDto.password, salt);
+    const password = await hash(dto.password, salt);
     const user = await this.prisma.user.create({
-      data: { ...createUserDto, password },
+      data: { ...dto, password },
     });
+    const avatar = generateRandomBgImage(512, 512, dto.name[0].toUpperCase(), 'png');
+    this.uploadAvatar(await avatar.toBuffer(), user.id);
     return user;
   }
 
