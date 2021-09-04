@@ -75,7 +75,7 @@ export const ChatMessageList = ({
   // };
 
   const AlwaysScrollToBottom = () => {
-    const elementRef = useRef();
+    const elementRef = useRef<HTMLDivElement>();
     useEffect(() =>
       elementRef.current.scrollIntoView({
         block: "end",

@@ -7,6 +7,7 @@ export const CREATE_MESSAGE_MUTATION = gql`
 export const CREATE_CHAT_MUTATION = gql`
   mutation NameMutation($createChatCreateChatInput: CreateChatInput!) {
     createChat(createChatInput: $createChatCreateChatInput) {
+      id
       name
       ownerId
     }

@@ -1,4 +1,5 @@
 import { IChatMessage } from "./message.interface";
+import { IChatPunishment } from "./punishments.interface";
 import { IUserProfile } from "./userprofile.interface";
 
 export enum ChatType {

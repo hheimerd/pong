@@ -50,11 +50,11 @@ const ChannelRoom = (): JSX.Element => {
   const [usersValue, setUsersValue] = React.useState<Array<IUserProfile>>();
   const [adminsValue, setAdminsValue] = React.useState<Array<IUserProfile>>();
   const [isPrivate, setPrivate] = React.useState(false);
-  const privateRef = useRef();
+  const privateRef = useRef<HTMLInputElement>();
   const [name, setName] = React.useState("");
-  const nameRef = useRef();
+  const nameRef = useRef<HTMLInputElement>();
   const [password, setPassword] = React.useState("");
-  const passwordRef = useRef();
+  const passwordRef = useRef<HTMLInputElement>();
 
   // Hack to redraw Autocomplete
   // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
@@ -237,13 +237,13 @@ const ChannelRoom = (): JSX.Element => {
               fullWidth
               multiple
               id="usersArr-tags"
-              value={usersValue}
+              value={typeof usersValue == "undefined" ? [] : [...usersValue]}
               key={usersInputReset}
               onChange={(
                 _event: React.ChangeEvent,
                 newValue: IUserProfile[]
               ) => {
-                setUsersValue([...newValue]);
+                setUsersValue(newValue);
               }}
               options={dataR.users}
               getOptionLabel={(option) => option.name}
@@ -288,13 +288,13 @@ const ChannelRoom = (): JSX.Element => {
               fullWidth
               multiple
               id="admins-tags"
-              value={adminsValue}
+              value={typeof adminsValue == "undefined" ? [] : [...adminsValue]}
               key={adminsInputReset}
               onChange={(
                 _event: React.ChangeEvent,
                 newValue: IUserProfile[]
               ) => {
-                setAdminsValue([...newValue]);
+                setAdminsValue(newValue);
               }}
               options={dataR.users}
               getOptionLabel={(option) => option.name}

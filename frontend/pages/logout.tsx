@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Htag } from "../components";
-// import {useSession} from "next-auth/client";
 
 export default function Home(): JSX.Element {
   const [token, setToken] = useState("");

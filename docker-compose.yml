@@ -46,8 +46,8 @@ services:
     depends_on:
       - backend
     entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn dev'"
-#    command: tail -F anything
+    # entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn build && npx yarn start'"
     environment:
-      GRAPHQL_REMOTE: http://localhost:3000/graphql
-      WEBSOCKET_LINK: ws://localhost:3000/graphql
-      IMAGES_LINK: http://localhost:3000/
+      - GRAPHQL_REMOTE=http://localhost:3000/graphql
+      - WEBSOCKET_LINK=ws://localhost:3000/graphql
+      - IMAGES_LINK=http://localhost:3000/

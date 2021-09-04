@@ -12,7 +12,6 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Provider } from "next-auth/client";
 import { AppProps } from "next/dist/next-server/lib/router/router";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -84,11 +83,11 @@ const getApolloClient = (token: string) => {
 
 const ApolloClientProvider = (props: any) => {
   const { token } = useContext(PersonalTokenContext);
-  const tokenRef = useRef();
+  const tokenRef = useRef<string>();
 
   // Whenever the token changes, the component re-renders, thus updating the ref.
   tokenRef.current = token;
-  console.log("[app.tsx] token: ", tokenRef.current);
+  // console.log("[app.tsx] token: ", tokenRef.current);
   // Ensure that the client is only created once.
   // const client = useMemo(() => {
   //   return getApolloClient(tokenRef.current);
@@ -114,33 +113,31 @@ function MyApp(props: AppProps): JSX.Element {
   return (
     <PersonalTokenContextProvider>
       <ApolloClientProvider>
-        <Provider session={pageProps.session}>
-          <UserProfileContextProvider>
-            <SnackBarProvider>
-              <Head>
-                <title>Pong Online</title>
-                <link rel="icon" href="/favicon.ico" />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link
-                  rel="preconnect"
-                  href="https://fonts.gstatic.com"
-                  crossOrigin="true"
-                />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-                  rel="stylesheet"
-                />
-              </Head>
-              <ThemeProvider theme={theme}>
-                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                <CssBaseline />
-                <Component {...pageProps} />
-              </ThemeProvider>
-            </SnackBarProvider>
-          </UserProfileContextProvider>
-        </Provider>
+        <UserProfileContextProvider>
+          <SnackBarProvider>
+            <Head>
+              <title>Pong Online</title>
+              <link rel="icon" href="/favicon.ico" />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link
+                rel="preconnect"
+                href="https://fonts.gstatic.com"
+                crossOrigin="true"
+              />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link rel="preconnect" href="https://fonts.gstatic.com" />
+              <link
+                href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+                rel="stylesheet"
+              />
+            </Head>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </SnackBarProvider>
+        </UserProfileContextProvider>
       </ApolloClientProvider>
     </PersonalTokenContextProvider>
   );

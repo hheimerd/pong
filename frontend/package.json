@@ -6,7 +6,7 @@
     "dev": "next dev -p 3040",
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3040",
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.css\" --fix",
     "serve": "concurrently \"npm run dev\" \"npm run mock\"",

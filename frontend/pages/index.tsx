@@ -39,7 +39,7 @@ const MainPage = (): JSX.Element => {
           onClick={() => Router.push("http://localhost:3000/auth/login42")}
         >
           OAuth
-        </Button>{" "}
+        </Button>
         &nbsp;
         <Button
           size="large"
