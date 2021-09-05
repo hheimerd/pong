@@ -1,3 +1,3 @@
-export interface ConnectGameDto {
+export class ConnectGameDto {
   id: string;
 }

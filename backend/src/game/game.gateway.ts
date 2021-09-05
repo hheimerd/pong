@@ -81,7 +81,6 @@ export class GameGateway implements OnGatewayConnection {
 
 
   @SubscribeMessage('playerReady')
-  
   playerReady(@ConnectedSocket() client: SocketWithData) {
     client.data.game.setPlayerReady(client.data.playerNumber);
   }

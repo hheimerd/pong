@@ -1,4 +1,4 @@
-export interface CreateGameDto {
+export class CreateGameDto {
   name: string;
   userId?: number;
 }
