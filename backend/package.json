@@ -36,8 +36,10 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-express": "^8.0.4",
+    "@nestjs/platform-socket.io": "^8.0.6",
     "@nestjs/schedule": "^1.0.1",
     "@nestjs/serve-static": "^2.2.2",
+    "@nestjs/websockets": "^8.0.6",
     "@prisma/client": "2.29.1",
     "apollo-server": "^3.0.2",
     "apollo-server-express": "^3.0.0",
@@ -60,6 +62,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sharp": "^0.28.3",
+    "socket-io": "^1.0.0",
     "ts-morph": "^11.0.3"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ import { PUBLIC_PATH } from './common/storage/storage.constants';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AppController } from './app.controller';
     ChatModule,
     StorageModule,
     PrismaModule,
+    GameModule,
   ],
   controllers: [AppController],
 })
