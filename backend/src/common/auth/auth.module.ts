@@ -12,6 +12,7 @@ import { AuthResolver } from './auth.resolver';
 import { FtStrategy } from './strategies/ft.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   controllers: [AuthController],

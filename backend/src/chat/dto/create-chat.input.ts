@@ -44,6 +44,5 @@ export class CreateChatInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  @MinLength(4)
   password?: string;
 }
