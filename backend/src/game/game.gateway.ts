@@ -22,7 +22,6 @@ export interface SocketWithData extends Socket {
 }
 
 @WebSocketGateway(81)
-@UseGuards(JwtAuthGuard)
 export class GameGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;
   private _games: GameEntity[] = [];
@@ -33,11 +32,13 @@ export class GameGateway implements OnGatewayConnection {
   ) {}
   
   async handleConnection(client: Socket, ...args: any[]) {
-    const authToken = client.handshake.headers.authorization.substr(7);
+    const authToken = client.handshake.headers.authorization?.substr(7);
 
     if (!authToken) {
-      throw new UnauthorizedException();
+      return;
     }
+    console.log(client);
+    
     const userPayload = await this.authService.verifyToken(authToken);
     client.data.id = userPayload.id;
     client.data.name = userPayload.name;
@@ -79,6 +80,12 @@ export class GameGateway implements OnGatewayConnection {
   }
 
 
+  @SubscribeMessage('playerReady')
+  
+  playerReady(@ConnectedSocket() client: SocketWithData) {
+    client.data.game.setPlayerReady(client.data.playerNumber);
+  }
+
   @SubscribeMessage('createGame')
   createGame(
     @MessageBody() dto: CreateGameDto,
@@ -87,9 +94,14 @@ export class GameGateway implements OnGatewayConnection {
     const game = new GameEntity(dto.name, dto.userId);
     this._games.push(game);
 
+    console.log(dto);
+    console.log(client.data);
+    
     game.connect(client);
     game.setPlayer(client);
     
+    client.data.game = game;
+
     client.emit('gameCreated', {
       game: {
         id: game.id,

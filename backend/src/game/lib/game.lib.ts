@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import { Ball } from "./ball.lib";
 import { GameObject  } from "./game-object.lib";
 export class Game {
-    payers: Player[];
+    payers: Player[] = [];
     ball: Ball;
     objects: GameObject[];
     screenWidth: number;

@@ -24,6 +24,7 @@ export class GameEntity {
   private _game: Game;
   private readonly name;
   public readonly id: string;
+  private _timer: NodeJS.Timeout;
 
   constructor(name: string, playerId?: number) {
     this.id = randomUUID();
@@ -77,6 +78,26 @@ export class GameEntity {
 
   setPlayerNumber(player: Player, socket: SocketWithData) {
     player.number = this._players.findIndex((p) => p.id === socket.data.id) + 1;
+  }
+
+  setPlayerReady(playerNumber: number) {
+    this._players[playerNumber - 1].isReady = true;
+    if (this._players.every(p => p.isReady)) {
+      this.animate();
+    }
+  }
+
+  animate() {
+    this._timer = this._timer = setInterval(() => {
+      this._game.update();
+    }, 30);
+    this._timer = setTimeout(() => {
+      this.stop();
+    }, 10000)
+  }
+
+  stop() {
+    clearInterval(this._timer);
   }
 
   onPlayerDisconnected(socket: SocketWithData) {
