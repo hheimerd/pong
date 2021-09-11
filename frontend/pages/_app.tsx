@@ -32,7 +32,7 @@ const httpLink = createHttpLink({
     process.env.BACKEND_HOST +
     ":" +
     process.env.BACKEND_PORT +
-    "/api/graphql",
+    "/graphql",
 });
 
 const wsLink = process.browser
@@ -42,7 +42,7 @@ const wsLink = process.browser
         process.env.BACKEND_HOST +
         ":" +
         process.env.BACKEND_PORT +
-        "/api/graphql",
+        "/graphql",
       options: { reconnect: true },
     })
   : null;

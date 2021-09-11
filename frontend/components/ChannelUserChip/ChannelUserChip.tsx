@@ -201,7 +201,7 @@ export const ChannelUserChip = ({
               process.env.BACKEND_HOST +
               ":" +
               process.env.BACKEND_PORT +
-              "/api/public/" +
+              "/public/" +
               user.avatar[0]
             }
           />
