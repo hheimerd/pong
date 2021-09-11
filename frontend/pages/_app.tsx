@@ -27,12 +27,22 @@ import "../styles/globals.css";
 import theme from "../theme";
 
 const httpLink = createHttpLink({
-  uri: process.env.GRAPHQL_REMOTE,
+  uri:
+    "http://" +
+    process.env.BACKEND_HOST +
+    ":" +
+    process.env.BACKEND_PORT +
+    "/api/graphql",
 });
 
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: process.env.WEBSOCKET_LINK,
+      uri:
+        "ws://" +
+        process.env.BACKEND_HOST +
+        ":" +
+        process.env.BACKEND_PORT +
+        "/api/graphql",
       options: { reconnect: true },
     })
   : null;

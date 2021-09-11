@@ -1,5 +1,5 @@
 import Router, { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "../components";
 import { PersonalTokenContext } from "../context/personaltoken/personaltoken.context";
 import { HomePageLayout } from "../layout/HomePageLayout";
@@ -8,19 +8,23 @@ const MainPage = (): JSX.Element => {
   const router = useRouter();
   const { setToken } = useContext(PersonalTokenContext);
 
-  if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
-    router.push("/dashboard");
+  useEffect(() => {
+    console.log("localStorage", typeof localStorage);
+    console.log("localStorage", localStorage.getItem("token"));
+    if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
+      router.push("/dashboard");
 
-  const url_token = router.query.token as string;
+    const url_token = router.query.token as string;
 
-  if (router.isReady) {
-    if (typeof url_token !== "undefined") {
-      console.log("token intra", url_token);
-      localStorage.setItem("token", url_token);
-      setToken(url_token);
-      window.location.replace("/profile");
+    if (router.isReady) {
+      if (typeof url_token !== "undefined") {
+        console.log("token intra", url_token);
+        localStorage.setItem("token", url_token);
+        setToken(url_token);
+        window.location.replace("/profile");
+      }
     }
-  }
+  }, []);
 
   return (
     <HomePageLayout>
