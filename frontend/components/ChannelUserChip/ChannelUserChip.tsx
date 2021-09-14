@@ -197,12 +197,7 @@ export const ChannelUserChip = ({
           <Avatar
             alt={user.name}
             src={
-              "http://" +
-              process.env.BACKEND_HOST +
-              ":" +
-              process.env.BACKEND_PORT +
-              "/public/" +
-              user.avatar[0]
+              "http://" + process.env.BACKEND_HOST + "/public/" + user.avatar[0]
             }
           />
         }

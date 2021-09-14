@@ -19,18 +19,8 @@ export const Avatar = ({
     image = ["/no-avatar.png", "/no-avatar.png"];
   } else {
     image = [
-      "http://" +
-        process.env.BACKEND_HOST +
-        ":" +
-        process.env.BACKEND_PORT +
-        "/public/" +
-        image[0],
-      "http://" +
-        process.env.BACKEND_HOST +
-        ":" +
-        process.env.BACKEND_PORT +
-        "/public/" +
-        image[1],
+      "http://" + process.env.BACKEND_HOST + "/public/" + image[0],
+      "http://" + process.env.BACKEND_HOST + "/public/" + image[1],
     ];
   }
   // set small or large image

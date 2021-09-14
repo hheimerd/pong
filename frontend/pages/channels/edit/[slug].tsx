@@ -255,7 +255,10 @@ const ChannelRoom = (): JSX.Element => {
                       <Avatar
                         alt={option.name}
                         src={
-                          'http://' + process.env.BACKEND_HOST + ':' + process.env.BACKEND_PORT + "/public/" + option.avatar[0]
+                          "http://" +
+                          process.env.BACKEND_HOST +
+                          "/public/" +
+                          option.avatar[0]
                         }
                       />
                     }
@@ -306,7 +309,10 @@ const ChannelRoom = (): JSX.Element => {
                       <Avatar
                         alt={option.name}
                         src={
-                          'http://' + process.env.BACKEND_HOST + ':' + process.env.BACKEND_PORT + "/public/" + option.avatar[0]
+                          "http://" +
+                          process.env.BACKEND_HOST +
+                          "/public/" +
+                          option.avatar[0]
                         }
                       />
                     }
