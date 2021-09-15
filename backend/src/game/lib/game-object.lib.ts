@@ -1,9 +1,11 @@
 export class GameObject {
-  x;
-  y;
-  width;
-  height;
-  constructor(x, y, width, height) {
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  constructor(name: string, x: number, y: number, width: number, height: number) {
+      this.name = name;
       this.x = x;
       this.y = y;
       this.width = width;
