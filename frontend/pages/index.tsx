@@ -13,10 +13,11 @@ const MainPage = (): JSX.Element => {
     console.log("localStorage", localStorage.getItem("token"));
     if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
       router.push("/dashboard");
+  }, []);
 
-    const url_token = router.query.token as string;
-
+  useEffect(() => {
     if (router.isReady) {
+      const url_token = router.query.token as string;
       if (typeof url_token !== "undefined") {
         console.log("token intra", url_token);
         localStorage.setItem("token", url_token);
@@ -24,7 +25,7 @@ const MainPage = (): JSX.Element => {
         window.location.replace("/profile");
       }
     }
-  }, []);
+  }, [router.isReady]);
 
   return (
     <HomePageLayout>
@@ -40,7 +41,7 @@ const MainPage = (): JSX.Element => {
           appearance="primary"
           image="/42_Logo.svg"
           size="large"
-          onClick={() => Router.push("http://localhost:3000/auth/login42")}
+          onClick={() => Router.push("http://localhost/api/auth/login42")}
         >
           OAuth
         </Button>
