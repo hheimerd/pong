@@ -28,8 +28,7 @@
     "next-auth": "^3.27.1",
     "nextjs-progressbar": "^0.0.11",
     "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "socket-io": "^1.0.0"
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -46,6 +45,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "json-server": "^0.16.3",
     "prettier": "2.3.2",
+    "socket.io": "^4.2.0",
     "socket.io-client": "^4.2.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",

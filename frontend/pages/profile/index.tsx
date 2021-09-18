@@ -128,7 +128,7 @@ const Profile = (): JSX.Element => {
         const formData = new FormData();
         formData.append("image", avatarRef.current.files[0]);
         axios
-          .post("http://localhost:3000/user/avatar", formData, {
+          .post("http://localhost/api/user/avatar", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: "Bearer " + localStorage.getItem("token"),
