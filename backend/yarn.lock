@@ -1167,7 +1167,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/cookie@^0.4.0":
+"@types/cookie@^0.4.0", "@types/cookie@^0.4.1":
   "integrity" "sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q=="
   "resolved" "https://registry.npmjs.org/@types/cookie/-/cookie-0.4.1.tgz"
   "version" "0.4.1"
@@ -1177,7 +1177,7 @@
   "resolved" "https://registry.npmjs.org/@types/cookiejar/-/cookiejar-2.1.2.tgz"
   "version" "2.1.2"
 
-"@types/cors@^2.8.10", "@types/cors@2.8.12":
+"@types/cors@^2.8.10", "@types/cors@^2.8.12", "@types/cors@2.8.12":
   "integrity" "sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw=="
   "resolved" "https://registry.npmjs.org/@types/cors/-/cors-2.8.12.tgz"
   "version" "2.8.12"
@@ -2711,7 +2711,7 @@
     "whatwg-mimetype" "^2.3.0"
     "whatwg-url" "^8.0.0"
 
-"debug@^4.0.1", "debug@^4.1.0", "debug@^4.1.1", "debug@^4.3.1", "debug@~4.3.1", "debug@4":
+"debug@^4.0.1", "debug@^4.1.0", "debug@^4.1.1", "debug@^4.3.1", "debug@~4.3.1", "debug@~4.3.2", "debug@4":
   "integrity" "sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw=="
   "resolved" "https://registry.npmjs.org/debug/-/debug-4.3.2.tgz"
   "version" "4.3.2"
@@ -2928,6 +2928,19 @@
   "integrity" "sha512-aMWot7H5aC8L4/T8qMYbLdvKlZOdJTH54FxfdFunTGvhMx1BHkJOntWArsVfgAZVwAO9LC2sryPWRcEeUzCe5w=="
   "resolved" "https://registry.npmjs.org/engine.io/-/engine.io-5.1.1.tgz"
   "version" "5.1.1"
+  dependencies:
+    "accepts" "~1.3.4"
+    "base64id" "2.0.0"
+    "cookie" "~0.4.1"
+    "cors" "~2.8.5"
+    "debug" "~4.3.1"
+    "engine.io-parser" "~4.0.0"
+    "ws" "~7.4.2"
+
+"engine.io@~5.2.0":
+  "integrity" "sha512-d1DexkQx87IFr1FLuV+0f5kAm1Hk1uOVijLOb+D1sDO2QMb7YjE02VHtZtxo7xIXMgcWLb+vl3HRT0rI9tr4jQ=="
+  "resolved" "https://registry.npmjs.org/engine.io/-/engine.io-5.2.0.tgz"
+  "version" "5.2.0"
   dependencies:
     "accepts" "~1.3.4"
     "base64id" "2.0.0"
@@ -6257,12 +6270,7 @@
   "resolved" "https://registry.npmjs.org/smart-buffer/-/smart-buffer-4.2.0.tgz"
   "version" "4.2.0"
 
-"socket-io@^1.0.0":
-  "integrity" "sha1-/FZvTTCmNwIk0H5l3O84a9j10pY="
-  "resolved" "https://registry.npmjs.org/socket-io/-/socket-io-1.0.0.tgz"
-  "version" "1.0.0"
-
-"socket.io-adapter@~2.3.1":
+"socket.io-adapter@~2.3.1", "socket.io-adapter@~2.3.2":
   "integrity" "sha512-PBZpxUPYjmoogY0aoaTmo1643JelsaS1CiAwNjRVdrI0X9Seuc19Y2Wife8k88avW6haG8cznvwbubAZwH4Mtg=="
   "resolved" "https://registry.npmjs.org/socket.io-adapter/-/socket.io-adapter-2.3.2.tgz"
   "version" "2.3.2"
@@ -6275,6 +6283,21 @@
     "@types/component-emitter" "^1.2.10"
     "component-emitter" "~1.3.0"
     "debug" "~4.3.1"
+
+"socket.io@^4.2.0":
+  "integrity" "sha512-sjlGfMmnaWvTRVxGRGWyhd9ctpg4APxWAxu85O/SxekkxHhfxmePWZbaYCkeX5QQX0z1YEnKOlNt6w82E4Nzug=="
+  "resolved" "https://registry.npmjs.org/socket.io/-/socket.io-4.2.0.tgz"
+  "version" "4.2.0"
+  dependencies:
+    "@types/cookie" "^0.4.1"
+    "@types/cors" "^2.8.12"
+    "@types/node" ">=10.0.0"
+    "accepts" "~1.3.4"
+    "base64id" "~2.0.0"
+    "debug" "~4.3.2"
+    "engine.io" "~5.2.0"
+    "socket.io-adapter" "~2.3.2"
+    "socket.io-parser" "~4.0.4"
 
 "socket.io@4.1.3":
   "integrity" "sha512-tLkaY13RcO4nIRh1K2hT5iuotfTaIQw7cVIe0FUykN3SuQi0cm7ALxuyT5/CtDswOMWUzMGTibxYNx/gU7In+Q=="

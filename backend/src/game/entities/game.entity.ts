@@ -108,7 +108,7 @@ export class GameEntity {
   }
 
   movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
-    const player = this._game.payers[playerNumber - 1];
+    const player = this._game.players[playerNumber - 1];
     player.move(direction);
   }
 

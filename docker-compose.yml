@@ -22,6 +22,7 @@ services:
     restart: always
     ports:
       - 3000:3000
+      - 81:81
     volumes:
       - ./backend:/app
     depends_on:
@@ -64,7 +65,7 @@ services:
       - 80:80
     volumes:
       - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro
-    command: [nginx, '-g', 'daemon off;']
+    command: ['nginx', '-g', 'daemon off;']
     environment:
      - NGINX_HOST=localhost
      - NGINX_PORT=80

@@ -30,6 +30,6 @@ export class AuthController {
   async login42(@Request() req, @Res() res: Response) {
     const payload = plainToClass(RequestUser, req.user);
     const token = (await this.authService.login(payload)).access_token;
-    res.redirect('http://localhost:3040/?token=' + token);
+    res.redirect('http://localhost/?token=' + token);
   }
 }

@@ -13,7 +13,7 @@ export class FtStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: ftConstants.FORTYTWO_APP_ID,
       clientSecret: ftConstants.FORTYTWO_APP_SECRET,
-      callbackURL: "http://localhost:3000/auth/login42"
+      callbackURL: "http://localhost/api/auth/login42"
     })
   }
 
