@@ -8,6 +8,7 @@ import { FtAuthGuard } from './guards/ft-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -17,6 +18,7 @@ export class AuthController {
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
+
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')

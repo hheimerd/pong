@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { randomUUID } from 'crypto';
-import * as nodemailer from 'nodemailer';
 import { env } from 'process';
 import bcryptjs from 'bcryptjs';
 const { genSalt, hash, compare } = bcryptjs;
+import _sendmail from 'sendmail';
+const sendmail = _sendmail({silent: true});
 
 @Injectable()
 export class TwoFactorAuthService {
@@ -24,11 +25,9 @@ export class TwoFactorAuthService {
       }
     });
 
-    const transporter = nodemailer.createTransport();
     const link = `${env.LINK2FA}?code=${code}&id=${record.id}`;
 
-
-    transporter.sendMail({
+    sendmail({
       from: env.MAIL_HOST,
       to: user.email,
       subject: "Confirm login",
@@ -36,7 +35,10 @@ export class TwoFactorAuthService {
       html: `
         Click <a href="${link}">here</a> to login
       `
-    });
+    }, function (err) {
+      if (err)
+        console.log(err && err.stack)
+    })
     
     return record;
   }
