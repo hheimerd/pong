@@ -119,6 +119,7 @@ input CreateUserDto {
   email: String!
   login: String!
   password: String!
+  TwoFactorAuth: Boolean
 }
 
 input UpdateUserDto {
@@ -126,6 +127,7 @@ input UpdateUserDto {
   email: String
   login: String
   password: String
+  TwoFactorAuth: Boolean
 
   """ADMIN ONLY"""
   id: Float

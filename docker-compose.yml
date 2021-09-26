@@ -35,7 +35,6 @@ services:
         condition: service_healthy
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
     entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start'"
-#    command: tail -F anything
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -47,6 +46,7 @@ services:
       - LINK2FA=localhost/account/2fa
       - HOST=localhost
       - MAIL_HOST=localhost
+      - ADMIN_PASS=admin
 
   frontend:
     image: node:16-alpine

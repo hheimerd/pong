@@ -2,19 +2,34 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, OnApplicationBootstrap, Res } from '@nestjs/common';
 import { generateImage, generateRandomBgImage, generateSvgGradient } from './common/helpers/image-generator.lib';
-import {Response} from 'express'
-import sharp from 'sharp';
-import { Public } from './common/auth/decorators/public.decorator';
+import { PrismaService } from './common/prisma/prisma.service';
+import { env } from 'process';
+import { Role } from './common/user/entities/user.entity';
+import { UserService } from './common/user/user.service';
+
 
 @Controller()
-export class AppController {
-  @Public()
-  @Get('/test')
-  async test(@Res() res: Response) {
-    const image = generateRandomBgImage(100, 100, 'Z', 'png');
+export class AppController implements OnApplicationBootstrap {
+  constructor(
+    private readonly userService: UserService,
+    private readonly prisma: PrismaService,
+  ) {}
+  
+  async onApplicationBootstrap() {
+    const userExists = await this.prisma.user.findUnique({ where: { login: "admin" }})
+   
+    if (userExists) return;
 
-    image.pipe(res);
+    const admin = await this.userService.create({
+        email: 'info@' + env.HOST,
+        login: 'admin',
+        password: env.ADMIN_PASS,
+        name: 'administrator'
+      }, [Role.Admin]);
+   
   }
+
+
 }
