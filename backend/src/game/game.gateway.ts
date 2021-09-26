@@ -19,7 +19,7 @@ export interface SocketWithData extends Socket {
 }
 
 @WebSocketGateway(81)
-export class GameGateway implements OnGatewayConnection {
+export class GameGateway {
   @WebSocketServer() server: Server;
   private _games: GameEntity[] = [];
 
@@ -28,19 +28,19 @@ export class GameGateway implements OnGatewayConnection {
     private readonly authService: AuthService
   ) {}
   
-  async handleConnection(client: Socket, ...args: any[]) {
-    const authToken = client.handshake.headers.authorization?.substr(7);
+  // async handleConnection(client: Socket, ...args: any[]) {
+  //   const authToken = client.handshake.headers.authorization?.substr(7);
 
-    if (!authToken) {
-      return;
-    }
+  //   if (!authToken) {
+  //     return;
+  //   }
     
-    const userPayload = await this.authService.verifyToken(authToken);
-    client.data.id = userPayload.id;
-    client.data.name = userPayload.name;
+  //   const userPayload = await this.authService.verifyToken(authToken);
+  //   client.data.id = userPayload.id;
+  //   client.data.name = userPayload.name;
     
     
-  }
+  // }
   
   @SubscribeMessage('connectToGame')
   connectToGame(

@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/common/user/user.service';
 import { PasswordService } from '../password/password.service';
@@ -33,8 +33,12 @@ export class AuthService {
   }
 
   async verifyToken(token: string) {
-    const payload = this.jwtService.verify(token);
-    return payload;
+    try {
+      const payload = this.jwtService.verify(token);
+      return payload;
+    } catch {
+      throw new UnauthorizedException();
+    }
   }
 
   async login(user: any) {
