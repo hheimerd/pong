@@ -20,6 +20,12 @@ enum ChatType {
   Channel
 }
 
+enum UserStatus {
+  Online
+  Offline
+  InGame
+}
+
 model User {
   id           Int              @id @default(autoincrement())
   name         String           @db.VarChar(32)
@@ -41,6 +47,7 @@ model User {
   TwoFactorAuth Boolean @default(false)
   AuthCodes    AuthCode[] 
   deleted_at   DateTime?
+  status UserStatus @default(Offline)
 }
 
 model AuthCode {

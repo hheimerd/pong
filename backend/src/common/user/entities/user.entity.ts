@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Role as PrismaRole } from '@prisma/client';
+import { Role as PrismaRole, UserStatus as PrismaUserStatus } from '@prisma/client';
 
 export enum Role {
   User = 'User',
@@ -8,6 +8,15 @@ export enum Role {
 
 registerEnumType(Role, {
   name: 'Role',
+});
+
+export enum UserStatus {
+  Online,
+  Offline,
+  InGame
+}
+registerEnumType(UserStatus, {
+  name: 'UserStatus',
 });
 
 @ObjectType()
@@ -37,6 +46,9 @@ export class User {
   avatar?: string[];
 
   @Field(() => Boolean)
-  TwoFactorAuth;
+  TwoFactorAuth?;
+
+  @Field(() => UserStatus)
+  status: UserStatus | PrismaUserStatus;
 }
 

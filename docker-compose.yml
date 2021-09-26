@@ -46,6 +46,7 @@ services:
       - LINK2FA=localhost/account/2fa
       - HOST=localhost
       - MAIL_HOST=pong-online.ru
+      - ADMIN_PASS=admin
 
   frontend:
     image: node:16-alpine

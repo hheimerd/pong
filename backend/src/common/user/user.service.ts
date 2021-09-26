@@ -1,6 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import bcryptjs from 'bcryptjs';
 const { genSalt, hash } = bcryptjs;
 import { StorageService } from 'src/common/storage/storage.service';
@@ -10,6 +9,7 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Chat } from '@prisma/client';
 import { generateRandomBgImage2 } from 'src/common/helpers/image-generator.lib';
+import { Role } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -119,7 +119,7 @@ export class UserService {
     return user.avatar;
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, roles: Role[] = [Role.User]) {
     const exists = await this.count({
       email: dto.email,
       login: dto.login,
@@ -130,7 +130,7 @@ export class UserService {
     const salt = await genSalt(10);
     const password = await hash(dto.password, salt);
     const user = await this.prisma.user.create({
-      data: { ...dto, password },
+      data: { ...dto, password, roles },
     });
     const avatar = generateRandomBgImage2(512, 512, 'png');
     this.uploadAvatar(await avatar.toBuffer(), user.id);

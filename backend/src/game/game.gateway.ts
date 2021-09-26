@@ -3,9 +3,6 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, We
 import { randomUUID } from 'crypto';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/common/auth/auth.service';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import { Public } from 'src/common/auth/decorators/public.decorator';
-import { JwtAuthGuard } from 'src/common/auth/guards/jwt-auth.guard';
 import { ConnectGameDto } from './dto/connect-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GameCreatedDto } from './dto/game-connected.dto';
@@ -37,11 +34,11 @@ export class GameGateway implements OnGatewayConnection {
     if (!authToken) {
       return;
     }
-    console.log(client);
     
     const userPayload = await this.authService.verifyToken(authToken);
     client.data.id = userPayload.id;
     client.data.name = userPayload.name;
+    
     
   }
   

@@ -5,7 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ServerOptions } from 'socket.io';
-import { SMTPServer } from 'smtp-server';
+
 
 export class SocketAdapter extends IoAdapter {
   createIOServer(
@@ -20,11 +20,7 @@ export class SocketAdapter extends IoAdapter {
   }
 }
 
-async function createSmtp() {
-  const server = new SMTPServer({
-  });
-  server.listen(25);
-}
+
 
 async function bootstrap() {
   try {
@@ -33,8 +29,6 @@ async function bootstrap() {
       process.env[k] = envConfig[k];
     }
   } catch (err) { }
-
-  createSmtp();
 
   const app = await NestFactory.create(AppModule, { cors: true });
   app.useWebSocketAdapter(new SocketAdapter(app)); app.enableCors();

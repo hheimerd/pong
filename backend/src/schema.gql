@@ -12,6 +12,7 @@ type User {
   updated_at: DateTime
   avatar: [String!]!
   TwoFactorAuth: Boolean!
+  status: UserStatus!
   chats: [Chat!]!
   friends: [User!]!
   followers: [User!]!
@@ -27,6 +28,12 @@ enum Role {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+enum UserStatus {
+  Online
+  Offline
+  InGame
+}
 
 type ChatMessage {
   created_at: DateTime!
@@ -119,6 +126,7 @@ input CreateUserDto {
   email: String!
   login: String!
   password: String!
+  TwoFactorAuth: Boolean
 }
 
 input UpdateUserDto {
@@ -126,6 +134,7 @@ input UpdateUserDto {
   email: String
   login: String
   password: String
+  TwoFactorAuth: Boolean
 
   """ADMIN ONLY"""
   id: Float

@@ -21,4 +21,7 @@ export class CreateUserDto {
   @MinLength(6)
   @Field()
   password: string;
+
+  @Field({nullable: true})
+  TwoFactorAuth?: boolean;
 }

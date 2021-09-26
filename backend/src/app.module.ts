@@ -12,6 +12,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { GameModule } from './game/game.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -38,5 +39,6 @@ import { GameModule } from './game/game.module';
     GameModule,
   ],
   controllers: [AppController],
+  providers: [AppGateway],
 })
 export class AppModule {}
