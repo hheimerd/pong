@@ -11,9 +11,9 @@ export class GameEmitter extends EventEmitter {
         this.name = name;
     }
     
-    on(eventName: string, ...args: any) {
-        this.connections.forEach((s) => {
-            s.emit(eventName, args);
-        });
-    }
+    // on(eventName: string, ...args: any) {
+    //     this.connections.forEach((s) => {
+    //         s.emit(eventName, args);
+    //     });
+    // }
 }

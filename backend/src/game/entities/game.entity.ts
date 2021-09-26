@@ -29,7 +29,7 @@ export class GameEntity {
   constructor(name: string, playerId?: number) {
     this.id = randomUUID();
     this.name = name;
-    this._game = new Game(1024, 768, this._connections, 1);
+    // this._game = new Game(1024, 768, this._connections, 1);
     if (playerId) {
       this._players[1] = new Player(playerId);
     }
