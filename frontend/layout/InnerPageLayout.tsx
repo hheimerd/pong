@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import router, { useRouter } from "next/router";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { Avatar } from "../components";
 import { PROFILE_QUERY } from "../graphql";
 import styles from "./InnerPageLayout.module.css";
@@ -14,6 +14,8 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
+
+  console.log("getProfile", data.getProfile);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -91,18 +93,27 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             <span onClick={() => handleLogout()}>Logout</span>
           </li>
         </ul>
-        <hr />
-        <ul className={styles.navi}>
-          <li
-            className={
-              router.pathname.startsWith("/admins") ? styles.active : ""
-            }
-          >
-            <Link href="/admin">Admin</Link>
-          </li>
-        </ul>
+        {data.getProfile.roles.includes("Admin") && (
+          <>
+            <hr />
+            <ul className={styles.navi}>
+              <li
+                className={
+                  router.pathname.startsWith("/admins") ? styles.active : ""
+                }
+              >
+                <Link href="/admin">Admin</Link>
+              </li>
+            </ul>
+          </>
+        )}
       </aside>
-      <main className={styles.content}>{children}</main>
+      <main className={styles.content}>
+        <div className={styles.logout} onClick={() => handleLogout()}>
+          Logout
+        </div>
+        {children}
+      </main>
     </div>
   );
 };

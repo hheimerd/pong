@@ -13,14 +13,14 @@ const TwoFactor = (): JSX.Element => {
   useEffect(() => {
     if (router.isReady) {
       const code = router.query.code as string;
-      const auth_id = router.query.auth_id as string;
-      if (typeof code !== "undefined" && typeof auth_id !== "undefined") {
-        console.log("code from email link code:", code, ", auth_id:", auth_id);
+      const id = router.query.id as string;
+      if (typeof code !== "undefined" && typeof id !== "undefined") {
+        console.log("code from email link code:", code, ", auth_id:", id);
         // write code sending graphql to verify2fa
         verify2fa({
           variables: {
-            auth_id: auth_id,
-            code: code,
+            verify2FaAuthId: id,
+            verify2FaCode: code,
           },
         });
       } else {
@@ -33,16 +33,16 @@ const TwoFactor = (): JSX.Element => {
   useEffect(() => {
     if (typeof data !== "undefined") {
       console.log("data loading: ", data);
-      if (data.login.access_token) {
-        localStorage.setItem("token", data.login.access_token);
-        setToken(data.login.access_token);
+      if (data.verify2fa.access_token) {
+        localStorage.setItem("token", data.verify2fa.access_token);
+        setToken(data.verify2fa.access_token);
         if (localStorage.getItem("token") !== "") {
           console.log("localStorage token: ", localStorage.getItem("token"));
           router.push("/profile");
         }
       } else {
-        console.log("message", data.login.message);
-        setTwofactorMessage(data.login.message);
+        console.log("message", data.verify2fa.message);
+        setTwofactorMessage(data.verify2fa.message);
       }
     }
   }, [loading]);

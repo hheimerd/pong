@@ -4,12 +4,21 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Avatar, Button, Htag } from "../../components";
-import { DELETE_USER_MUTATION, USERS_QUERY } from "../../graphql";
+import {
+  DELETE_USER_MUTATION,
+  PROFILE_QUERY,
+  USERS_QUERY,
+} from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
   const router = useRouter();
+  const {
+    data: dataProfile,
+    error: errorPorfile,
+    loading: loadingProfile,
+  } = useQuery(PROFILE_QUERY);
   const { loading, error, data } = useQuery(USERS_QUERY, {
     variables: {
       usersOffset: 0,
@@ -20,7 +29,7 @@ const Channel = (): JSX.Element => {
   const [
     deleteUser,
     {
-      data: dataDeleteUser,
+      // data: dataDeleteUser,
       loading: loadingDeleteUser,
       error: errorDeleteUser,
     },
@@ -40,8 +49,12 @@ const Channel = (): JSX.Element => {
   });
 
   // wait while data loading
-  if (loading) return <p>Loading data from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading || loadingDeleteUser || loadingProfile)
+    return <p>Loading data from graphql...</p>;
+  if (error || errorDeleteUser || errorPorfile)
+    return <p>Error: can't fetching data from graphql :(</p>;
+  if (!dataProfile.getProfile.roles.includes("Admin"))
+    return <p className="error-message">Access forbidden</p>;
 
   // leave Channel
   const handleDelete = (values: IUserProfile) => {

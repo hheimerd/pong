@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { TextField } from "@material-ui/core";
+import { FormControlLabel, Switch, TextField } from "@material-ui/core";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -45,6 +45,9 @@ const Profile = (): JSX.Element => {
   // const [isPasswordValid, setIsPasswordValid] = useState(true);
   // const [isEmailValid, setIsEmailValid] = useState(true);
 
+  const [is2FAEnabled, setIs2FAEnabled] = React.useState(false);
+  const is2FAEnabledRef = useRef<HTMLInputElement>();
+
   // on loading USER_QUERY
   useEffect(() => {
     // console.log("loading: ", loading);
@@ -58,6 +61,9 @@ const Profile = (): JSX.Element => {
       // if (emailRef.current) emailRef.current.value = data.getProfile.email;
       setAvatar(data.getProfile.avatar);
       // if (avatarRef.current) avatarRef.current.value = data.getProfile.avatar;
+      setIs2FAEnabled(data.getProfile.TwoFactorAuth);
+      if (is2FAEnabledRef.current)
+        is2FAEnabledRef.current.value = data.getProfile.TwoFactorAuth;
     }
   }, [loading]);
 
@@ -115,6 +121,7 @@ const Profile = (): JSX.Element => {
         variables: {
           updateUserInput: {
             name: name,
+            TwoFactorAuth: is2FAEnabled,
             // email: email,
             // oldPassword: oldPassword,
             // newPassword: newPassword,
@@ -208,6 +215,20 @@ const Profile = (): JSX.Element => {
             />
           </div>
         */}
+          <div className="line">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={is2FAEnabled ? is2FAEnabled : false}
+                  onChange={(event) => setIs2FAEnabled(event.target.checked)}
+                  name="checkedA"
+                  color="primary"
+                  inputRef={is2FAEnabledRef}
+                />
+              }
+              label="Private"
+            />
+          </div>
           <div className="line">
             <OutlinedDiv label="Avatar">
               <Avatar
