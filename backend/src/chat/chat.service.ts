@@ -17,7 +17,7 @@ export class ChatService {
     const allLastPunishments = await this.prisma.chatPunishment.findMany({
       where: { 
         created_at: {
-          gte: lastWeek.toDate(),
+          lte: lastWeek.toDate(),
         }
       }
     })

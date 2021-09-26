@@ -37,6 +37,6 @@ export class User {
   avatar?: string[];
 
   @Field(() => Boolean)
-  TwoFactorAuth;
+  TwoFactorAuth?;
 }
 

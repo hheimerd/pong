@@ -5,11 +5,26 @@ import { env } from 'process';
 import bcryptjs from 'bcryptjs';
 const { genSalt, hash, compare } = bcryptjs;
 import _sendmail from 'sendmail';
+import { Cron } from '@nestjs/schedule';
+import moment from 'moment';
 const sendmail = _sendmail({silent: true});
 
 @Injectable()
 export class TwoFactorAuthService {
   constructor(private readonly prisma: PrismaService) {}
+
+  @Cron('0 * * * *')
+  async deleteOld() {
+    const hourAgo = moment().subtract(1, 'hours');
+
+    this.prisma.authCode.deleteMany({
+      where: {
+        created_at: {
+          lte: hourAgo.toDate(),
+        }
+      }
+    });
+  }
 
   async sendCode(userId: number)
   {
@@ -43,6 +58,11 @@ export class TwoFactorAuthService {
     return record;
   }
 
+  async delete(id: string) {
+    return await this.prisma.authCode.delete({
+      where: { id }
+    });
+  }
 
   async validate(code: string, id: string){
     const record = await this.prisma.authCode.findUnique({ where: { id } });
@@ -50,6 +70,8 @@ export class TwoFactorAuthService {
 
     const isValid = await compare(code, record.codeHash);
     if (!isValid) return false;
+
+    this.delete(id);
 
     return await this.prisma.user.findUnique({ where: { id: record.user_id }});
   }
