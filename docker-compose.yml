@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.9'
 
 services:
   db:
@@ -9,6 +9,11 @@ services:
       POSTGRES_DB: pong
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     
   adminer:
     image: adminer
@@ -26,7 +31,8 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
     entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start'"
 #    command: tail -F anything
@@ -37,10 +43,11 @@ services:
       - NODE_ENV=development
       - DB_PORT=5432
       - DB_HOST=db
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public
-      - LINK2FA=${HOST}/account/2fa
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/pong?schema=public
+      - LINK2FA=localhost/account/2fa
       - HOST=localhost
       - MAIL_HOST=localhost
+
   frontend:
     image: node:16-alpine
     container_name: frontend

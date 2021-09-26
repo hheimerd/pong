@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { AvatarButton, Htag } from "../../components";
-import { PROFILE_QUERY, USERS_QUERY } from "../../graphql";
+import { PROFILE_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./dashboard.module.css";
@@ -9,10 +11,29 @@ import styles from "./dashboard.module.css";
 const Users = (): JSX.Element => {
   // get my profile
   const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const router = useRouter();
 
   // wait while data loading
   if (loading) return <p>Loading data from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (error) {
+    // remove old token if error happened and token found
+    if (localStorage.getItem("token") !== "") {
+      localStorage.removeItem("token");
+      router.push("/");
+    }
+    return (
+      <>
+        <p className="error-message">
+          Error: can't fetching data from graphql :(
+          <br />
+          {error.message}
+        </p>
+        <p>
+          <Link href="/">Return to home page</Link>
+        </p>
+      </>
+    );
+  }
 
   // if (!rows) return null;
   console.log("data.friends", data.getProfile.friends);

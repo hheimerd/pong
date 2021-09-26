@@ -25,15 +25,22 @@ const UserLogin = (): JSX.Element => {
   const [isNameValid, setIsNameValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
 
+  const [twofactorMessage, setTwofactorMessage] = useState("");
+
   // on finish submit
   useEffect(() => {
     if (typeof data !== "undefined") {
       console.log("data loading: ", data);
-      localStorage.setItem("token", data.login.access_token);
-      setToken(data.login.access_token);
-      if (localStorage.getItem("token") !== "") {
-        console.log("localStorage token: ", localStorage.getItem("token"));
-        router.push("/profile");
+      if (data.login.access_token) {
+        localStorage.setItem("token", data.login.access_token);
+        setToken(data.login.access_token);
+        if (localStorage.getItem("token") !== "") {
+          console.log("localStorage token: ", localStorage.getItem("token"));
+          router.push("/profile");
+        }
+      } else {
+        console.log("message", data.login.message);
+        setTwofactorMessage(data.login.message);
       }
     }
   }, [loading]);
@@ -84,6 +91,9 @@ const UserLogin = (): JSX.Element => {
           &lt; Back
         </span>
         <Htag tag="h2">Login</Htag>
+        {twofactorMessage && (
+          <p className="info-message"> {twofactorMessage} </p>
+        )}
         {error && <p className="error-message"> Error: {error.message} </p>}
         <form onSubmit={handleSubmit}>
           <div className="line">

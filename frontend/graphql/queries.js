@@ -7,6 +7,7 @@ export const PROFILE_QUERY = gql`
       name
       email
       login
+      roles
       avatar
       friends {
         id
@@ -172,6 +173,16 @@ export const USER_LOGIN = gql`
   query Query($loginPassword: String!, $loginLogin: String!) {
     login(password: $loginPassword, login: $loginLogin) {
       access_token
+      message
+    }
+  }
+`;
+
+export const VERIFY_TWOFA = gql`
+  query Query($verify2FaAuthId: String!, $verify2FaCode: String!) {
+    verify2fa(auth_id: $verify2FaAuthId, code: $verify2FaCode) {
+      access_token
+      message
     }
   }
 `;
