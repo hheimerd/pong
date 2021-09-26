@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-42"
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/common/user/user.service";
 import { ftConstants } from "../auth.constants";
 import bcryptjs from 'bcryptjs';
 const { genSalt } = bcryptjs;

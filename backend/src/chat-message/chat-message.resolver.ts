@@ -13,7 +13,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { PubSub } from 'graphql-subscriptions';
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/common/user/entities/user.entity';
 import { ChatService } from 'src/chat/chat.service';
 import { PunishmentDegree } from 'src/chat/entities/chat.entity';
 

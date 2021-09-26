@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
+import { UserModule } from './common/user/user.module';
 import { AuthModule } from './common/auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PolicyModule } from './common/policy/policy.module';

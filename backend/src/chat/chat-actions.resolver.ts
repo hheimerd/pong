@@ -9,7 +9,7 @@ import { Chat } from '@prisma/client';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { PasswordService } from 'src/common/password/password.service';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/common/user/user.service';
 import { ChatService } from './chat.service';
 import { ChatPunishment } from './entities/chat-punishment.entity';
 import { PunishmentDegree } from './entities/chat.entity';

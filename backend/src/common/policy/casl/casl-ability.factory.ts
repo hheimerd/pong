@@ -7,7 +7,7 @@ import {
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { Chat } from 'src/chat/entities/chat.entity';
-import { Role, User } from 'src/user/entities/user.entity';
+import { Role, User } from 'src/common/user/entities/user.entity';
 
 export type Subjects = InferSubjects<typeof User | typeof Chat> | 'all';
 

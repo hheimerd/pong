@@ -1,6 +1,6 @@
 import { CreateChatInput } from './create-chat.input';
 import { InputType, Field, PartialType, OmitType } from '@nestjs/graphql';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/common/user/entities/user.entity';
 import { IsUUID, ValidateIf } from 'class-validator';
 
 @InputType()

@@ -23,7 +23,7 @@ import { PolicyGuard } from 'src/common/policy/guards/policy.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/common/user/entities/user.entity';
 import { ChatPunishment } from './entities/chat-punishment.entity';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)

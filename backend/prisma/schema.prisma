@@ -38,8 +38,19 @@ model User {
   chatPunish   ChatPunishment[] @relation("chatPunish")
   chatPunished ChatPunishment[] @relation("chatPunished")
   chatMessages ChatMessage[]
+  TwoFactorAuth Boolean @default(false)
+  AuthCodes    AuthCode[] 
   deleted_at   DateTime?
 }
+
+model AuthCode {
+  id String    @id @default(uuid()) @db.Uuid
+  codeHash String 
+  user User  @relation(fields: [user_id], references: [id]) 
+  user_id Int
+  created_at DateTime @default(now())
+}
+
 
 enum PunishmentDegree {
   BAN

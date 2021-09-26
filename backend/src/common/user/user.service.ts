@@ -13,6 +13,14 @@ import { generateImage, generateRandomBgImage } from 'src/common/helpers/image-g
 
 @Injectable()
 export class UserService {
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storageService: StorageService,
+  ) {
+    prisma.applySoftDelete('User', 'deleted_at', new Date(), null);
+  }
+
   async getFollowing(id: number) {
     return await this.prisma.user.findMany({
       where: {
@@ -27,12 +35,6 @@ export class UserService {
         followedBy: { some: { id: id } },
       },
     });
-  }
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly storageService: StorageService,
-  ) {
-    prisma.applySoftDelete('User', 'deleted_at', new Date(), null);
   }
 
   async getFriends(id: number) {
