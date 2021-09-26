@@ -9,11 +9,10 @@ import { join } from 'path';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { Chat } from '@prisma/client';
-import { generateImage, generateRandomBgImage } from 'src/common/helpers/image-generator.lib';
+import { generateRandomBgImage2 } from 'src/common/helpers/image-generator.lib';
 
 @Injectable()
 export class UserService {
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly storageService: StorageService,
@@ -89,10 +88,7 @@ export class UserService {
     });
   }
 
-  async uploadAvatar(
-    image: Buffer,
-    userId: number,
-  ): Promise<string[]> {
+  async uploadAvatar(image: Buffer, userId: number): Promise<string[]> {
     const user = await this.findOne(userId);
 
     const sharpLarge = sharp(image).resize(512).png({ progressive: true });
@@ -115,7 +111,7 @@ export class UserService {
       },
       data: {
         avatar: paths,
-      } 
+      },
     });
 
     this.storageService.delete(...oldAvatar);
@@ -136,7 +132,7 @@ export class UserService {
     const user = await this.prisma.user.create({
       data: { ...dto, password },
     });
-    const avatar = generateRandomBgImage(512, 512, dto.name[0].toUpperCase(), 'png');
+    const avatar = generateRandomBgImage2(512, 512, 'png');
     this.uploadAvatar(await avatar.toBuffer(), user.id);
     return user;
   }
