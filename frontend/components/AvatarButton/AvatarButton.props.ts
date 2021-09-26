@@ -1,5 +1,8 @@
 import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
-import { IUserProfile } from "../../interfaces/userprofile.interface";
+import {
+  IUserProfile,
+  UserStatus,
+} from "../../interfaces/userprofile.interface";
 
 export interface AvatarButtonProps
   extends DetailedHTMLProps<
@@ -8,5 +11,5 @@ export interface AvatarButtonProps
   > {
   user: IUserProfile;
   link: string;
-  appearance?: "offline" | "online" | "ingame";
+  appearance?: UserStatus;
 }

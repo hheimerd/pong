@@ -19,6 +19,7 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
 
   const handleLogout = () => {
     localStorage.clear();
+    dispatchEvent(new Event("logout"));
     router.push("/");
   };
 

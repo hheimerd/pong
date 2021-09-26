@@ -7,7 +7,7 @@ const { genSalt, hash, compare } = bcryptjs;
 import _sendmail from 'sendmail';
 import { Cron } from '@nestjs/schedule';
 import moment from 'moment';
-const sendmail = _sendmail({silent: true});
+const sendmail = _sendmail({ silent: true });
 
 @Injectable()
 export class TwoFactorAuthService {
@@ -21,50 +21,51 @@ export class TwoFactorAuthService {
       where: {
         created_at: {
           lte: hourAgo.toDate(),
-        }
-      }
+        },
+      },
     });
   }
 
-  async sendCode(userId: number)
-  {
+  async sendCode(userId: number) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotFoundException("User not found");
+    if (!user) throw new NotFoundException('User not found');
 
     const code = randomUUID();
 
     const record = await this.prisma.authCode.create({
       data: {
-        user_id :userId,
+        user_id: userId,
         codeHash: await hash(code, await genSalt()),
-      }
+      },
     });
 
     const link = `${env.LINK2FA}?code=${code}&id=${record.id}`;
 
-    sendmail({
-      from: env.MAIL_HOST,
-      to: user.email,
-      subject: "Confirm login",
-      text: "Go to this link to login: " + link,
-      html: `
+    sendmail(
+      {
+        from: 'login@' + env.MAIL_HOST,
+        to: user.email,
+        subject: 'Confirm login',
+        text: 'Go to this link to login: ' + link,
+        html: `
         Click <a href="${link}">here</a> to login
-      `
-    }, function (err) {
-      if (err)
-        console.log(err && err.stack)
-    })
-    
+      `,
+      },
+      function (err) {
+        if (err) console.log(err && err.stack);
+      },
+    );
+
     return record;
   }
 
   async delete(id: string) {
     return await this.prisma.authCode.delete({
-      where: { id }
+      where: { id },
     });
   }
 
-  async validate(code: string, id: string){
+  async validate(code: string, id: string) {
     const record = await this.prisma.authCode.findUnique({ where: { id } });
     if (!record) return false;
 
@@ -73,7 +74,6 @@ export class TwoFactorAuthService {
 
     this.delete(id);
 
-    return await this.prisma.user.findUnique({ where: { id: record.user_id }});
+    return await this.prisma.user.findUnique({ where: { id: record.user_id } });
   }
-
 }

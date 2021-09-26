@@ -8,7 +8,9 @@ export const PROFILE_QUERY = gql`
       email
       login
       roles
+      TwoFactorAuth
       avatar
+      status
       friends {
         id
         name
@@ -150,6 +152,7 @@ export const USERS_QUERY = gql`
       updated_at
       avatar
       roles
+      status
     }
   }
 `;
@@ -165,6 +168,7 @@ export const USER_QUERY = gql`
       updated_at
       avatar
       roles
+      status
     }
   }
 `;

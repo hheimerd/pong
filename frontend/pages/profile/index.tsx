@@ -226,7 +226,7 @@ const Profile = (): JSX.Element => {
                   inputRef={is2FAEnabledRef}
                 />
               }
-              label="Private"
+              label="2FA"
             />
           </div>
           <div className="line">
