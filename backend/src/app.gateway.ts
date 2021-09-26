@@ -29,8 +29,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.userService.update(userPayload.id, {
         status: UserStatus.Online,
       })
-      
-    } catch {
+    } catch (e){
       return false;
     }
     
