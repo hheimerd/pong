@@ -20,18 +20,25 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     
-    const userPayload = await this.authService.verifyToken(authToken);
-    client.data.id = userPayload.id;
-    client.data.name = userPayload.name;
+    try { 
+      
+      const userPayload = await this.authService.verifyToken(authToken);
+      client.data.id = userPayload.id;
+      client.data.name = userPayload.name;
+      
+      this.userService.update(userPayload.id, {
+        status: UserStatus.Online,
+      })
+      
+    } catch {
+      return false;
+    }
     
-    this.userService.update(userPayload.id, {
-      status: UserStatus.Online as unknown,
-    })
   }
 
   handleDisconnect(client: Socket) {
     this.userService.update(client.data.id, {
-      status: UserStatus.Offline as unknown,
+      status: UserStatus.Offline,
     })
   }
 

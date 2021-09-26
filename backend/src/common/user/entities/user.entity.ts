@@ -11,9 +11,9 @@ registerEnumType(Role, {
 });
 
 export enum UserStatus {
-  Online,
-  Offline,
-  InGame
+  Online = "Online",
+  Offline = "Offline",
+  InGame = "InGame"
 }
 registerEnumType(UserStatus, {
   name: 'UserStatus',
