@@ -42,6 +42,8 @@
     "@nestjs/websockets": "^8.0.6",
     "@prisma/client": "2.29.1",
     "@types/nodemailer": "^6.4.4",
+    "@types/sendmail": "^1.4.4",
+    "@types/smtp-server": "^3.5.7",
     "apollo-server": "^3.0.2",
     "apollo-server-express": "^3.0.0",
     "app-root-path": "^3.0.0",
@@ -63,7 +65,9 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "sendmail": "^1.6.1",
     "sharp": "^0.28.3",
+    "smtp-server": "^3.9.0",
     "ts-morph": "^11.0.3"
   },
   "devDependencies": {
