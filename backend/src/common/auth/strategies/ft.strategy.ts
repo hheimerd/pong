@@ -22,7 +22,7 @@ export class FtStrategy extends PassportStrategy(Strategy) {
     const dto = {
       email: profile.emails[0].value,
       login: profile.username,
-      name: profile.name.familyName + ' ' + profile.name.familyName,
+      name: profile.name.givenName + ' ' + profile.name.familyName,
       password: await genSalt()
     }
     
