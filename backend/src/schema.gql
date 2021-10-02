@@ -86,6 +86,13 @@ type ChatPunishment {
   minutes: Int!
 }
 
+type GameResult {
+  id: String!
+  players_id: [Int!]!
+  score: [Int!]!
+  created_at: DateTime!
+}
+
 type Query {
   user(id: Int!): User!
   getProfile: User!
@@ -93,12 +100,14 @@ type Query {
   login(password: String!, login: String!): JwtResponse!
   verify2fa(auth_id: String!, code: String!): JwtResponse!
   chats(
+    type: ChatType
     offset: Int
 
     """max limit 100"""
     limit: Int
   ): [Chat!]!
   chat(id: String!): Chat!
+  gameResult(skip: Int, take: Int, user_id: Int!): [GameResult!]!
 }
 
 type Mutation {
