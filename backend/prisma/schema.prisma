@@ -47,7 +47,16 @@ model User {
   TwoFactorAuth Boolean @default(false)
   AuthCodes    AuthCode[] 
   deleted_at   DateTime?
+  games    GameResult[]
   status UserStatus @default(Offline)
+}
+
+
+model GameResult {
+  id String           @id @default(uuid()) @db.Uuid
+  players   User[]
+  score Int[]
+  created_at DateTime @default(now())
 }
 
 model AuthCode {

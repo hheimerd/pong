@@ -30,18 +30,23 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       if (!userPayload.id) return;
 
-      this.userService.update(userPayload.id, {
+      await this.userService.update(userPayload.id, {
         status: UserStatus.Online,
       });
-    } catch {
+    } catch (e) {
       return false;
     }
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     if (!client.data.id) return;
-    this.userService.update(client.data.id, {
-      status: UserStatus.Offline,
-    });
+
+    try {
+      await this.userService.update(client.data.id, {
+        status: UserStatus.Offline,
+      });
+    } catch (e) {
+      
+    }
   }
 }

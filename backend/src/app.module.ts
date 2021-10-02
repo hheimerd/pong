@@ -13,6 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { GameModule } from './game/game.module';
 import { AppGateway } from './app.gateway';
+import { GameResultModule } from './game-result/game-result.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AppGateway } from './app.gateway';
     StorageModule,
     PrismaModule,
     GameModule,
+    GameResultModule,
   ],
   controllers: [AppController],
   providers: [AppGateway],

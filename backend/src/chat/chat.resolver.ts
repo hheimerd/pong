@@ -29,7 +29,7 @@ import { ChatPunishment } from './entities/chat-punishment.entity';
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
 export class ChatResolver {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) { }
 
   @UsePipes(ValidationPipe)
   @Mutation(() => Chat, { name: 'createChat' })
@@ -46,14 +46,21 @@ export class ChatResolver {
 
   @Query(() => [Chat], { name: 'chats' })
   findAll(
-    @Args('limit', {type: () => Int, nullable: true, description: 'max limit 100'})
+    @Args('limit', { type: () => Int, nullable: true, description: 'max limit 100' })
     limit = 15,
     @Args('offset', { type: () => Int, nullable: true })
     offset?: number,
+    @Args('type', { type: () => ChatType, nullable: true })
+    type?: ChatType,
+    @CurrentUser() user?: RequestUser,
   ) {
     if (limit > 100) limit = 100;
     if (limit < 0) limit = 15;
-    return this.chatService.findAll({ is_private: false}, limit, offset);
+
+    return this.chatService.findAll({
+      is_private: user.isAdmin ? undefined : false, 
+      type
+    }, limit, offset);
   }
 
   @Query(() => Chat, { name: 'chat' })
@@ -70,7 +77,7 @@ export class ChatResolver {
       throw new ForbiddenException();
     }
   }
- 
+
   @ResolveField('dialogName', () => String)
   async getDialogName(@Parent() chat: Chat, @CurrentUser() user: RequestUser) {
     if (chat.type === ChatType.Chat) {
@@ -89,18 +96,19 @@ export class ChatResolver {
     offset?: number,
     @CurrentUser() user?: RequestUser,
   ) {
-    if (limit > 100) limit = 100;
+    if (limit > 100) limit = 100; 
     if (limit < 0) limit = 15;
 
-    await this.throwUnlessMember(chat.id, user.id);
+    if (!user.isAdmin)
+      await this.throwUnlessMember(chat.id, user.id);
 
     return this.chatService.getMessages(chat.id, limit, offset);
   }
 
   @ResolveField('punishments', () => [ChatPunishment])
   async getPunishments(
-    @Parent() chat: Chat, 
-    @Args('degree', { type: () => PunishmentDegree, nullable: true}) degree: PunishmentDegree
+    @Parent() chat: Chat,
+    @Args('degree', { type: () => PunishmentDegree, nullable: true }) degree: PunishmentDegree
   ) {
     return await this.chatService.getPunishments(chat.id, degree);
   }

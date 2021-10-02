@@ -29,7 +29,7 @@ export class AuthService {
     if (!isValid) return null;
 
     const { password, ...userData } = user;
-    return userData;
+    return new RequestUser(userData);
   }
 
   async verifyToken(token: string) {
