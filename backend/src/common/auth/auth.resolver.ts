@@ -53,7 +53,7 @@ export class AuthResolver {
     @Args("code") code: string,
     @Args("auth_id") id: string,
   ) {
-    const user = this.twoFAService.validate(code, id);
+    const user = await this.twoFAService.validate(code, id);
     if (!user) throw new UnauthorizedException("Incorrect code. Try login again");
 
     return this.authService.login(user);

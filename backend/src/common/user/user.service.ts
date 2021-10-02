@@ -150,7 +150,11 @@ export class UserService {
   }
 
   async update(id: number, data: Prisma.UserUpdateInput) {
-    return this.prisma.user.update({ where: { id }, data: data });
+    try {
+      return this.prisma.user.update({ where: { id }, data: data });
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
   async remove(id: number) {
