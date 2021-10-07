@@ -2,10 +2,12 @@ import React, {
   createContext,
   Dispatch,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
-import io from "socket.io-client";
+import { UserStatus } from "../../interfaces/userprofile.interface";
+import { UserStatusContext } from "../userstatus/userstatus.context";
 
 interface IPersonalContext {
   token: string;
@@ -16,31 +18,27 @@ export const PersonalTokenContext = createContext<IPersonalContext>(
   {} as IPersonalContext
 );
 
-const statusServe = () => {
-  const socket = io("ws://" + process.env.GAME_API_HOST, {
-    extraHeaders: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-  });
-  socket.on("connect", () => {
-    console.log("socket connect", socket.id); // x8WIv7-mJelg7on_ALbx
-  });
-  window.addEventListener("logout", () => {
-    socket.disconnect();
-  });
-};
-
 export const PersonalTokenContextProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState<string>({} as string);
+  const [token, setToken] = useState<string | null>(null);
+  const { setStatus } = useContext(UserStatusContext);
 
   useEffect(() => {
-    const tkn = localStorage.getItem("token");
-    setToken(tkn);
-    console.log("PersonalTokenContext useEffect onLoading token: ", tkn);
-    if (tkn) {
-      statusServe();
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("Get token from localStorage and set to state:", token);
+      setToken(token);
+      setStatus(UserStatus.Online);
     }
   }, []);
+
+  useEffect(() => {
+    const localStorageToken = localStorage.getItem("token");
+    if (token != null && token != localStorageToken) {
+      console.log("Set localStorage token to:", token);
+      window.localStorage.setItem("token", token);
+      setStatus(UserStatus.Online);
+    }
+  }, [token]);
 
   return (
     <PersonalTokenContext.Provider value={{ token, setToken }}>

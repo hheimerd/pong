@@ -48,7 +48,9 @@ const Register = (): JSX.Element => {
 
   // on submit error
   useEffect(() => {
-    console.log("error: ", error);
+    if (typeof error !== "undefined") {
+      console.log("error: ", error);
+    }
   }, [error]);
 
   // wait fetching data

@@ -34,12 +34,8 @@ const TwoFactor = (): JSX.Element => {
     if (typeof data !== "undefined") {
       console.log("data loading: ", data);
       if (data.verify2fa.access_token) {
-        localStorage.setItem("token", data.verify2fa.access_token);
         setToken(data.verify2fa.access_token);
-        if (localStorage.getItem("token") !== "") {
-          console.log("localStorage token: ", localStorage.getItem("token"));
-          router.push("/profile");
-        }
+        router.push("/profile");
       } else {
         console.log("message", data.verify2fa.message);
         setTwofactorMessage(data.verify2fa.message);

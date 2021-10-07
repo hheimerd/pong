@@ -77,7 +77,9 @@ const Profile = (): JSX.Element => {
 
   // on submit error
   useEffect(() => {
-    console.log("mutation error: ", errorUpdateUser);
+    if (typeof errorUpdateUser !== "undefined") {
+      console.log("mutation error: ", errorUpdateUser);
+    }
   }, [errorUpdateUser]);
 
   // wait fetching data

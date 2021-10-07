@@ -8,7 +8,7 @@ import { USER_LOGIN } from "../../graphql";
 import { HomePageLayout } from "../../layout/HomePageLayout";
 
 const UserLogin = (): JSX.Element => {
-  const { token, setToken } = useContext(PersonalTokenContext);
+  const { setToken } = useContext(PersonalTokenContext);
   const router = useRouter();
 
   const [login, { loading, data, error }] = useLazyQuery(USER_LOGIN);
@@ -32,12 +32,8 @@ const UserLogin = (): JSX.Element => {
     if (typeof data !== "undefined") {
       console.log("data loading: ", data);
       if (data.login.access_token) {
-        localStorage.setItem("token", data.login.access_token);
         setToken(data.login.access_token);
-        if (localStorage.getItem("token") !== "") {
-          console.log("localStorage token: ", localStorage.getItem("token"));
-          router.push("/profile");
-        }
+        router.push("/profile");
       } else {
         console.log("message", data.login.message);
         setTwofactorMessage(data.login.message);
@@ -47,7 +43,9 @@ const UserLogin = (): JSX.Element => {
 
   // on submit error
   useEffect(() => {
-    console.log("error: ", error);
+    if (typeof error !== "undefined") {
+      console.log("error: ", error);
+    }
   }, [error]);
 
   // wait fetching data

@@ -1,22 +1,53 @@
-import React, { createContext, Reducer, useReducer } from "react";
-import { UserStatusActions } from "./userstatus.actions";
-import { reducer } from "./userstatus.reducer";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import io from "socket.io-client";
+import { UserStatus } from "../../interfaces/userprofile.interface";
 
-export const UserStatusContext = createContext<{
-  state: string;
-  dispatch: React.Dispatch<UserStatusActions>;
-}>({
-  state: undefined,
-  dispatch: () => undefined,
-});
+interface IUserStatusContext {
+  status: UserStatus;
+  setStatus: Dispatch<SetStateAction<string>>;
+}
+
+export const UserStatusContext = createContext<IUserStatusContext>(
+  {} as IUserStatusContext
+);
+
+const statusServe = () => {
+  const socket = io("ws://" + process.env.GAME_API_HOST, {
+    extraHeaders: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+  socket.on("connect", () => {
+    console.log("socket connect", socket.id);
+  });
+  window.addEventListener("logout", () => {
+    socket.disconnect();
+  });
+};
 
 export const UserStatusContextProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer<Reducer<string, UserStatusActions>>(
-    reducer,
-    undefined
-  );
+  const [status, setStatus] = useState<UserStatus>(UserStatus.Offline);
+
+  useEffect(() => {
+    switch (status) {
+      case UserStatus.Online:
+        statusServe();
+        break;
+      case UserStatus.Offline:
+        dispatchEvent(new Event("logout"));
+        break;
+      default:
+    }
+  }, [status]);
+
   return (
-    <UserStatusContext.Provider value={{ state, dispatch }}>
+    <UserStatusContext.Provider value={{ status, setStatus }}>
       {children}
     </UserStatusContext.Provider>
   );

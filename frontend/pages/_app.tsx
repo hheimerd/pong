@@ -21,8 +21,7 @@ import {
   PersonalTokenContextProvider,
 } from "../context/personaltoken/personaltoken.context";
 import { SnackBarProvider } from "../context/snackbar/snackbar.context";
-// import styles from "../styles/MainPage.module.css";
-import { UserProfileContextProvider } from "../context/userprofile/userprofile.context";
+import { UserStatusContextProvider } from "../context/userstatus/userstatus.context";
 import "../styles/globals.css";
 import theme from "../theme";
 
@@ -111,9 +110,9 @@ function MyApp(props: AppProps): JSX.Element {
   }, []);
 
   return (
-    <PersonalTokenContextProvider>
-      <ApolloClientProvider>
-        <UserProfileContextProvider>
+    <UserStatusContextProvider>
+      <PersonalTokenContextProvider>
+        <ApolloClientProvider>
           <SnackBarProvider>
             <Head>
               <title>Pong Online</title>
@@ -137,9 +136,9 @@ function MyApp(props: AppProps): JSX.Element {
               <Component {...pageProps} />
             </ThemeProvider>
           </SnackBarProvider>
-        </UserProfileContextProvider>
-      </ApolloClientProvider>
-    </PersonalTokenContextProvider>
+        </ApolloClientProvider>
+      </PersonalTokenContextProvider>
+    </UserStatusContextProvider>
   );
 }
 

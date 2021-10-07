@@ -13,7 +13,7 @@ export const AvatarButton = ({
   className,
   ...props
 }: AvatarButtonProps): JSX.Element => {
-  console.log("status", appearance);
+  // console.log("status", appearance);
   return (
     <Link href={link}>
       <a className={styles.button} {...props}>

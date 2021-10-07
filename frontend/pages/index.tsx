@@ -9,7 +9,6 @@ const MainPage = (): JSX.Element => {
   const { setToken } = useContext(PersonalTokenContext);
 
   useEffect(() => {
-    console.log("localStorage", typeof localStorage);
     console.log("localStorage", localStorage.getItem("token"));
     if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
       router.push("/dashboard");

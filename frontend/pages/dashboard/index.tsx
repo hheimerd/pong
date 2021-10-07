@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { AvatarButton, Htag } from "../../components";
 import { PROFILE_QUERY } from "../../graphql";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
@@ -9,16 +9,24 @@ import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./dashboard.module.css";
 
 const Users = (): JSX.Element => {
-  // get my profile
+  // Get my profile.
   const { data, error, loading } = useQuery(PROFILE_QUERY);
   const router = useRouter();
 
-  // wait while data loading
+  useEffect(() => {
+    if (typeof data !== "undefined") {
+      console.log("data.friends", data.getProfile.friends);
+    }
+  }, [data]);
+
+  // Wait while data loading.
   if (loading) return <p>Loading data from graphql...</p>;
+
+  // Get error from graphql request.
   if (error) {
-    // remove old token if error happened and token found
+    // Remove old token if error happened and token found.
     if (localStorage.getItem("token") !== "") {
-      localStorage.removeItem("token");
+      localStorage.clear();
       router.push("/");
     }
     return (
@@ -35,10 +43,7 @@ const Users = (): JSX.Element => {
     );
   }
 
-  // if (!rows) return null;
-  console.log("data.friends", data.getProfile.friends);
-
-  // generate list of chats
+  // Generate list of chats.
   const UsersList = (users: [IUserProfile]) => {
     if (typeof users !== "undefined") {
       return Array.from(users).map((user: IUserProfile, i: number) => {

@@ -1,12 +1,17 @@
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Avatar } from "../components";
+import { PersonalTokenContext } from "../context/personaltoken/personaltoken.context";
+import { UserStatusContext } from "../context/userstatus/userstatus.context";
 import { PROFILE_QUERY } from "../graphql";
+import { UserStatus } from "../interfaces/userprofile.interface";
 import styles from "./InnerPageLayout.module.css";
 
 export const InnerPageLayout = ({ children }): JSX.Element => {
+  const { setToken } = useContext(PersonalTokenContext);
+  const { setStatus } = useContext(UserStatusContext);
   const router = useRouter();
   // get user
   const { data, error, loading } = useQuery(PROFILE_QUERY);
@@ -15,11 +20,15 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
 
-  console.log("getProfile", data.getProfile);
+  // useEffect(() => {
+  //   console.log("getProfile", data.getProfile);
+  // }, []);
 
   const handleLogout = () => {
+    console.log("Clear localStorage.");
     localStorage.clear();
-    dispatchEvent(new Event("logout"));
+    setToken(null);
+    setStatus(UserStatus.Offline);
     router.push("/");
   };
 
@@ -47,7 +56,7 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
           </p>
         </div>
         <ul className={styles.navi}>
-          <li className={router.pathname == "/" ? styles.active : ""}>
+          <li className={router.pathname == "/dashboard" ? styles.active : ""}>
             <Link href="/dashboard">Home</Link>
           </li>
           <li
