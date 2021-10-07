@@ -10,7 +10,8 @@
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.css\" --fix",
     "serve": "concurrently \"npm run dev\" \"npm run mock\"",
-    "mock": "json-server -w db.json -p 4300 -d 1750"
+    "mock": "json-server -w db.json -p 4300 -d 1750",
+    "export": "next build && next export"
   },
   "dependencies": {
     "@apollo/client": "^3.3.21",

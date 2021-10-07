@@ -3,6 +3,7 @@ import React from "react";
 import { AvatarButton, Htag } from "../../components";
 import { MY_CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
+import { UserStatus } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Chat = (): JSX.Element => {
@@ -23,12 +24,13 @@ const Chat = (): JSX.Element => {
   const ChatList = (chats: [IChat]) => {
     if (typeof chats !== "undefined") {
       return Array.from(chats).map((onemessage: IChat, i: number) => {
+        const user = onemessage.members.find((x) => x.id !== current_user_id);
         return (
           <React.Fragment key={i}>
             <AvatarButton
-              user={onemessage.members.find((x) => x.id !== current_user_id)}
+              user={user}
               link={"/chats/room/" + onemessage.id}
-              appearance="offline"
+              appearance={user.status}
             />
           </React.Fragment>
         );

@@ -2,14 +2,10 @@ server {
     set $node_env   ${NODE_ENV};
     listen          ${NGINX_PORT};
     access_log      off;
+    root            /app;
 
     location / {
-            proxy_pass http://frontend:3040;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection 'upgrade';
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
+      try_files $uri $uri/ =404;
     }
 
     location /api/ {

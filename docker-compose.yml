@@ -1,12 +1,31 @@
 version: '3.9'
 
+# Define environment variables
+x-env: &default-env
+  NODE_ENV: development
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: pong
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DB_NAME: pong
+  DB_PORT: 5432
+  DB_HOST: db
+  DATABASE_URL: postgresql://postgres:postgres@db:5432/pong?schema=public
+  LINK2FA: localhost/account/2fa
+  HOST: localhost
+  MAIL_HOST: pong-online.ru
+  ADMIN_PASS: admin
+  BACKEND_HOST: localhost/api
+  GAME_API_HOST: localhost:81
+  NGINX_HOST: localhost
+  NGINX_PORT: 80
+
 services:
   db:
-    image: postgres
+    image: postgres:14
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: pong
+      <<: *default-env
     ports:
       - 5432:5432
     healthcheck:
@@ -34,19 +53,9 @@ services:
       db:
         condition: service_healthy
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
-    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start:dev'"
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start:dev'"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DB_NAME=pong
-      - NODE_ENV=development
-      - DB_PORT=5432
-      - DB_HOST=db
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/pong?schema=public
-      - LINK2FA=localhost/account/2fa
-      - HOST=localhost
-      - MAIL_HOST=pong-online.ru
-      - ADMIN_PASS=admin
+      <<: *default-env
 
   frontend:
     image: node:16-alpine
@@ -59,14 +68,12 @@ services:
     depends_on:
       - backend
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
-    entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npm install && npm run dev'"
-    # entrypoint: "sh -c 'chmod -R 777 /root && cd /app && npx yarn && npx yarn build && npx yarn start'"
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npm run dev'"
     environment:
-      - BACKEND_HOST=localhost/api
-      - GAME_API_HOST=localhost:81
+      <<: *default-env
 
   web:
-    image: nginx
+    image: nginx:1.21
     depends_on:
       - backend
       - frontend
@@ -76,5 +83,4 @@ services:
       - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro
     command: ['nginx', '-g', 'daemon off;']
     environment:
-     - NGINX_HOST=localhost
-     - NGINX_PORT=80
+      <<: *default-env

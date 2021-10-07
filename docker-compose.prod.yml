@@ -1,0 +1,18 @@
+version: '3.9'
+
+# Define environment variables
+x-env: &default-env
+  NODE_ENV: production
+
+services:
+  backend:
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run build && npm run start:prod'"
+
+  frontend:
+    restart: "no"
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npm run export'"
+
+  web:
+    volumes:
+      - ./frontend/out:/app
+      - ./nginx/templates/prod.conf.template:/etc/nginx/templates/default.conf.template:ro
