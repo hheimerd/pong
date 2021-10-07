@@ -3,6 +3,23 @@ Website for the pong contest created with <a href="https://nestjs.com">NestJS</a
 
 ![Home](https://user-images.githubusercontent.com/12528718/134925580-9b88a130-bc8f-4171-bac9-55002be74d88.png)
 
+## How to launch
+
+Development version:
+```
+make dev
+```
+
+Production version:
+```
+make prod
+```
+
+Clean docker containers:
+```
+make clean
+```
+
 ## Overview
 In this subject, you will need to build a website for the mighty pong contest.  
 Your website will help users play pong against each other.  
