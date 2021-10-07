@@ -5,20 +5,10 @@ Website for the pong contest created with <a href="https://nestjs.com">NestJS</a
 
 ## How to launch
 
-Development version:
-```
-make dev
-```
+1) Type in cmd: `make prod`
+2) Wait for launching all services (this can take few minutes)
+3) Open website URL: `http://localhost`
 
-Production version:
-```
-make prod
-```
-
-Clean docker containers:
-```
-make clean
-```
 
 ## Overview
 In this subject, you will need to build a website for the mighty pong contest.  
