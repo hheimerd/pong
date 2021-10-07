@@ -6,7 +6,7 @@ x-env: &default-env
 
 services:
   backend:
-    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run build && npm run start:prod'"
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run build && npm run start:dev'"
 
   frontend:
     restart: "no"
