@@ -134,7 +134,7 @@ export const ChannelUserChip = ({
     router.replace(router.asPath);
   };
 
-  async function createGame(socket, userName): Promise<number> {
+  async function createGame(socket, user: IUserProfile): Promise<number> {
     return new Promise((resolve, reject) => {
       socket.on("gameCreated", (o) => {
         const id = o?.game?.id;
@@ -144,25 +144,25 @@ export const ChannelUserChip = ({
           reject(o);
         }
       });
-      socket.emit("createGame", { name: userName });
+      socket.emit("createGame", { name: user.name, userId: user.id });
     });
   }
 
-  const handleInviteToGame = async (userName: string) => {
+  const handleInviteToGame = async (user: IUserProfile) => {
     const socket = io("ws://" + process.env.GAME_API_HOST, {
       extraHeaders: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     });
     try {
-      const gameId = await createGame(socket, userName);
+      const gameId = await createGame(socket, user);
       console.log("Game created");
       // send message to back via mutation CREATE_MESSAGE_MUTATION
       addMessage({
         variables: {
           createChatMessageInput: {
             chatId: current_channel.id,
-            message: `Game created, please <a href="http://localhost/game/?gameId=${gameId}">open link</a>`,
+            message: `Game created, please <a href="http://${process.env.HOST}/game/${gameId}">open link</a>`,
           },
         },
       });
@@ -277,7 +277,7 @@ export const ChannelUserChip = ({
           View user profile
         </MenuItem>
         {user.id !== current_user_id ? (
-          <MenuItem onClick={() => handleInviteToGame(user.name)}>
+          <MenuItem onClick={() => handleInviteToGame(user)}>
             Create game and invite {user.name}
           </MenuItem>
         ) : (

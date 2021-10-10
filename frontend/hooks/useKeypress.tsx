@@ -6,14 +6,12 @@ import { useEffect } from 'react';
  * @param {function} action - the action to perform on key press
  */
 
-type alertFunction = (offsetY: number) => void;
-
-export default function useKeypress(key: string, action: alertFunction, offsetY: number) {
+export default function useKeypress(key: string, action) {
   useEffect(() => {
     function onKeyup(e:KeyboardEvent) {
-      if (e.key === key) action(offsetY)
+      if (e.key === key) action()
     }
-    window.addEventListener('keyup', onKeyup);
-    return () => window.removeEventListener('keyup', onKeyup);
-  }, [offsetY]);
+    window.addEventListener('keydown', onKeyup);
+    return () => window.removeEventListener('keydown', onKeyup);
+  });
 }

@@ -1,6 +1,5 @@
 export * from "./Htag/Htag";
 export * from "./Button/Button";
-export * from "./Canvas/Canvas";
 export * from "./Avatar/Avatar";
 export * from "./AvatarButton/AvatarButton";
 export * from "./ChatMessage/ChatMessage";

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { randomUUID } from 'crypto';
+import { v4 as randomUUID } from 'uuid';
 import { env } from 'process';
 import bcryptjs from 'bcryptjs';
 const { genSalt, hash, compare } = bcryptjs;

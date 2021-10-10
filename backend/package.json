@@ -49,6 +49,8 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0",
     "graphql": "^15.5.1",
@@ -67,7 +69,8 @@
     "sendmail": "^1.6.1",
     "sharp": "^0.28.3",
     "smtp-server": "^3.9.0",
-    "ts-morph": "^11.0.3"
+    "ts-morph": "^11.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

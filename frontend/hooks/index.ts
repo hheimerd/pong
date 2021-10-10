@@ -3,3 +3,4 @@
  */
 
 export * from "./useKeypress"
+export * from "./useUser"

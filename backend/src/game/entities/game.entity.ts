@@ -1,6 +1,6 @@
-import { randomUUID } from 'crypto';
 import { SocketWithData } from '../game.gateway';
-import { Game } from '../lib/game.lib'
+import { v4 as randomUUID } from 'uuid';
+import { Game } from '../lib/game.lib';
 
 export class Player {
   socket: SocketWithData;
@@ -29,7 +29,13 @@ export class GameEntity {
   constructor(name: string, playerId?: number) {
     this.id = randomUUID();
     this.name = name;
-    // this._game = new Game(1024, 768, this._connections, 1);
+    this._game = new Game(this.id, this._connections, 1024, 768, 1);
+    this._game.on('goal', (pl1score, pl2score) => {
+    	this._game.sendToAll('goal', pl1score, pl2score);
+    })
+    this._game.on('newFrame', (pl1x, pl1y, pl2x, pl2y, ballx, bally) => {
+    	this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
+    })
     if (playerId) {
       this._players[1] = new Player(playerId);
     }
@@ -39,12 +45,19 @@ export class GameEntity {
     this._connections.push(socket);
   }
 
+  setMap(mapId: number) {
+    this._game.setMap(mapId);
+  }
+
+  isPlyer(id: number) {
+    return this._players[0]?.id == id || this._players[1]?.id == id;
+  }
+
   setPlayer(socket: SocketWithData): boolean {
     if (this._players[0] && this._players[1]) {
       const reconnectSuccess = this.tryReconnect(socket);
       if (!reconnectSuccess) {
-        return false;
-      }
+        return false;      }
     }
    
     const player = new Player(socket.data.id);
@@ -57,6 +70,10 @@ export class GameEntity {
 
     this.setPlayerNumber(player, socket);
     return true;
+  }
+
+  getPlayersId() {
+    return this._players.map((p) => p.id);
   }
 
   tryReconnect(socket: SocketWithData): boolean {
@@ -87,8 +104,14 @@ export class GameEntity {
     }
   }
 
+  addEventListenner(eventName: string, cb: (...args: any[]) => void) {
+    this._game.on('newFrame', (...args) => {
+      cb(args);
+    });
+  }
+
   animate() {
-    this._timer = this._timer = setInterval(() => {
+    this._timer = this._timer = setInterval(() => {      
       this._game.update();
     }, 30);
     this._timer = setTimeout(() => {
