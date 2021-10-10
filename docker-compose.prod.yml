@@ -9,10 +9,4 @@ services:
     command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start'"
 
   frontend:
-    restart: "no"
-    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npm run export'"
-
-  web:
-    volumes:
-      - ./frontend/out:/app
-      - ./nginx/templates/prod.conf.template:/etc/nginx/templates/default.conf.template:ro
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npm run build && npm run start'"
