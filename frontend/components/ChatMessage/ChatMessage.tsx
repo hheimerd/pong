@@ -4,6 +4,10 @@ import { Avatar } from "../Avatar/Avatar";
 import styles from "./ChatMessage.module.css";
 import { ChatMessageProps } from "./ChatMessage.props";
 
+function parseMessage(message: string) {
+  return message;
+}
+
 export const ChatMessage = ({
   onemessage,
   user,
@@ -11,7 +15,7 @@ export const ChatMessage = ({
   const { message, created_at } = onemessage;
 
   // console.log("user", user);
-
+  
   return (
     <div className={styles.box}>
       <div className={styles.wrapper}>
