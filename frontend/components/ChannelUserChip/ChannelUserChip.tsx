@@ -162,7 +162,7 @@ export const ChannelUserChip = ({
         variables: {
           createChatMessageInput: {
             chatId: current_channel.id,
-            message: `Game created, please open <a href="http://localhost/game/?gameId=${gameId}">link</a>`,
+            message: `Game created, please <a href="http://localhost/game/?gameId=${gameId}">open link</a>`,
           },
         },
       });

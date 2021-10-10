@@ -3,10 +3,17 @@ import React from "react";
 import { Avatar } from "../Avatar/Avatar";
 import styles from "./ChatMessage.module.css";
 import { ChatMessageProps } from "./ChatMessage.props";
+import sanitizeHtml from "sanitize-html";
 
-function parseMessage(message: string) {
-  return message;
-}
+// Allow only a super restricted set of tags and attributes
+const cleanMessage = (dirty) =>
+  sanitizeHtml(dirty, {
+    allowedTags: ["a"],
+    allowedAttributes: {
+      a: ["href"],
+    },
+    allowedIframeHostnames: ["www.youtube.com"],
+  });
 
 export const ChatMessage = ({
   onemessage,
@@ -15,7 +22,7 @@ export const ChatMessage = ({
   const { message, created_at } = onemessage;
 
   // console.log("user", user);
-  
+
   return (
     <div className={styles.box}>
       <div className={styles.wrapper}>
@@ -31,7 +38,10 @@ export const ChatMessage = ({
           <div className={styles.message__date}>
             {format(new Date(created_at), "H:mm")}
           </div>
-          <p className={styles.message__text}>{message}</p>
+          <p
+            className={styles.message__text}
+            dangerouslySetInnerHTML={{ __html: cleanMessage(message) }}
+          ></p>
         </div>
       </div>
     </div>
