@@ -19,4 +19,15 @@ prod:
 clean:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
-.PHONY: build dev prod clean
+# Docker full clean
+fclean: confirm clean
+	docker stop $$(docker ps -qa)
+	docker rm -f $$(docker ps -qa)
+	docker rmi -f $$(docker images -qa)
+	docker volume rm -f $$(docker volume ls -q)
+	docker network rm $$(docker network ls -q) 2>/dev/null
+
+confirm:
+	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+
+.PHONY: build dev prod clean fclean confirm
