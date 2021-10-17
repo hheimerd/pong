@@ -27,7 +27,11 @@ export class Game extends EventEmitter {
         this.players[1] = new Player(screenWidth - 20, (screenHeight - 100) / 2, screenHeight);
         this.playersReadyFlag[0] = false;
         this.playersReadyFlag[1] = false;
-        this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
+        let w = this.screenWidth;
+        let h = this.screenHeight;
+	this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
+        this.objects = new Array(new GameObject('pl2goal', -100, 0, 100, h), new GameObject('pl1goal', w, 0, 100, h),
+        new GameObject('wall', 0, -100, this.screenWidth, 100), new GameObject('wall', 0, h, w, 100));
     }
 
     sendToAll(eventName: string, ...args) {
@@ -70,9 +74,7 @@ export class Game extends EventEmitter {
         if (eventName == 'goal') {
             this.emit('goal', this.players[0].score, this.players[1].score);
             this.startNewRound();
-        } else {
-            console.log();
-            
+        } else {   
             this.emit('newFrame', this.players[0].x, this.players[0].y, this.players[1].x, this.players[1].y, this.ball.x, this.ball.y);
         }
     }
