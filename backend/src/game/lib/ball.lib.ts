@@ -32,19 +32,13 @@ export class Ball {
     }
     
     check(object: GameObject) {
-/*	if (object.name == 'wall') {
-		console.log('obj');
-		console.log(object.x, object.y, object.width, object.height);
-        	console.log('ball');
-		console.log(this.x, this.y, this.width, this.height, this.xSpeed, this.ySpeed);
-	}
-*/	if (this.ySpeed > 0) {
+	if (this.ySpeed > 0) {
             if (this.y > object.y + object.height)
                 return 'skip';
             else if (this.y + this.height > object.y && this.x > object.x && this.x < object.x + object.width) {
                 this.ySpeed *= -1;
                 return object.name;
-	    }
+	        }
         }
         else {
             if (this.y < object.y)
@@ -52,7 +46,7 @@ export class Ball {
             else if (this.y - this.height < object.y + object.height && this.x > object.x  && this.x < object.x + object.width) {
                 this.ySpeed *= -1;
                 return object.name;
-	    }
+	        }
         }
         if (this.xSpeed > 0) {
             if (this.x > object.x)
@@ -60,7 +54,7 @@ export class Ball {
             else if (this.x + this.width > object.x && this.y > object.y && this.y < object.y + object.height) {
                 this.xSpeed *= -1;
                 return object.name;
-	    }
+	        }
         }
         else {
             if (this.x < object.x + object.width)
@@ -68,7 +62,7 @@ export class Ball {
             else if (this.x - this.width < object.x + object.width && this.y > object.y && this.y < object.y + object.height) {
                 this.xSpeed *= -1;
                 return object.name;
-	    }
+	        }
         }
     }
 
@@ -84,17 +78,19 @@ export class Ball {
         if (this.x - this.width <= 0) {
             this.players[1].scoreInc();
             this.newRound();
-	    return 'goal';
+	        return 'goal';
         }
         if (this.x + this.width >= this.screenWidth) {
             this.players[0].scoreInc();
             this.newRound();
-	    return 'goal';
+	        return 'goal';
         }
-        this.check(this.players[0]);
-        this.check(this.players[1]);
+        objName = this.check(this.players[0]);
+        objName = this.check(this.players[1]);
         for (let i in this.objects) {
+            console.log('here');
             objName = this.check(this.objects[i]);
+            console.log(objName);
         }
         this.move();
     }

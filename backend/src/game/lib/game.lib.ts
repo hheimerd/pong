@@ -29,9 +29,8 @@ export class Game extends EventEmitter {
         this.playersReadyFlag[1] = false;
         let w = this.screenWidth;
         let h = this.screenHeight;
-	this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
-        this.objects = new Array(new GameObject('pl2goal', -100, 0, 100, h), new GameObject('pl1goal', w, 0, 100, h),
-        new GameObject('wall', 0, -100, this.screenWidth, 100), new GameObject('wall', 0, h, w, 100));
+	    this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
+        this.setMap(2);
     }
 
     sendToAll(eventName: string, ...args) {
@@ -41,19 +40,22 @@ export class Game extends EventEmitter {
     }
 
     setMap(mapId: number) {
+        console.log(mapId);
         let w = this.screenWidth;
         let h = this.screenHeight;
-        this.objects = new Array(new GameObject('pl2goal', 0, 0, 1, h), new GameObject('pl1goal', w, 0, 1, h),
-        new GameObject('wall', 0, 0, this.screenWidth, 1), new GameObject('wall', 0, h, w, 1));
+        this.objects = new Array();
         if (mapId == 1) {
             this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
             this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
+            console.log(this.objects);
         } else if (mapId == 2) {
             this.objects.push(new GameObject('wall', w / 4 - 20, 0, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 * 3 - 20, 0, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 - 20, h - h / 4, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 * 3 - 20, h - h / 4, 40, h / 4));
-        } 
+            console.log(this.objects);
+        }
+        console.log(this.objects);
     }
 
     movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
@@ -71,7 +73,11 @@ export class Game extends EventEmitter {
     update() {
         let eventName: string;
         eventName = this.ball.update();
+        // console.log(eventName);
         if (eventName == 'goal') {
+            if (this.players[0].score == 21 || this.players[1].score == 21) {
+                this.emit('win', this.players[0].score == 21? 1 : 2);
+            }
             this.emit('goal', this.players[0].score, this.players[1].score);
             this.startNewRound();
         } else {   

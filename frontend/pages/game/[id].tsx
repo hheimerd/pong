@@ -83,14 +83,10 @@ export default function Game(): JSX.Element {
         console.log(pl1x);
         
       });
-      socket.on("goal", (pl1Score, pl2Score) => {
+      socket.on("goal", (score) => {
         screen[2].clear();
-        screen[2].drawScore(screen[2].canvasEl.width / 4, pl1Score, "#ff0000");
-        screen[2].drawScore(
-          (screen[2].canvasEl.width / 4) * 3,
-          pl2Score,
-          "#00ff00"
-        );
+        screen[2].drawScore(screen[2].canvasEl.width * 0.25, score[0], "#ff0000");
+        screen[2].drawScore(screen[2].canvasEl.width * 0.75, score[1], "#00ff00");
       });
       socket.on("waitForReconnect", (ready) => {
         console.log("waitForReconnect");
