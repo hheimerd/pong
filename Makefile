@@ -20,7 +20,10 @@ clean:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
 # Docker full clean
-fclean:
+fclean: clean
+	rm -rf ./backend/node_modules
+	rm -rf ./backend/dist
+	rm -rf ./frontend/node_modules
 	docker container prune --force
 	docker images prune
 	docker system prune --force
