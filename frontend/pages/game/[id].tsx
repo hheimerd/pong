@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
 import { Canvas } from "../../helpers/GameCanvas";
 import useKeypress from "../../hooks/useKeypress";
+import zIndex from "@material-ui/core/styles/zIndex";
 
 export enum MoveDirectionEnum {
   UP = 'up',
@@ -32,16 +33,16 @@ export default function Game(): JSX.Element {
 
       let num = -1;
       const screen = [
-        new Canvas(nodeRef),
-        new Canvas(nodeRef),
-        new Canvas(nodeRef),
+        new Canvas(nodeRef, { zIndex: 1 }),
+        new Canvas(nodeRef, { zIndex: 2 }),
+        new Canvas(nodeRef, { zIndex: 3 }),
       ];
       screen[0].fill("#104c87");
       screen[0].drawRectangle(
-        screen[0].window.width / 2 - 2,
+        screen[0].canvasEl.width / 2 - 2,
         0,
         4,
-        screen[0].window.height,
+        screen[0].canvasEl.height,
         "#000000"
       );
 
@@ -55,6 +56,7 @@ export default function Game(): JSX.Element {
         socket.on('connectedAsPlayer', () => {
           console.log('connectedAsPlayer');
           const onKeyDown = (e) => {
+            e.preventDefault();
             if (e.key == "ArrowUp") socket.emit("gamePlayerMove", MoveDirectionEnum.UP);
             else if (e.key == "ArrowDown") socket.emit("gamePlayerMove", MoveDirectionEnum.DOWN);
             else if (e.key == " ") socket.emit('playerReady');
@@ -83,9 +85,9 @@ export default function Game(): JSX.Element {
       });
       socket.on("goal", (pl1Score, pl2Score) => {
         screen[2].clear();
-        screen[2].drawScore(screen[2].window.width / 4, pl1Score, "#ff0000");
+        screen[2].drawScore(screen[2].canvasEl.width / 4, pl1Score, "#ff0000");
         screen[2].drawScore(
-          (screen[2].window.width / 4) * 3,
+          (screen[2].canvasEl.width / 4) * 3,
           pl2Score,
           "#00ff00"
         );
@@ -98,8 +100,8 @@ export default function Game(): JSX.Element {
         console.log("win");
         screen[2].fill("#000000");
         screen[2].write(
-          screen[2].window.width / 2 - 50,
-          screen[2].window.height / 2 + 20,
+          screen[2].canvasEl.width / 2 - 50,
+          screen[2].canvasEl.height / 2 + 20,
           "Player " + pl + " wins",
           "#ffffff"
         );
@@ -107,8 +109,8 @@ export default function Game(): JSX.Element {
 
       socket.on("ready", (playerNumber: number) => {
         screen[2].write(
-          screen[1].window.width / 2 - 60,
-          screen[1].window.height / 2 - 20 + num * 20,
+          screen[1].canvasEl.width / 2 - 60,
+          screen[1].canvasEl.height / 2 - 20 + num * 20,
           "Player " + (playerNumber + 1) + " ready!",
           "#000000"
         );

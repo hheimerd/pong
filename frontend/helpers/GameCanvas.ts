@@ -1,19 +1,22 @@
 export class Canvas {
-    window: HTMLCanvasElement;
+    canvasEl: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
-    constructor(gameRef, width = 1024, height = 768) {
-      this.window = document.createElement("canvas");
-      this.context = this.window.getContext("2d");
-      this.window.width = width;
-      this.window.height = height;
-      gameRef.append(this.window);
+    constructor(gameRef, {width = 1024, height = 768, zIndex = 0}) {
+      this.canvasEl = document.createElement("canvas");
+      this.context = this.canvasEl.getContext("2d");
+      this.canvasEl.width = width;
+      this.canvasEl.height = height;
+      this.canvasEl.style.zIndex = zIndex.toString();
+      this.canvasEl.style.position = 'absolute';
+  
+      gameRef.append(this.canvasEl);
     }
     fill(color: string) {
       this.context.fillStyle = color;
-      this.context.fillRect(0, 0, this.window.width, this.window.height);
+      this.context.fillRect(0, 0, this.canvasEl.width, this.canvasEl.height);
     }
     clear() {
-      this.context.clearRect(0, 0, this.window.width, this.window.height);
+      this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
     }
     drawRectangle(startX: number, startY: number, width: number, height: number, color: string) {
       this.context.fillStyle = color;
@@ -36,8 +39,8 @@ export class Canvas {
       this.write(placeholder + 5, 20, score, color);
     }
     waitScreen(string: string) {
-      const w = this.window.width;
-      const h = this.window.height;
+      const w = this.canvasEl.width;
+      const h = this.canvasEl.height;
       this.fill("#e0cfb101");
       this.drawRectangle(w / 3, (h * 2) / 5, w / 3, h / 5, "#ffffff");
       if (string === "wait")
