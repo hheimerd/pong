@@ -1,9 +1,13 @@
 import { useMutation } from "@apollo/client";
 import { Avatar, Chip, Menu, MenuItem } from "@material-ui/core";
+import id from "date-fns/locale/id/index";
 import { useRouter } from "next/router";
 import React from "react";
+import { io } from "socket.io-client";
+import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { MY_CHATS_QUERY } from "../../graphql";
 import {
+  CREATE_MESSAGE_MUTATION,
   PUNISHMENT_USER_MUTATION,
   UNPUNISHMENT_USER_MUTATION,
 } from "../../graphql/mutations";
@@ -24,6 +28,7 @@ export const ChannelUserChip = ({
 }: UserChipProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
+  const { updateSnackBarMessage } = useSnackBar();
 
   // ban user
   const [banUser, { data: dataP, loading: loadingP, error: errorP }] =
@@ -36,6 +41,20 @@ export const ChannelUserChip = ({
     useMutation(UNPUNISHMENT_USER_MUTATION, {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
     });
+
+  const [addMessage, { data: dataM, loading: loadingM, error: errorM }] =
+    useMutation(CREATE_MESSAGE_MUTATION, {
+      onError(err) {
+        console.log(err);
+        updateSnackBarMessage(err.message);
+      },
+    });
+
+  // wait for fetching data
+  if (loadingP || loadingU || loadingM)
+    return <p>Loading user profile from graphql...</p>;
+  if (errorP || errorU || errorM)
+    return <p>Error: can't fetching data from graphql :(</p>;
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     setAnchorEl(event.currentTarget);
@@ -113,6 +132,44 @@ export const ChannelUserChip = ({
     });
     setAnchorEl(null);
     router.replace(router.asPath);
+  };
+
+  async function createGame(socket, userName): Promise<number> {
+    return new Promise((resolve, reject) => {
+      socket.on("gameCreated", (o) => {
+        const id = o?.game?.id;
+        if (id !== undefined) {
+          resolve(id);
+        } else {
+          reject(o);
+        }
+      });
+      socket.emit("createGame", { name: userName });
+    });
+  }
+
+  const handleInviteToGame = async (userName: string) => {
+    const socket = io("ws://" + process.env.GAME_API_HOST, {
+      extraHeaders: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    try {
+      const gameId = await createGame(socket, userName);
+      console.log("Game created");
+      // send message to back via mutation CREATE_MESSAGE_MUTATION
+      addMessage({
+        variables: {
+          createChatMessageInput: {
+            chatId: current_channel.id,
+            message: `Game created, please <a href="http://localhost/game/?gameId=${gameId}">open link</a>`,
+          },
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    setAnchorEl(null);
   };
 
   if (!user) return null;
@@ -220,8 +277,8 @@ export const ChannelUserChip = ({
           View user profile
         </MenuItem>
         {user.id !== current_user_id ? (
-          <MenuItem onClick={() => router.push("/game/join/" + user.id)}>
-            Start game
+          <MenuItem onClick={() => handleInviteToGame(user.name)}>
+            Create game and invite {user.name}
           </MenuItem>
         ) : (
           ""

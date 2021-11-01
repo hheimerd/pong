@@ -67,6 +67,7 @@ export const MY_CHATS_QUERY = gql`
           name
           id
           avatar
+          status
         }
         ownerId
         admins {

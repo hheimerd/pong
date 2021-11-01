@@ -49,3 +49,8 @@
   margin: 0;
   padding: 0;
 }
+
+.message__text a {
+  text-decoration: underline;
+  color: var(--green-light);
+}

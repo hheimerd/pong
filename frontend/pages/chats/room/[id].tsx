@@ -51,6 +51,7 @@ const ChatRoom = (): JSX.Element => {
             user={user}
             current_user_id={data.getProfile.id}
             current_channel={chats[0]}
+            key={user.name}
           />
         ))}
         <br />
