@@ -45,13 +45,13 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             {data.getProfile.name}
             <br />
             <span>
-              <img src="/rank.png" alt="Rank" title="Rank" />0
+              <img src="/rank.png" alt="Rank" title="Rank" />?
             </span>
             <span>
-              <img src="/wins.png" alt="Wins" title="Wins" />0
+              <img src="/wins.png" alt="Wins" title="Wins" />?
             </span>
             <span>
-              <img src="/loses.png" alt="Loses" title="Loses" />0
+              <img src="/loses.png" alt="Loses" title="Loses" />?
             </span>
           </p>
         </div>
@@ -87,6 +87,13 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
           </li>
           <li
             className={
+              router.pathname.startsWith("/leaderboard") ? styles.active : ""
+            }
+          >
+            <Link href="/leaderboard">Leaderboard</Link>
+          </li>
+          <li
+            className={
               router.pathname.startsWith("/chats") ? styles.active : ""
             }
           >
@@ -98,9 +105,6 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             }
           >
             <Link href="/channels">Channels</Link>
-          </li>
-          <li>
-            <span onClick={() => handleLogout()}>Logout</span>
           </li>
         </ul>
         {data.getProfile.roles.includes("Admin") && (

@@ -1,0 +1,41 @@
+.avatar {
+  display: inline-block;
+}
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr 4fr;
+  gap: 0px 0px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s;
+  border-radius: 2rem;
+  border: 1px solid var(--green-light);
+  align-items: center;
+  margin: 0 0 1rem 0;
+}
+
+.position {
+  font-size: 2rem;
+  text-align: right;
+}
+.score {
+  font-size: 1.1rem;
+  text-align: center;
+}
+.score img {
+  margin-right: 10px;
+}
+.wins {
+  margin-right: 1rem;
+}
+.score_value {
+  margin-left: 4px;
+}
+
+.image {
+  text-align: center;
+}
+.name,
+.right_name {
+  text-align: left;
+  font-size: 1.1rem;
+}
