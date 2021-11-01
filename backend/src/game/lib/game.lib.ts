@@ -9,6 +9,7 @@ export class Game extends EventEmitter {
     connections: SocketWithData[];
     id: string;
     isMenu: boolean;
+    pause: boolean;
     players: Player[] = [];
     playersReadyFlag: boolean[] = [];
     ball: Ball;
@@ -19,6 +20,7 @@ export class Game extends EventEmitter {
     constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
         super();
         this.isMenu = true;
+	this.pause = false;
         this.id = id;
         this.connections = connections;
         this.screenHeight = screenHeight;
@@ -44,18 +46,17 @@ export class Game extends EventEmitter {
         let w = this.screenWidth;
         let h = this.screenHeight;
         this.objects = new Array();
-        if (mapId == 1) {
+        if (mapId == 2) {
             this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
             this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
             console.log(this.objects);
-        } else if (mapId == 2) {
+        } else if (mapId == 3) {
             this.objects.push(new GameObject('wall', w / 4 - 20, 0, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 * 3 - 20, 0, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 - 20, h - h / 4, 40, h / 4));
             this.objects.push(new GameObject('wall', w / 4 * 3 - 20, h - h / 4, 40, h / 4));
             console.log(this.objects);
         }
-        console.log(this.objects);
     }
 
     movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
@@ -70,13 +71,23 @@ export class Game extends EventEmitter {
         this.playersReadyFlag[playerNumber] = true;
     }
 
+    setPause(bool: boolean) {
+	this.players[0].setPause(bool);
+	this.players[1].setPause(bool);
+    	this.pause = bool;
+    }
+
     update() {
         let eventName: string;
-        eventName = this.ball.update();
-        // console.log(eventName);
+        if (this.pause) {
+	   return;
+	}
+	eventName = this.ball.update();
         if (eventName == 'goal') {
             if (this.players[0].score == 21 || this.players[1].score == 21) {
-                this.emit('win', this.players[0].score == 21? 1 : 2);
+                this.emit('win', this.players[0].score, this.players[1].score);
+		this.setPause(true);
+		return;	
             }
             this.emit('goal', this.players[0].score, this.players[1].score);
             this.startNewRound();

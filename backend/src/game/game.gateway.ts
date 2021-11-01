@@ -53,6 +53,9 @@ export class GameGateway {
     targetGame.addEventListenner('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
     })
+    targetGame.addEventListenner('win', (arg) => {
+      client.emit('win', arg);
+    })
   }
 
   @SubscribeMessage('gamePlayerMove')

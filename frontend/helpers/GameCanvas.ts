@@ -38,6 +38,13 @@ export class Canvas {
       this.drawRectangle(placeholder, 5, 30, 20, "#ffffff");
       this.write(placeholder + 5, 20, score, color);
     }
+    drawFon() {
+      const w = this.canvasEl.width;
+      const h = this.canvasEl.height;
+      this.clear();
+      this.fill("#104c87");
+      this.drawRectangle(w / 2 - 2, 0, 4, h, "#000000");
+    }
     waitScreen(string: string) {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
