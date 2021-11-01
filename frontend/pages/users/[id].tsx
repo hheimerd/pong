@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Avatar, Button, Htag } from "../../components";
+import { MatchHistory } from "../../components/MatchHistory/MatchHistory";
 import {
   CREATE_CHAT_MUTATION,
   FOLLOW_TO_USER,
@@ -206,7 +207,8 @@ const UserProfile = (): JSX.Element => {
             />
           </div>
           <div>
-            Status: ?<br />
+            Status: {dataVProfile.user.status}
+            <br />
             Rank: ?<br />
             Wins: ?<br />
             Loses: ?<br />
@@ -221,6 +223,16 @@ const UserProfile = (): JSX.Element => {
               </Button>
             </div>
           )}
+        </div>
+        <div className={styles.history_container}>
+          <MatchHistory
+            nameLeft={dataVProfile.user.name}
+            imageLeft={dataVProfile.user.avatar}
+            scoreLeft={7}
+            nameRight={dataVProfile.user.name}
+            imageRight={dataVProfile.user.avatar}
+            scoreRight={10}
+          />
         </div>
       </div>
     </InnerPageLayout>

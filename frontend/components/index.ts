@@ -8,3 +8,5 @@ export * from "./Chat/Chat";
 export * from "./ChatForm/ChatForm";
 export * from "./OutlinedDiv/OutlinedDiv";
 export * from "./ChannelUserChip/ChannelUserChip";
+export * from "./MatchHistory/MatchHistory";
+export * from "./LeaderboardItem/LeaderboardItem";
