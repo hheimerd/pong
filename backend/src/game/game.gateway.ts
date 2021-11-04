@@ -132,10 +132,10 @@ export class GameGateway {
     
   }
 
-  async handleDisconnect(client: SocketWithData) {
-    if (!client.data.id) return;
-    client.data?.game?.setPause(true);
-    client.data?.game?.sendAll('playerDisconnected');
-  }
+  // async handleDisconnect(client: SocketWithData) {
+  //   if (!client.data.id) return;
+  //   client.data?.game?.setPause(true);
+  //   client.data?.game?.sendAll('playerDisconnected');
+  // }
   
 }
