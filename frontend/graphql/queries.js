@@ -191,3 +191,14 @@ export const VERIFY_TWOFA = gql`
     }
   }
 `;
+
+export const GAME_RESULT = gql`
+  query Query($userId: Int, $take: Int, $skip: Int) {
+    gameResult(user_id: $userId, take: $take, skip: $skip) {
+      id
+      score
+      created_at
+      players
+    }
+  }
+`;

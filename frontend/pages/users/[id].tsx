@@ -9,6 +9,7 @@ import {
   PROFILE_QUERY,
   UNFOLLOW_TO_USER,
   USER_QUERY,
+  GAME_RESULT,
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
@@ -38,6 +39,20 @@ const UserProfile = (): JSX.Element => {
       userId: +id,
     },
   });
+
+  // get viewed user game stats
+  // const {
+  //   data: dataGames,
+  //   error: errorGames,
+  //   loading: loadingGames,
+  // } = useQuery(GAME_RESULT, {
+  //   variables: {
+  //     skip: 0,
+  //     fetchPolicy: "cache-and-network",
+  //     userId: +id,
+  //     take: 100,
+  //   },
+  // });
 
   // follow to user
   const [followUser, { loading: loadingF }] = useMutation(FOLLOW_TO_USER, {
@@ -72,9 +87,9 @@ const UserProfile = (): JSX.Element => {
   }, [loadingCreateChat]);
 
   // wait fetching data
-  if (loadingVProfile || loadingProfile || loadingF || loadingU)
+  if (loadingVProfile || loadingProfile || loadingF || loadingU || loadingGames)
     return <p>Loading user profile from graphql...</p>;
-  if (errorVProfile || errorProfile || errorU)
+  if (errorVProfile || errorProfile || errorU || errorGames)
     return <p>Error: can't fetching data from graphql :(</p>;
 
   const isUserFriend = () => {
