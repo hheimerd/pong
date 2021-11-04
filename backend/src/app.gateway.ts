@@ -7,7 +7,7 @@ import { Socket } from 'socket.io';
 import { AuthService } from './common/auth/auth.service';
 import { UserStatus } from './common/user/entities/user.entity';
 import { UserService } from './common/user/user.service';
-import { UserStatus as PrismaUserStatus } from '.prisma/client';
+import { UserStatus as PrismaUserStatus } from 'prisma';
 
 @WebSocketGateway(81)
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {

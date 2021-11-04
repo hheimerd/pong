@@ -9,10 +9,11 @@ export class GameResultResolver {
 
   @Query(() => [GameResult], { name: 'gameResult' })
   findAll(
-    @Args('user_id',{ type: () => Int }) userId: number,
-    @Args('take',{ type: () => Int, nullable: true }) take = 15,
-    @Args('skip',{ type: () => Int, nullable: true }) skip = 0,
+    @Args('user_id',{ type: () => Int, nullable: true }) userId: number,
+    @Args('take',{ type: () => Int, nullable: true }) take,
+    @Args('skip',{ type: () => Int, nullable: true }) skip,
   ) {
     return this.gameResultService.findAll(userId, take, skip);
   }
+
 }

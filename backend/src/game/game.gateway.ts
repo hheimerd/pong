@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { retry } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/common/auth/auth.service';
+import { GameResultService } from 'src/game-result/game-result.service';
 import { ConnectGameDto } from './dto/connect-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GameCreatedDto } from './dto/game-connected.dto';
@@ -23,19 +24,7 @@ export class GameGateway {
   @WebSocketServer() server: Server;
   private _games: GameEntity[] = [];
   
-  // async handleConnection(client: Socket, ...args: any[]) {
-  //   const authToken = client.handshake.headers.authorization?.substr(7);
-
-  //   if (!authToken) {
-  //     return;
-  //   }
-    
-  //   const userPayload = await this.authService.verifyToken(authToken);
-  //   client.data.id = userPayload.id;
-  //   client.data.name = userPayload.name;
-    
-    
-  // }
+  constructor(private readonly gameResultService: GameResultService) {}
   
   @SubscribeMessage('connectToGame')
   connectToGame(
@@ -43,17 +32,16 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
     console.log(dto);
-    
+
     const targetGame = this._games.find(g => g.id == dto.id);
     client.data.game = targetGame;
-    
 
     targetGame.connect(client);
     client.emit('gameConnected', { playersId: targetGame.getPlayersId() });
-    targetGame.addEventListenner('newFrame', (...args) =>  {
+    targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
     })
-    targetGame.addEventListenner('win', (arg) => {
+    targetGame.addEventListener('win', (arg) => {
       client.emit('win', arg);
     })
   }
@@ -124,7 +112,7 @@ export class GameGateway {
     @MessageBody() dto: CreateGameDto,
     @ConnectedSocket() client: SocketWithData,
   ) {
-    const game = new GameEntity(dto.name, dto.userId);
+    const game = new GameEntity(dto.name, this.gameResultService, dto.userId);
     this._games.push(game);
     
     game.connect(client);

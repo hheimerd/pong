@@ -1,6 +1,7 @@
 import { SocketWithData } from '../game.gateway';
 import { v4 as randomUUID } from 'uuid';
 import { Game } from '../lib/game.lib';
+import { GameResultService } from 'src/game-result/game-result.service';
 
 export class Player {
   socket: SocketWithData;
@@ -26,7 +27,7 @@ export class GameEntity {
   public readonly id: string;
   private _timer: NodeJS.Timeout;
 
-  constructor(name: string, playerId?: number) {
+  constructor(name: string, gameResultService: GameResultService, playerId?: number) {
     this.id = randomUUID();
     this.name = name;
     this._game = new Game(this.id, this._connections, 1024, 768, 1);
@@ -37,8 +38,12 @@ export class GameEntity {
     	this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
     });
     this._game.on('win', (pl1score, pl2score) => {
-	console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
-	console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
+      gameResultService.create({ 
+        players_id: this._players.map(p => p.id),
+        score: [pl1score, pl2score]
+      })
+	// console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
+	// console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
     	this._game.sendToAll('winner', pl1score == 21 ? 1 : 2);
     });
     if (playerId) {
@@ -113,7 +118,7 @@ export class GameEntity {
     }
   }
 
-  addEventListenner(eventName: string, cb: (...args: any[]) => void) {
+  addEventListener(eventName: string, cb: (...args: any[]) => void) {
     this._game.on('newFrame', (...args) => {
       cb(args);
     });
