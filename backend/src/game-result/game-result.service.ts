@@ -17,14 +17,26 @@ export class GameResultService {
   }
 
   async findAll(userId?: number, take = 15, skip = 0) {
-    return await this.prisma.gameResult.findMany({
+    const results = (await this.prisma.gameResult.findMany({
       where: {
         players: {
           some: { id: userId }
         }
       },
       take,
-      skip
-    });
+      skip,
+      include: {
+        players: {
+          select: { id: true },
+        }
+      }
+    }));
+
+    const normalized = results.map(r => ({
+      ...r,
+      players: r.players.map(pl => pl.id)
+    }))
+
+    return normalized;
   }
 }

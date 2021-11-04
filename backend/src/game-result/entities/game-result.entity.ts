@@ -6,7 +6,7 @@ export class GameResult {
   id: string;
   
   @Field(() => [Int])
-  players_id: number[];
+  players: number[];
   
   @Field(() => [Int])
   score: number[]
