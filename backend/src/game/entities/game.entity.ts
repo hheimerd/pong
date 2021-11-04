@@ -59,6 +59,10 @@ export class GameEntity {
     this._game.setMap(mapId);
   }
 
+  setPause(value: boolean) {
+    this._game.setPause(value);
+  }
+
   isPlyer(id: number) {
     return this._players[0]?.id == id || this._players[1]?.id == id;
   }
