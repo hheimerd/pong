@@ -53,7 +53,7 @@ services:
       db:
         condition: service_healthy
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
-    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate deploy && npm run start:dev'"
+    command: "sh -c 'chmod -R 777 /root && cd /app && npm install && npx prisma migrate dev && npm run start:dev'"
     environment:
       <<: *default-env
 

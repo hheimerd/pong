@@ -63,6 +63,15 @@ export class GameEntity {
     this._game.setPause(value);
   }
 
+  sendAll(massage: string, ...args) {
+    this._connections.forEach(e => {
+      e.emit(massage, args);
+    });
+    this._players.forEach(p => {
+      p.socket.emit(massage, args);
+    })
+  }
+
   isPlyer(id: number) {
     return this._players[0]?.id == id || this._players[1]?.id == id;
   }

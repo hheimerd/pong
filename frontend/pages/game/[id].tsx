@@ -38,6 +38,7 @@ export default function Game(): JSX.Element {
         });
 
         let num = -1;
+        let ready = false;
         const screen = [
           new Canvas(nodeRef, { zIndex: 1 }),
           new Canvas(nodeRef, { zIndex: 2 }),
@@ -67,7 +68,10 @@ export default function Game(): JSX.Element {
                 socket.emit("gamePlayerMove", MoveDirectionEnum.UP);
               else if (e.key == "ArrowDown")
                 socket.emit("gamePlayerMove", MoveDirectionEnum.DOWN);
-              else if (e.key == " ") socket.emit("playerReady");
+              else if (e.key == " " && !ready) {
+                ready = true;
+                socket.emit("playerReady");
+              }
               else if (e.key == "1" || e.key == "2" || e.key == "3") {
                 const w = screen[0].canvasEl.width;
                 const h = screen[0].canvasEl.height;
@@ -119,9 +123,10 @@ export default function Game(): JSX.Element {
             document.addEventListener("keydown", onKeyDown);
           });
           socket.emit("connectAsPlayer");
-          socket.on('disconnectPlayer', () => {
+          socket.on('playerDisconnected', () => {
             console.log('Player has disconnected');
-            socket.emit('disconnected');
+            ready = false;
+            socket.emit('playerDisconnected');
           });
         });
 
