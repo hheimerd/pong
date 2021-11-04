@@ -1,6 +1,5 @@
-import { useQuery } from '@apollo/client';
-import { PROFILE_QUERY } from '../graphql/queries';
-
+import { useQuery } from "@apollo/client";
+import { PROFILE_QUERY } from "../graphql/queries";
 
 export default function useUser() {
   // get user
