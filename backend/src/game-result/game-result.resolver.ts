@@ -1,7 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { GameResultService } from './game-result.service';
 import { GameResult } from './entities/game-result.entity';
-import { CreateGameResultInput } from './dto/create-game-result.input';
 
 @Resolver(() => GameResult)
 export class GameResultResolver {

@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
-import { CreateGameResultInput } from './dto/create-game-result.input';
 
 @Injectable()
 export class GameResultService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateGameResultInput) {
-    return this.prisma.gameResult.create({
-      data: dto
+  async create(players: number[], score) {
+    return await this.prisma.gameResult.create({
+      data: {
+        players: {
+          connect: players.map(id => ({ id })),
+        },
+        score
+      }
     });
   }
 
-  findAll(userId?: number, take = 15, skip = 0) {
-    return this.prisma.gameResult.findMany({
+  async findAll(userId?: number, take = 15, skip = 0) {
+    return await this.prisma.gameResult.findMany({
       where: {
         players: {
           some: { id: userId }
