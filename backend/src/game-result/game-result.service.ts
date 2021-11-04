@@ -12,7 +12,7 @@ export class GameResultService {
     });
   }
 
-  findAll(userId: number, take: number, skip: number) {
+  findAll(userId?: number, take = 15, skip = 0) {
     return this.prisma.gameResult.findMany({
       where: {
         players: {

@@ -107,7 +107,7 @@ type Query {
     limit: Int
   ): [Chat!]!
   chat(id: String!): Chat!
-  gameResult(skip: Int, take: Int, user_id: Int!): [GameResult!]!
+  gameResult(skip: Int, take: Int, user_id: Int): [GameResult!]!
 }
 
 type Mutation {

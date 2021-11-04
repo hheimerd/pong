@@ -5,6 +5,7 @@ import { PrismaModule } from 'src/common/prisma/prisma.module';
 
 @Module({
   providers: [GameResultResolver, GameResultService],
-  imports: [PrismaModule]
+  imports: [PrismaModule],
+  exports: [GameResultService]
 })
 export class GameResultModule {}
