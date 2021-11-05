@@ -12,6 +12,7 @@ import {
   GAME_RESULT,
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
+import { IGameResult } from "../../interfaces/gameresult.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./users.module.css";
@@ -41,18 +42,18 @@ const UserProfile = (): JSX.Element => {
   });
 
   // get viewed user game stats
-  // const {
-  //   data: dataGames,
-  //   error: errorGames,
-  //   loading: loadingGames,
-  // } = useQuery(GAME_RESULT, {
-  //   variables: {
-  //     skip: 0,
-  //     fetchPolicy: "cache-and-network",
-  //     userId: +id,
-  //     take: 100,
-  //   },
-  // });
+  const {
+    data: dataGames,
+    error: errorGames,
+    loading: loadingGames,
+  } = useQuery(GAME_RESULT, {
+    variables: {
+      skip: 0,
+      fetchPolicy: "cache-and-network",
+      userId: +id,
+      take: 100,
+    },
+  });
 
   // follow to user
   const [followUser, { loading: loadingF }] = useMutation(FOLLOW_TO_USER, {
@@ -209,6 +210,24 @@ const UserProfile = (): JSX.Element => {
 
   const isThisPageForMyProfile = dataProfile.getProfile.id == +id;
 
+  console.log("dataGames", typeof dataGames.gameResult);
+
+  // iterate over all games
+  const arr = Array.from(dataGames.gameResult);
+  console.log("arr", arr);
+  const HistoryList = Array.from(dataGames.gameResult).map(
+    (oneresult: IGameResult, i: number) => {
+      return (
+        <React.Fragment key={i}>
+          <MatchHistory
+            scores={[+oneresult.score[0], +oneresult.score[1]]}
+            users={[+oneresult.players[0], +oneresult.players[1]]}
+          />
+        </React.Fragment>
+      );
+    }
+  );
+
   return (
     <InnerPageLayout>
       <div>
@@ -239,16 +258,7 @@ const UserProfile = (): JSX.Element => {
             </div>
           )}
         </div>
-        <div className={styles.history_container}>
-          <MatchHistory
-            nameLeft={dataVProfile.user.name}
-            imageLeft={dataVProfile.user.avatar}
-            scoreLeft={7}
-            nameRight={dataVProfile.user.name}
-            imageRight={dataVProfile.user.avatar}
-            scoreRight={10}
-          />
-        </div>
+        <div className={styles.history_container}>{HistoryList}</div>
       </div>
     </InnerPageLayout>
   );

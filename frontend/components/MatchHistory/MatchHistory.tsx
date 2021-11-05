@@ -2,34 +2,57 @@ import styles from "./MatchHistory.module.css";
 import React from "react";
 import { MatchHistoryProps } from "./MatchHistory.props";
 import { Avatar } from "../Avatar/Avatar";
+import { useQuery } from "@apollo/client";
+import { USER_QUERY } from "../../graphql";
 
 export const MatchHistory = ({
-  nameRight = "",
-  imageRight,
-  scoreRight,
-  nameLeft = "",
-  imageLeft,
-  scoreLeft,
+  scores,
+  users,
   ...props
 }: MatchHistoryProps): JSX.Element => {
-  // set small or large image
+  // get user
+  const {
+    data: dataL,
+    error: errorL,
+    loading: loadingL,
+  } = useQuery(USER_QUERY, {
+    variables: { userId: users[0] },
+  });
+
+  const {
+    data: dataR,
+    error: errorR,
+    loading: loadingR,
+  } = useQuery(USER_QUERY, {
+    variables: { userId: users[1] },
+  });
+
+  // wait fetching data
+  if (loadingL || loadingR) return <p>Loading user profile from graphql...</p>;
+  if (errorL || errorR)
+    return <p>Error: can't fetching data from graphql :(</p>;
+
   return (
     <div className={styles.container}>
-      <div className={styles.left_name}>{nameLeft}</div>
+      <div className={styles.left_name}>{dataL.user.name}</div>
       <div className={styles.left_img}>
-        <Avatar image={imageLeft} alt={nameLeft} aria-controls="simple-menu" />
-      </div>
-      <div className={styles.score}>
-        {scoreLeft} : {scoreRight}
-      </div>
-      <div className={styles.right_img}>
         <Avatar
-          image={imageRight}
-          alt={nameRight}
+          image={dataL.user.avatar}
+          alt={dataL.user.name}
           aria-controls="simple-menu"
         />
       </div>
-      <div className={styles.right_name}>{nameRight}</div>
+      <div className={styles.score}>
+        {scores[0]} : {scores[1]}
+      </div>
+      <div className={styles.right_img}>
+        <Avatar
+          image={dataR.user.avatar}
+          alt={dataR.user.name}
+          aria-controls="simple-menu"
+        />
+      </div>
+      <div className={styles.right_name}>{dataR.user.name}</div>
     </div>
   );
 };
