@@ -94,6 +94,12 @@ type GameResult {
   created_at: DateTime!
 }
 
+type GameInfo {
+  id: String!
+  players_id: [Int!]!
+  name: String!
+}
+
 type Query {
   user(id: Int!): User!
   getProfile: User!
@@ -108,6 +114,8 @@ type Query {
     limit: Int
   ): [Chat!]!
   chat(id: String!): Chat!
+  getMatchmakingGames: [GameInfo!]!
+  getAllGames: [GameInfo!]!
   gameResult(skip: Int, take: Int, user_id: Int): [GameResult!]!
   getLeaderBoard: [User!]!
 }

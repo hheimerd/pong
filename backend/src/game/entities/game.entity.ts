@@ -2,6 +2,7 @@ import { SocketWithData } from '../game.gateway';
 import { v4 as randomUUID } from 'uuid';
 import { Game } from '../lib/game.lib';
 import { GameResultService } from 'src/game-result/game-result.service';
+import { GameInfo } from './game-info.entity';
 
 export class Player {
   socket: SocketWithData;
@@ -66,7 +67,7 @@ export class GameEntity {
     }
   }
 
-  getInfo() {
+  getInfo(): GameInfo {
     return {
       id: this.id,
       players_id: this._players.map(p => p.id),
