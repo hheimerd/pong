@@ -37,14 +37,15 @@ export class GameEntity {
     this._game.on('newFrame', (pl1x, pl1y, pl2x, pl2y, ballx, bally) => {
     	this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
     });
+    this._game.on('collect', (playerNumber, sizeBonus) => {
+      this._game.sendToAll('collect', playerNumber, sizeBonus);
+    })
     this._game.on('win', (pl1score, pl2score) => {
       gameResultService.create(
         this._players.map(p => p.id),
         [pl1score, pl2score]
       );
-	// console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
-	// console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
-    	this._game.sendToAll('winner', pl1score == 21 ? 1 : 2);
+    	this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
     });
     if (playerId) {
       this._players[1] = new Player(playerId);

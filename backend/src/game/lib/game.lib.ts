@@ -4,6 +4,7 @@ import { GameObject  } from "./game-object.lib";
 import { MoveDirectionEnum } from "../entities/game.entity";
 import { EventEmitter } from "events"
 import { SocketWithData } from "../game.gateway";
+import { Bonus } from "./bonus.lib";
 
 export class Game extends EventEmitter {
     connections: SocketWithData[];
@@ -16,6 +17,7 @@ export class Game extends EventEmitter {
     objects: GameObject[];
     screenWidth: number;
     screenHeight: number;
+    bonus: Bonus;
 
     constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
         super();
@@ -29,8 +31,6 @@ export class Game extends EventEmitter {
         this.players[1] = new Player(screenWidth - 20, (screenHeight - 100) / 2, screenHeight);
         this.playersReadyFlag[0] = false;
         this.playersReadyFlag[1] = false;
-        let w = this.screenWidth;
-        let h = this.screenHeight;
 	    this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
         this.setMap(2);
     }
@@ -64,6 +64,17 @@ export class Game extends EventEmitter {
     }
 
     startNewRound() {
+        if ((this.players[0].score + this.players[1].score) % 5 === 0) {
+          this.bonus = new Bonus(
+          this.players,
+          this.screenWidth / 2,
+          this.screenHeight / 2,
+          this.players[0].score > this.players[1].score ? 10 : -10,
+          this.screenWidth,
+          this.screenHeight,
+          (this.players[0].score + this.players[1].score) === 15 ? 5 : 0,
+          (this.players[0].score + this.players[1].score) % 5 === 0 ? 50 : 0);
+        }
         this.ball.newRound();
     }
 
@@ -72,28 +83,36 @@ export class Game extends EventEmitter {
     }
 
     setPause(bool: boolean) {
-	this.players[0].setPause(bool);
-	this.players[1].setPause(bool);
-    	this.pause = bool;
+	  this.players[0].setPause(bool);
+	  this.players[1].setPause(bool);
+      this.pause = bool;
     }
 
     update() {
-        let eventName: string;
-        if (this.pause) {
-	   return;
-	}
-	eventName = this.ball.update();
-        if (eventName == 'goal') {
-            if (this.players[0].score == 21 || this.players[1].score == 21) {
-                this.emit('win', this.players[0].score, this.players[1].score);
-		this.setPause(true);
-		return;	
-            }
-            this.emit('goal', this.players[0].score, this.players[1].score);
-            this.startNewRound();
-        } else {   
-            this.emit('newFrame', this.players[0].x, this.players[0].y, this.players[1].x, this.players[1].y, this.ball.x, this.ball.y);
+      let eventName: string;
+      let pl: number;
+      if (this.pause) return;
+      this.bonus?.update();
+      if (this.bonus && (pl = this.bonus.collect()) != 0) {
+        this.emit('collect', pl, this.bonus.sizeBonus);
+        this.bonus = undefined;
+      }
+	  eventName = this.ball.update();
+      if (eventName == 'goal') {
+        if (this.players[0].score == 11 || this.players[1].score == 11) {
+          this.emit('win', this.players[0].score, this.players[1].score);
+	      this.setPause(true);
+	      return;	
         }
+        this.emit('goal', this.players[0].score, this.players[1].score);
+        this.startNewRound();
+      } else {   
+        this.emit('newFrame',
+          this.players[0].x, this.players[0].y,
+          this.players[1].x, this.players[1].y,
+          this.ball.x, this.ball.y,
+          this.bonus?.x, this.bonus?.y);
+      }
     }
 }
 //# sourceMappingURL=game.js.map
