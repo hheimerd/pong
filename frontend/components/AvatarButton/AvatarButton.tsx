@@ -23,6 +23,7 @@ export const AvatarButton = ({
             [styles.offline]: appearance == UserStatus.Offline,
             [styles.online]: appearance == UserStatus.Online,
             [styles.ingame]: appearance == UserStatus.InGame,
+            [styles.undefined]: appearance == UserStatus.Undefined,
           })}
         >
           <span className={styles.button__image}>

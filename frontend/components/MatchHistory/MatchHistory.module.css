@@ -20,6 +20,10 @@
   box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);
 }
 
+.clk {
+  cursor: pointer;
+}
+
 .score {
   font-size: 2rem;
   text-align: center;

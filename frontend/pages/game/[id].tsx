@@ -72,8 +72,7 @@ export default function Game(): JSX.Element {
               else if (e.key == " " && !ready) {
                 ready = true;
                 socket.emit("playerReady");
-              }
-              else if (e.key == "1" || e.key == "2" || e.key == "3") {
+              } else if (e.key == "1" || e.key == "2" || e.key == "3") {
                 const w = screen[0].canvasEl.width;
                 const h = screen[0].canvasEl.height;
                 screen[0].drawFon();
@@ -124,10 +123,10 @@ export default function Game(): JSX.Element {
             document.addEventListener("keydown", onKeyDown);
           });
           socket.emit("connectAsPlayer");
-          socket.on('playerDisconnected', () => {
-            console.log('Player has disconnected');
+          socket.on("playerDisconnected", () => {
+            console.log("Player has disconnected");
             ready = false;
-            socket.emit('playerDisconnected');
+            socket.emit("playerDisconnected");
           });
         });
 

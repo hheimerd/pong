@@ -2,7 +2,10 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { AvatarButton, Htag } from "../../components";
 import { PROFILE_QUERY, USERS_QUERY } from "../../graphql";
-import { IUserProfile } from "../../interfaces/userprofile.interface";
+import {
+  IUserProfile,
+  UserStatus,
+} from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./friends.module.css";
 
@@ -27,7 +30,7 @@ const Users = (): JSX.Element => {
               <AvatarButton
                 user={user}
                 link={"/users/" + user.id}
-                appearance={user.status}
+                appearance={UserStatus.Undefined}
               />
             </React.Fragment>
           );

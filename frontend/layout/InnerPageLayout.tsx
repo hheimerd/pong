@@ -36,35 +36,35 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
     <div className={styles.wrapper}>
       <aside className={styles.aside}>
         <div className={styles.user}>
-          <Avatar
-            image={data.getProfile.avatar}
-            alt={data.getProfile.name}
-            aria-controls="simple-menu"
-          />
+          <Link href="/dashboard">
+            <Avatar
+              image={data.getProfile.avatar}
+              alt={data.getProfile.name}
+              aria-controls="simple-menu"
+            />
+          </Link>
           <p className={styles.stats}>
             {data.getProfile.name}
-            <br />
+            &nbsp; &nbsp;
             <span>
-              <img src="/rank.png" alt="Rank" title="Rank" />?
+              <img src="/rank.png" alt="Rank" title="Rank" />
+              {data.getProfile.rank}
             </span>
+            {/*
             <span>
               <img src="/wins.png" alt="Wins" title="Wins" />?
             </span>
             <span>
               <img src="/loses.png" alt="Loses" title="Loses" />?
             </span>
+            */}
           </p>
         </div>
         <ul className={styles.navi}>
-          <li className={router.pathname == "/dashboard" ? styles.active : ""}>
-            <Link href="/dashboard">Home</Link>
-          </li>
           <li
-            className={
-              router.pathname.startsWith("/friends") ? styles.active : ""
-            }
+            className={router.pathname == "/activegames" ? styles.active : ""}
           >
-            <Link href="/friends">Friends</Link>
+            <Link href="/activegames">Active Games</Link>
           </li>
           <li
             className={
@@ -72,25 +72,6 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             }
           >
             <Link href="/users">All users</Link>
-          </li>
-          <li
-            className={
-              router.pathname.startsWith("/profile") ? styles.active : ""
-            }
-          >
-            <Link href="/profile">Edit profile</Link>
-          </li>
-          <li
-            className={router.pathname.startsWith("/game") ? styles.active : ""}
-          >
-            <Link href="/game">Game</Link>
-          </li>
-          <li
-            className={
-              router.pathname.startsWith("/leaderboard") ? styles.active : ""
-            }
-          >
-            <Link href="/leaderboard">Leaderboard</Link>
           </li>
           <li
             className={
@@ -105,6 +86,32 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
             }
           >
             <Link href="/channels">Channels</Link>
+          </li>
+          <li
+            className={
+              router.pathname.startsWith("/profile") ? styles.active : ""
+            }
+          >
+            <Link href="/profile">Edit profile</Link>
+          </li>
+          <li
+            className={
+              router.pathname.startsWith("/friends") ? styles.active : ""
+            }
+          >
+            <Link href="/friends">Friends</Link>
+          </li>
+          <li
+            className={
+              router.pathname.startsWith("/leaderboard") ? styles.active : ""
+            }
+          >
+            <Link href="/leaderboard">Leaderboard</Link>
+          </li>
+          <li
+            className={router.pathname.startsWith("/game") ? styles.active : ""}
+          >
+            <Link href="/game">Play game</Link>
           </li>
         </ul>
         {data.getProfile.roles.includes("Admin") && (

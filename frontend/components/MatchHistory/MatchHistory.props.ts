@@ -4,4 +4,5 @@ export interface MatchHistoryProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   scores?: [number, number];
   users?: [number, number];
+  href?: string;
 }

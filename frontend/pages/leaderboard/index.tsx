@@ -1,44 +1,37 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
 import { Htag, LeaderboardItem } from "../../components";
-import { PROFILE_QUERY } from "../../graphql";
+import { GET_LEADER_BOARD } from "../../graphql";
+import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import styles from "./leaderboard.module.css";
 
 const Leaderboard = (): JSX.Element => {
   // get my profile
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(GET_LEADER_BOARD);
 
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
 
+  const Leaderboard = Array.from(data.getLeaderBoard).map(
+    (user: IUserProfile, i: number) => {
+      return (
+        <React.Fragment key={i}>
+          <LeaderboardItem
+            name={user.name}
+            image={user.avatar}
+            position={user.rank}
+          />
+        </React.Fragment>
+      );
+    }
+  );
+
   return (
     <InnerPageLayout>
       <Htag tag="h1">Leaderboard</Htag>
-      <div className={styles.container}>
-        <LeaderboardItem
-          name={data.getProfile.name}
-          image={data.getProfile.avatar}
-          position={1}
-          scoreLeft={7}
-          scoreRight={10}
-        />
-        <LeaderboardItem
-          name={data.getProfile.name}
-          image={data.getProfile.avatar}
-          position={2}
-          scoreLeft={7}
-          scoreRight={10}
-        />
-        <LeaderboardItem
-          name={data.getProfile.name}
-          image={data.getProfile.avatar}
-          position={3}
-          scoreLeft={7}
-          scoreRight={10}
-        />
-      </div>
+      <div className={styles.container}>{Leaderboard}</div>
     </InnerPageLayout>
   );
 };

@@ -11,7 +11,7 @@ const MainPage = (): JSX.Element => {
   useEffect(() => {
     console.log("localStorage", localStorage.getItem("token"));
     if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
-      router.push("/dashboard");
+      router.push("/activegames");
   }, []);
 
   useEffect(() => {

@@ -147,3 +147,6 @@ hr {
   background-color: var(--dark-gray);
   border: 0px none;
 }
+.center {
+  text-align: center;
+}

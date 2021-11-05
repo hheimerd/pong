@@ -8,6 +8,7 @@ type User {
   email: String!
   login: String!
   roles: [Role!]!
+  rank: Int!
   created_at: DateTime!
   updated_at: DateTime
   avatar: [String!]!
@@ -95,7 +96,7 @@ type GameResult {
 
 type GameInfo {
   id: String!
-  players_id: [Int!]!
+  players: [Int!]!
   name: String!
 }
 
@@ -116,6 +117,7 @@ type Query {
   getMatchmakingGames: [GameInfo!]!
   getAllGames: [GameInfo!]!
   gameResult(skip: Int, take: Int, user_id: Int): [GameResult!]!
+  getLeaderBoard: [User!]!
 }
 
 type Mutation {
