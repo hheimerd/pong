@@ -77,6 +77,11 @@ export default function Game(): JSX.Element {
             document.addEventListener("keydown", onKeyDown);
           });
           socket.emit("connectAsPlayer");
+          socket.on("playerDisconnected", () => {
+            console.log("Player has disconnected");
+            ready = false;
+            socket.emit("playerDisconnected");
+          });
         });
 
         socket.on("error", (e) => {

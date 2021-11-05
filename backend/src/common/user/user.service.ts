@@ -137,8 +137,8 @@ export class UserService {
     return user;
   }
 
-  async findAll(take = 15, skip = 0, whereClause?: Prisma.UserWhereInput) {
-    return this.prisma.user.findMany({ take, skip, where: whereClause });
+  async findAll(take = 15, skip = 0, whereClause?: Prisma.UserWhereInput, orderBy?: Prisma.UserOrderByInput) {
+    return this.prisma.user.findMany({ take, skip, where: whereClause, orderBy });
   }
 
   async findMany(ids: number[]) {

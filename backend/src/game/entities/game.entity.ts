@@ -2,12 +2,13 @@ import { SocketWithData } from '../game.gateway';
 import { v4 as randomUUID } from 'uuid';
 import { Game } from '../lib/game.lib';
 import { GameResultService } from 'src/game-result/game-result.service';
+import { GameInfo } from './game-info.entity';
 
 export class Player {
   socket: SocketWithData;
   isReady: boolean = false;
   id: number;
-  number: number
+  number: number;
 
   constructor(id: number) {
     this.id = id;
@@ -16,12 +17,12 @@ export class Player {
 
 export enum MoveDirectionEnum {
   UP = 'up',
-  DOWN = 'down'
+  DOWN = 'down',
 }
 
 export enum GameType {
   Friend,
-  MM
+  MM,
 }
 
 export class GameEntity {
@@ -33,7 +34,11 @@ export class GameEntity {
   private _timer: NodeJS.Timeout;
   public gameType: GameType;
 
-  constructor(name: string, gameResultService: GameResultService, playerId?: number) {
+  constructor(
+    name: string,
+    gameResultService: GameResultService,
+    playerId?: number,
+  ) {
     this.id = randomUUID();
     this.name = name;
 
@@ -46,28 +51,31 @@ export class GameEntity {
     });
     this._game.on('collect', (playerNumber, sizeBonus) => {
       this._game.sendToAll('collect', playerNumber, sizeBonus);
-    })
+    });
     this._game.on('win', (pl1score, pl2score) => {
       if (this.gameType == GameType.MM) {
-        gameResultService.create(
-          this._players.map(p => p.id),
-          [pl1score, pl2score]
-        );
+        const winner =
+          pl1score > pl2score ? this._players[0] : this._players[1];
+        gameResultService.upRank(winner.id, 1);
       }
+      gameResultService.create(
+        this._players.map((p) => p.id),
+        [pl1score, pl2score],
+      );
       this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
     });
     if (playerId) {
       this._players[1] = new Player(playerId);
-      this.gameType = GameType.Friend
+      this.gameType = GameType.Friend;
     } else {
       this.gameType = GameType.MM;
     }
   }
 
-  getInfo() {
+  getInfo(): GameInfo {
     return {
       id: this.id,
-      players_id: this._players.map(p => p.id),
+      players: this._players.map((p) => p.id),
       name: this.name,
     };
   }
@@ -127,7 +135,9 @@ export class GameEntity {
       return false;
     }
 
-    const playerSocket = this._connections.find((s) => s.data.id === socket.data.id);
+    const playerSocket = this._connections.find(
+      (s) => s.data.id === socket.data.id,
+    );
     if (!playerSocket) {
       this._connections.push(socket);
     }
@@ -144,7 +154,7 @@ export class GameEntity {
 
   setPlayerReady(playerNumber: number) {
     this._players[playerNumber - 1].isReady = true;
-    if (this._players.every(p => p.isReady)) {
+    if (this._players.every((p) => p.isReady)) {
       this.animate();
     }
   }
@@ -161,7 +171,7 @@ export class GameEntity {
     }, 30);
     this._timer = setTimeout(() => {
       this.stop();
-    }, 10000)
+    }, 10000);
   }
 
   stop() {
@@ -172,7 +182,7 @@ export class GameEntity {
     const player = this._players.find((p) => p.id === socket.data.id);
     player.socket = undefined;
 
-    this._players.forEach((p) => p.isReady = false);
+    this._players.forEach((p) => (p.isReady = false));
   }
 
   movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
@@ -186,5 +196,4 @@ export class GameEntity {
       this._connections.splice(index, 1);
     }
   }
-
 }

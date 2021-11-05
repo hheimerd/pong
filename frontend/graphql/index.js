@@ -17,3 +17,4 @@ export { UNPUNISHMENT_USER_MUTATION } from "./mutations";
 export { PUNISHMENT_USER_MUTATION } from "./mutations";
 export { ADD_MEMBER_TO_CHAT_MUTATION } from "./mutations";
 export { GAME_RESULT } from "./queries";
+export { GET_LEADER_BOARD } from "./queries";

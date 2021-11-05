@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Query, Resolver } from '@nestjs/graphql';
+import { GameInfo } from './entities/game-info.entity';
 import { GameType } from './entities/game.entity';
 import { GameGateway } from './game.gateway';
 
-@Controller('game')
-export class GameController {
-  @Get('matchmaking')
-  getMatchmakingGames()
+@Resolver()
+export class GameResolver {
+  @Query(() => [GameInfo])
+  getMatchmakingGames(): GameInfo[]
   {
     return GameGateway.games
       .filter(game => game.gameType == GameType.MM)
@@ -13,8 +14,8 @@ export class GameController {
   }
 
 
-  @Get('all')
-  getAllGames()
+  @Query(() => [GameInfo])
+  getAllGames(): GameInfo[]
   {
     return GameGateway.games.map(game => game.getInfo());
   }

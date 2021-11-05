@@ -19,7 +19,8 @@
   border-radius: 2rem;
 }
 
-.button__wrapper:hover {
+.button__wrapper:hover,
+.button__wrapper.undefined {
   background-color: rgba(255, 255, 255, 0.1);
   -webkit-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);
   -moz-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);

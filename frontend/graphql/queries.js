@@ -11,6 +11,7 @@ export const PROFILE_QUERY = gql`
       TwoFactorAuth
       avatar
       status
+      rank
       friends {
         id
         name
@@ -169,6 +170,7 @@ export const USER_QUERY = gql`
       updated_at
       avatar
       roles
+      rank
       status
     }
   }
@@ -199,6 +201,36 @@ export const GAME_RESULT = gql`
       score
       created_at
       players
+    }
+  }
+`;
+
+export const GET_LEADER_BOARD = gql`
+  query Query {
+    getLeaderBoard {
+      name
+      avatar
+      rank
+    }
+  }
+`;
+
+export const GET_ALL_GAMES = gql`
+  query Query {
+    getAllGames {
+      id
+      players
+      name
+    }
+  }
+`;
+
+export const GET_MATCHMAKING_GAMES = gql`
+  query Query {
+    getMatchmakingGames {
+      id
+      players
+      name
     }
   }
 `;

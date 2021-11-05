@@ -7,6 +7,7 @@ export enum UserStatus {
   Online = "Online",
   Offline = "Offline",
   InGame = "InGame",
+  Undefined = "Undefined",
 }
 
 export interface IUserProfile {
@@ -19,6 +20,7 @@ export interface IUserProfile {
   updated_at?: Date;
   avatar?: [string, string];
   roles?: Role;
+  rank?: number;
   status?: UserStatus;
   TwoFactorAuth: boolean;
 }

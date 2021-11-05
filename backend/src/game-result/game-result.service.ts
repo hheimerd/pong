@@ -5,6 +5,20 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class GameResultService {
   constructor(private readonly prisma: PrismaService) {}
 
+  public upRank(playerId: number, amount: number)
+  {
+    this.prisma.user.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        rank: {
+          increment: amount
+        }
+      }
+    })
+  }
+
   async create(players: number[], score) {
     return await this.prisma.gameResult.create({
       data: {

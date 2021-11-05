@@ -36,6 +36,9 @@ export class User {
   @Field(() => [Role])
   roles: Role[] | PrismaRole[];
 
+  @Field(() => Int)
+  rank: number;
+
   @Field()
   created_at: Date;
 

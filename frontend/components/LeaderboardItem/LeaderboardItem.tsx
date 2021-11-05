@@ -7,9 +7,9 @@ export const LeaderboardItem = ({
   name = "",
   image,
   position,
-  scoreRight,
-  scoreLeft,
-}: LeaderboardItemProps): JSX.Element => {
+}: // scoreRight,
+// scoreLeft,
+LeaderboardItemProps): JSX.Element => {
   // set small or large image
   return (
     <div className={styles.container}>
@@ -18,18 +18,6 @@ export const LeaderboardItem = ({
         <Avatar image={image} alt={name} aria-controls="simple-menu" />
       </div>
       <div className={styles.name}>{name}</div>
-      <div className={styles.score}>
-        <span className={styles.wins}>
-          <img src="/wins.png" alt="Wins" title="Wins" />
-          Wins:
-          <span className={styles.score_value}>{scoreLeft}</span>
-        </span>
-        <span className={styles.loses}>
-          <img src="/loses.png" alt="Loses" title="Loses" />
-          Loses:
-          <span className={styles.score_value}>{scoreRight}</span>
-        </span>
-      </div>
     </div>
   );
 };

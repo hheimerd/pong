@@ -5,6 +5,6 @@ export interface LeaderboardItemProps
   image?: [string, string];
   name?: string;
   position: number;
-  scoreLeft: number;
-  scoreRight: number;
+  // scoreLeft: number;
+  // scoreRight: number;
 }

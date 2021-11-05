@@ -243,9 +243,12 @@ const UserProfile = (): JSX.Element => {
           <div>
             Status: {dataVProfile.user.status}
             <br />
-            Rank: ?<br />
+            Rank: {dataVProfile.user.rank}
+            <br />
+            {/*
             Wins: ?<br />
             Loses: ?<br />
+            */}
           </div>
           {!isThisPageForMyProfile && (
             <div>
