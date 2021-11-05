@@ -44,6 +44,9 @@ export class GameEntity {
     this._game.on('newFrame', (pl1x, pl1y, pl2x, pl2y, ballx, bally) => {
       this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
     });
+    this._game.on('collect', (playerNumber, sizeBonus) => {
+      this._game.sendToAll('collect', playerNumber, sizeBonus);
+    })
     this._game.on('win', (pl1score, pl2score) => {
       if (this.gameType == GameType.MM) {
         gameResultService.create(
@@ -51,9 +54,7 @@ export class GameEntity {
           [pl1score, pl2score]
         );
       }
-      // console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
-      // console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
-      this._game.sendToAll('winner', pl1score == 21 ? 1 : 2);
+      this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
     });
     if (playerId) {
       this._players[1] = new Player(playerId);
@@ -65,7 +66,7 @@ export class GameEntity {
 
   getInfo() {
     return {
-      id: this.id, 
+      id: this.id,
       players_id: this._players.map(p => p.id),
       name: this.name,
     };
@@ -82,6 +83,15 @@ export class GameEntity {
   setPause(value: boolean) {
     this._game.setPause(value);
   }
+
+  // sendAll(massage: string, ...args) {
+  //   this._connections.forEach(e => {
+  //     e.emit(massage, args);
+  //   });
+  //   this._players.forEach(p => {
+  //     p.socket.emit(massage, args);
+  //   });
+  // }
 
   isPlyer(id: number) {
     return this._players[0]?.id == id || this._players[1]?.id == id;

@@ -72,27 +72,26 @@ export class Ball {
     }
 
     update() {
-        let objName: string;
-	if (this.y - this.height <= 0 || this.y + this.height >= this.screenHeight)
-            this.ySpeed *= -1;
-        if (this.x - this.width <= 0) {
-            this.players[1].scoreInc();
-            this.newRound();
-	        return 'goal';
-        }
-        if (this.x + this.width >= this.screenWidth) {
-            this.players[0].scoreInc();
-            this.newRound();
-	        return 'goal';
-        }
-        objName = this.check(this.players[0]);
-        objName = this.check(this.players[1]);
-        for (let i in this.objects) {
-            console.log('here');
-            objName = this.check(this.objects[i]);
-            console.log(objName);
-        }
-        this.move();
+      let objName: string;
+	  if (this.y - this.height <= 0 || this.y + this.height >= this.screenHeight)
+        this.ySpeed *= -1;
+      if (this.x - this.width <= 0) {
+        this.players[1].scoreInc();
+        this.newRound();
+	    return 'goal';
+      }
+      if (this.x + this.width >= this.screenWidth) {
+        this.players[0].scoreInc();
+        this.newRound();
+	    return 'goal';
+      }
+      objName = this.check(this.players[0]);
+      objName = this.check(this.players[1]);
+      for (let i in this.objects) {
+        objName = this.check(this.objects[i]);
+        console.log(objName);
+      }
+      this.move();
     }
 }
 //# sourceMappingURL=ball.js.map%
