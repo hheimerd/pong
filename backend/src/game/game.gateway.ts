@@ -22,7 +22,7 @@ export interface SocketWithData extends Socket {
 @WebSocketGateway(81)
 export class GameGateway {
   @WebSocketServer() server: Server;
-  private _games: GameEntity[] = [];
+  public static games: GameEntity[] = [];
   
   constructor(private readonly gameResultService: GameResultService) {}
   
@@ -33,7 +33,7 @@ export class GameGateway {
   ) {
     console.log(dto);
 
-    const targetGame = this._games.find(g => g.id == dto.id);
+    const targetGame = GameGateway.games.find(g => g.id == dto.id);
     client.data.game = targetGame;
 
     targetGame.connect(client);
@@ -113,7 +113,7 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
     const game = new GameEntity(dto.name, this.gameResultService, dto.userId);
-    this._games.push(game);
+    GameGateway.games.push(game);
     
     game.connect(client);
     game.setPlayer(client);

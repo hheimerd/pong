@@ -19,36 +19,56 @@ export enum MoveDirectionEnum {
   DOWN = 'down'
 }
 
+export enum GameType {
+  Friend,
+  MM
+}
+
 export class GameEntity {
   private _connections: SocketWithData[] = [];
   private _players: Player[] = [];
   private _game: Game;
-  private readonly name;
+  public readonly name;
   public readonly id: string;
   private _timer: NodeJS.Timeout;
+  public gameType: GameType;
 
   constructor(name: string, gameResultService: GameResultService, playerId?: number) {
     this.id = randomUUID();
     this.name = name;
+
     this._game = new Game(this.id, this._connections, 1024, 768, 1);
     this._game.on('goal', (pl1score, pl2score) => {
-    	this._game.sendToAll('goal', pl1score, pl2score);
+      this._game.sendToAll('goal', pl1score, pl2score);
     });
     this._game.on('newFrame', (pl1x, pl1y, pl2x, pl2y, ballx, bally) => {
-    	this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
+      this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
     });
     this._game.on('win', (pl1score, pl2score) => {
-      gameResultService.create(
-        this._players.map(p => p.id),
-        [pl1score, pl2score]
-      );
-	// console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
-	// console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
-    	this._game.sendToAll('winner', pl1score == 21 ? 1 : 2);
+      if (this.gameType == GameType.MM) {
+        gameResultService.create(
+          this._players.map(p => p.id),
+          [pl1score, pl2score]
+        );
+      }
+      // console.log(this._players[0].socket.data.name + ' ' + pl1score.toString(10));
+      // console.log(this._players[1].socket.data.name + ' ' + pl2score.toString(10));
+      this._game.sendToAll('winner', pl1score == 21 ? 1 : 2);
     });
     if (playerId) {
       this._players[1] = new Player(playerId);
+      this.gameType = GameType.Friend
+    } else {
+      this.gameType = GameType.MM;
     }
+  }
+
+  getInfo() {
+    return {
+      id: this.id, 
+      players_id: this._players.map(p => p.id),
+      name: this.name,
+    };
   }
 
   connect(socket: SocketWithData) {
@@ -71,16 +91,17 @@ export class GameEntity {
     if (this._players[0] && this._players[1]) {
       const reconnectSuccess = this.tryReconnect(socket);
       if (!reconnectSuccess) {
-        return false;      }
+        return false;
+      }
     }
-   
+
     const player = new Player(socket.data.id);
 
     if (!this._players[0]) {
       this._players[0] = player;
     } else {
       this._players[1] = player;
-    } 
+    }
 
     this.setPlayerNumber(player, socket);
     return true;
@@ -95,7 +116,7 @@ export class GameEntity {
     if (!player) {
       return false;
     }
-    
+
     const playerSocket = this._connections.find((s) => s.data.id === socket.data.id);
     if (!playerSocket) {
       this._connections.push(socket);
@@ -125,7 +146,7 @@ export class GameEntity {
   }
 
   animate() {
-    this._timer = this._timer = setInterval(() => {      
+    this._timer = this._timer = setInterval(() => {
       this._game.update();
     }, 30);
     this._timer = setTimeout(() => {
@@ -140,7 +161,7 @@ export class GameEntity {
   onPlayerDisconnected(socket: SocketWithData) {
     const player = this._players.find((p) => p.id === socket.data.id);
     player.socket = undefined;
-    
+
     this._players.forEach((p) => p.isReady = false);
   }
 

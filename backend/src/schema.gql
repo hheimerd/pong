@@ -88,7 +88,7 @@ type ChatPunishment {
 
 type GameResult {
   id: String!
-  players_id: [Int!]!
+  players: [Int!]!
   score: [Int!]!
   created_at: DateTime!
 }
