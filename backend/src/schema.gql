@@ -8,6 +8,7 @@ type User {
   email: String!
   login: String!
   roles: [Role!]!
+  rank: Int!
   created_at: DateTime!
   updated_at: DateTime
   avatar: [String!]!

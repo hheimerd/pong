@@ -47,6 +47,7 @@ model User {
   TwoFactorAuth Boolean @default(false)
   AuthCodes    AuthCode[] 
   deleted_at   DateTime?
+  rank        Int @default(0)
   games    GameResult[]
   status UserStatus @default(Offline)
 }

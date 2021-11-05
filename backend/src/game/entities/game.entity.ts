@@ -49,11 +49,13 @@ export class GameEntity {
     })
     this._game.on('win', (pl1score, pl2score) => {
       if (this.gameType == GameType.MM) {
-        gameResultService.create(
-          this._players.map(p => p.id),
-          [pl1score, pl2score]
-        );
+        const winner = pl1score > pl2score ? this._players[0] : this._players[1];
+        gameResultService.upRank(winner.id, 1);
       }
+      gameResultService.create(
+        this._players.map(p => p.id),
+        [pl1score, pl2score]
+      );
       this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
     });
     if (playerId) {
