@@ -13,7 +13,7 @@ export class Ball {
     objects: GameObject[];
     players: Player[];
     constructor(objects: GameObject[], players: Player[], x: number, y: number, screenWidth: number, screenHeight: number,
-        xSpeed = 5, ySpeed = 5, width = 15, height = 15) {
+        xSpeed = 10, ySpeed = 5, width = 15, height = 15) {
         this.objects = objects;
         this.players = players;
         this.x = x;

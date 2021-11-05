@@ -1,6 +1,9 @@
 export class Canvas {
     canvasEl: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
+    map: number;
+    mode: number;
+    position: number;
     constructor(gameRef, {width = 1024, height = 768, zIndex = 0}) {
       this.canvasEl = document.createElement("canvas");
       this.context = this.canvasEl.getContext("2d");
@@ -8,6 +11,9 @@ export class Canvas {
       this.canvasEl.height = height;
       this.canvasEl.style.zIndex = zIndex.toString();
       this.canvasEl.style.position = 'absolute';
+      this.map = 0;
+      this.mode = 0;
+      this.position = -1;
   
       gameRef.append(this.canvasEl);
     }
@@ -35,24 +41,53 @@ export class Canvas {
       this.context.fillText(text, x, y);
     }
     drawScore(placeholder: number, score: string, color: string) {
-      this.drawRectangle(placeholder, 5, 30, 20, "#ffffff");
+      this.drawRectangle(placeholder, 5, 30, 20, "#e0cfb1");
       this.write(placeholder + 5, 20, score, color);
     }
     drawFon() {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
       this.clear();
-      this.fill("#104c87");
+      this.fill("#000000bf");
       this.drawRectangle(w / 2 - 2, 0, 4, h, "#000000");
     }
     waitScreen(string: string) {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
-      this.fill("#e0cfb101");
+      this.fill("#e0cfb1");
       this.drawRectangle(w / 3, (h * 2) / 5, w / 3, h / 5, "#ffffff");
       if (string === "wait")
         this.write(w / 2 - 80, h / 2 + 30, "press space to start", "#000000");
       else if (string === "reconnect")
         this.write(w / 2 - 80, h / 2 + 30, "witing for reconnect", "#000000");
+    }
+    menu() {
+      const w = this.canvasEl.width;
+      const h = this.canvasEl.height;
+      let mode = this.mode == 0 ? 'classic' : 'with bonuses';
+      this.fill('#057a68');
+      this.write(w / 2 - 100, h / 2 - 40, ('game map ' + (this.map + 1).toString(10)), '#000000');
+      this.write(w / 2 - 100, h / 2, 'game mode ' + mode, '#000000');
+      this.write(w / 2 - 100, h / 2 + 40, 'PLAY', '#000000');
+      this.drawRectangle(w / 2 - 140, h / 2 + 40 * this.position, 10, 40, '#000000');
+    }
+
+    setPosition(dir: string) {
+      if (dir == 'up' && this.position > -1)
+        this.position--;
+      if (dir == 'down' && this.position < 1)
+        this.position++;
+      this.menu();
+    }
+
+    select() {
+      if (this.position == 1) {
+        this.clear();
+        return true;
+      }
+      if (this.position == 0) this.mode = this.mode + 1 > 1 ? 0 : 1;
+      if (this.position == -1) this.map = this.map + 1 > 1 ? 0 : 1;
+      this.menu();
+      return false;
     }
   }

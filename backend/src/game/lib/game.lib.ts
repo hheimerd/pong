@@ -9,7 +9,6 @@ import { Bonus } from "./bonus.lib";
 export class Game extends EventEmitter {
     connections: SocketWithData[];
     id: string;
-    isMenu: boolean;
     pause: boolean;
     players: Player[] = [];
     playersReadyFlag: boolean[] = [];
@@ -21,14 +20,13 @@ export class Game extends EventEmitter {
 
     constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
         super();
-        this.isMenu = true;
-	this.pause = false;
+	    this.pause = false;
         this.id = id;
         this.connections = connections;
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.players[0] = new Player(10, (screenHeight - 100) / 2, screenHeight);
-        this.players[1] = new Player(screenWidth - 20, (screenHeight - 100) / 2, screenHeight);
+        this.players[1] = new Player(screenWidth - 30, (screenHeight - 100) / 2, screenHeight);
         this.playersReadyFlag[0] = false;
         this.playersReadyFlag[1] = false;
 	    this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
@@ -50,17 +48,11 @@ export class Game extends EventEmitter {
             this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
             this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
             console.log(this.objects);
-        } else if (mapId == 3) {
-            this.objects.push(new GameObject('wall', w / 4 - 20, 0, 40, h / 4));
-            this.objects.push(new GameObject('wall', w / 4 * 3 - 20, 0, 40, h / 4));
-            this.objects.push(new GameObject('wall', w / 4 - 20, h - h / 4, 40, h / 4));
-            this.objects.push(new GameObject('wall', w / 4 * 3 - 20, h - h / 4, 40, h / 4));
-            console.log(this.objects);
         }
     }
 
     movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
-        this.players[playerNumber].move(direction);
+      this.players[playerNumber].move(direction);
     }
 
     startNewRound() {
@@ -69,10 +61,10 @@ export class Game extends EventEmitter {
           this.players,
           this.screenWidth / 2,
           this.screenHeight / 2,
-          this.players[0].score > this.players[1].score ? 10 : -10,
+          this.players[0].score > this.players[1].score ? 5 : -5,
           this.screenWidth,
           this.screenHeight,
-          (this.players[0].score + this.players[1].score) === 15 ? 5 : 0,
+          (this.players[0].score + this.players[1].score) === 15 ? 7 : 0,
           (this.players[0].score + this.players[1].score) % 5 === 0 ? 50 : 0);
         }
         this.ball.newRound();
@@ -104,8 +96,8 @@ export class Game extends EventEmitter {
 	      this.setPause(true);
 	      return;	
         }
-        this.emit('goal', this.players[0].score, this.players[1].score);
-        this.startNewRound();
+          this.emit('goal', this.players[0].score, this.players[1].score);
+          this.startNewRound();
       } else {   
         this.emit('newFrame',
           this.players[0].x, this.players[0].y,
