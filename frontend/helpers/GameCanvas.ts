@@ -63,12 +63,16 @@ export class Canvas {
       this.drawRectangle(placeholder, 5, 30, 20, "#e0cfb1");
       this.write(placeholder + 5, 20, score, color);
     }
-    drawFon() {
+    drawFon(mapId: number) {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
       this.clear();
       this.fill("#000000bf");
       this.drawRectangle(w / 2 - 2, 0, 4, h, "#057a68");
+      if (mapId == 1) {
+        this.drawRoundRectangle(w / 4, h / 3 - 20, w / 2, 40, 5, '#dfa876');
+        this.drawRoundRectangle(w / 4, h / 3 * 2 - 20, w / 2, 40, 5, '#dfa876');
+      }
     }
     waitScreen(string: string) {
       const w = this.canvasEl.width;

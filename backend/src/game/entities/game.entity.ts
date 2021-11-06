@@ -46,6 +46,9 @@ export class GameEntity {
     this._game.on('goal', (pl1score, pl2score) => {
       this._game.sendToAll('goal', pl1score, pl2score);
     });
+    this._game.on('gameStart', (map) => {
+      this._game.sendToAll('gameStart', (map));
+    });
     this._game.on('newFrame', (pl1x, pl1y, pl2x, pl2y, ballx, bally) => {
       this._game.sendToAll('newFrame', pl1x, pl1y, pl2x, pl2y, ballx, bally);
     });
@@ -92,15 +95,6 @@ export class GameEntity {
   setPause(value: boolean) {
     this._game.setPause(value);
   }
-
-  // sendAll(massage: string, ...args) {
-  //   this._connections.forEach(e => {
-  //     e.emit(massage, args);
-  //   });
-  //   this._players.forEach(p => {
-  //     p.socket.emit(massage, args);
-  //   });
-  // }
 
   isPlyer(id: number) {
     return this._players[0]?.id == id || this._players[1]?.id == id;

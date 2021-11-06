@@ -31,7 +31,6 @@ export class Game extends EventEmitter {
     this.players[1] = new Player(screenWidth - 30, (screenHeight - 100) / 2, screenHeight);
     this.playersReadyFlag[0] = false;
     this.playersReadyFlag[1] = false;
-	  this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
     this.map = -1;
     this.mode = -1;
   }
@@ -43,14 +42,12 @@ export class Game extends EventEmitter {
   }
 
   setMap(mapId: number) {
-    console.log(mapId);
     let w = this.screenWidth;
     let h = this.screenHeight;
     this.objects = new Array();
     if (mapId == 1) {
       this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
       this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
-      console.log(this.objects);
     }
   }
 
@@ -88,8 +85,12 @@ export class Game extends EventEmitter {
         this.mode = settings[1];
       else if (this.mode != settings[1])
         this.mode = this.getRandomInt(0, 2);
-      this.setMap(this.map);
-      this.playersReadyFlag[playerNumber] = true;
+      this.playersReadyFlag[playerNumber - 1] = true;
+      if (this.playersReadyFlag[0] == true && this.playersReadyFlag[1] == true) {
+        this.setMap(this.map);
+        this.ball = new Ball(this.objects, this.players, (this.screenWidth - 15) / 2, (this.screenHeight - 15) / 2, this.screenWidth, this.screenHeight);
+        this.emit('gameStart', this.map);
+      }
     }
 
     setPause(bool: boolean) {

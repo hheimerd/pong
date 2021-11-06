@@ -13,7 +13,7 @@ export class Ball {
     objects: GameObject[];
     players: Player[];
     constructor(objects: GameObject[], players: Player[], x: number, y: number, screenWidth: number, screenHeight: number,
-        xSpeed = 10, ySpeed = 5, width = 15, height = 15) {
+        xSpeed = 7, ySpeed = 5, width = 15, height = 15) { 
         this.objects = objects;
         this.players = players;
         this.x = x;
@@ -72,7 +72,6 @@ export class Ball {
     }
 
     update() {
-      let objName: string;
 	  if (this.y - this.height <= 0 || this.y + this.height >= this.screenHeight)
         this.ySpeed *= -1;
       if (this.x - this.width <= 0) {
@@ -85,11 +84,11 @@ export class Ball {
         this.newRound();
 	    return 'goal';
       }
-      objName = this.check(this.players[0]);
-      objName = this.check(this.players[1]);
-      for (let i in this.objects) {
-        objName = this.check(this.objects[i]);
-        console.log(objName);
+      this.check(this.players[0]);
+      this.check(this.players[1]);
+      if (this.objects.length > 0) {
+        this.check(this.objects[0]);
+        this.check(this.objects[1]);
       }
       this.move();
     }

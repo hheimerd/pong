@@ -47,7 +47,7 @@ export default function Game(): JSX.Element {
           new Canvas(nodeRef, { zIndex: 2 }),
           new Canvas(nodeRef, { zIndex: 3 }),
         ];
-        screen[0].drawFon();
+        screen[0].drawFon(0);
         if (!spectator)
           screen[2].menu();
 
@@ -83,11 +83,6 @@ export default function Game(): JSX.Element {
             document.addEventListener("keydown", onKeyDown);
           });
           socket.emit("connectAsPlayer");
-          // socket.on("playerDisconnected", () => {
-          //   console.log("Player has disconnected");
-          //   ready = false;
-          //   socket.emit("playerDisconnected");
-          // });
         });
 
         socket.on("error", (e) => {
@@ -95,6 +90,11 @@ export default function Game(): JSX.Element {
         });
 
         socket.emit("connectToGame", { id: gameId });
+
+        socket.on('gameStart', (gameMap: number) => {
+          console.log('gameStart ' + gameMap.toString(10));
+          screen[0].drawFon(gameMap);
+        });
 
         socket.on("newFrame", (args) => {
           const [pl1x, pl1y, pl2x, pl2y, ballx, bally, bonusx, bonusy] = args;
