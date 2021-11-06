@@ -44,7 +44,7 @@ const ActiveGames = (): JSX.Element => {
           <React.Fragment key={i}>
             <MatchHistory
               users={[+onegame.players[0], +onegame.players[1]]}
-              href={"/game/" + onegame.id}
+              href={"/game/" + onegame.id + "/?spectator=true"}
             />
           </React.Fragment>
         );
