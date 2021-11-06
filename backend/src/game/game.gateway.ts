@@ -41,7 +41,7 @@ export class GameGateway {
     targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
     });
-    targetGame.addEventListener('win', (arg) => {
+    targetGame.addEventListener('win', (pl1score, pl2score) => {
       GameGateway.games.splice(GameGateway.games.findIndex(i => i.id == dto.id), 1);
     })
   }
