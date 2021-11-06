@@ -24,6 +24,8 @@ export default function Game(): JSX.Element {
   const user = useUser();
 
   const { id: gameId } = router.query;
+  // spectator = "true" or typeof spectator === "undefined"
+  const { spectator } = router.query;
 
   // https://stackoverflow.com/questions/54346040/react-hooks-ref-is-not-avaiable-inside-useeffect/54346500
   const gameRef = useCallback(
@@ -60,16 +62,14 @@ export default function Game(): JSX.Element {
               e.preventDefault();
               let settings: number[] = [];
               if (!ready) {
-                if (e.key == "ArrowUp")
-                  screen[2].setPosition('up');
-                else if (e.key == "ArrowDown")
-                  screen[2].setPosition('down');
+                if (e.key == "ArrowUp") screen[2].setPosition("up");
+                else if (e.key == "ArrowDown") screen[2].setPosition("down");
                 else if (e.key == " ") {
                   settings = screen[2].select();
                   if (settings[2] == 1) {
                     ready = true;
                     screen[2].clear();
-                    socket.emit('playerReady', settings);
+                    socket.emit("playerReady", settings);
                   }
                 }
               } else {
@@ -98,8 +98,22 @@ export default function Game(): JSX.Element {
         socket.on("newFrame", (args) => {
           const [pl1x, pl1y, pl2x, pl2y, ballx, bally, bonusx, bonusy] = args;
           screen[1].clear();
-          screen[1].drawRoundRectangle(pl1x, pl1y, 20, playersSize[0], 5, "#dfa876");
-          screen[1].drawRoundRectangle(pl2x, pl2y, 20, playersSize[1], 5, "#dfa876");
+          screen[1].drawRoundRectangle(
+            pl1x,
+            pl1y,
+            20,
+            playersSize[0],
+            5,
+            "#dfa876"
+          );
+          screen[1].drawRoundRectangle(
+            pl2x,
+            pl2y,
+            20,
+            playersSize[1],
+            5,
+            "#dfa876"
+          );
           screen[1].drawCircle(ballx, bally, 15, "#dfa876");
           if (bonusx != undefined && bonusy != undefined) {
             screen[1].drawCircle(bonusx, bonusy, 10, "#123123");
