@@ -42,7 +42,7 @@ export class GameGateway {
       client.emit('newFrame', ...args);
     })
     targetGame.addEventListener('win', (arg) => {
-      client.emit('win', arg);
+      console.log('EXIT');
     })
   }
 

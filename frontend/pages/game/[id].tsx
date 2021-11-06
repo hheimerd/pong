@@ -102,7 +102,7 @@ export default function Game(): JSX.Element {
           screen[1].drawRoundRectangle(pl2x, pl2y, 20, playersSize[1], 5, "#dfa876");
           screen[1].drawCircle(ballx, bally, 15, "#dfa876");
           if (bonusx != undefined && bonusy != undefined) {
-            screen[1].drawCircle(bonusx, bonusy, 10, "#123123");
+            screen[1].drawCircle(bonusx, bonusy, 10, "#d64b4b");
           }
         });
         socket.on("collect", (args) => {
