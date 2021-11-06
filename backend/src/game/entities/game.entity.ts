@@ -152,7 +152,8 @@ export class GameEntity {
     player.number = this._players.findIndex((p) => p.id === socket.data.id) + 1;
   }
 
-  setPlayerReady(playerNumber: number) {
+  setPlayerReady(playerNumber: number, settings: number[]) {
+    this._game.setPlayerReady(playerNumber, settings)
     this._players[playerNumber - 1].isReady = true;
     if (this._players.every((p) => p.isReady)) {
       this.animate();

@@ -7,56 +7,59 @@ import { SocketWithData } from "../game.gateway";
 import { Bonus } from "./bonus.lib";
 
 export class Game extends EventEmitter {
-    connections: SocketWithData[];
-    id: string;
-    pause: boolean;
-    players: Player[] = [];
-    playersReadyFlag: boolean[] = [];
-    ball: Ball;
-    objects: GameObject[];
-    screenWidth: number;
-    screenHeight: number;
-    bonus: Bonus;
+  connections: SocketWithData[];
+  id: string;
+  pause: boolean;
+  players: Player[] = [];
+  playersReadyFlag: boolean[] = [];
+  ball: Ball;
+  objects: GameObject[];
+  screenWidth: number;
+  screenHeight: number;
+  bonus: Bonus;
+  map: number;
+  mode: number;
 
-    constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
-        super();
-	    this.pause = false;
-        this.id = id;
-        this.connections = connections;
-        this.screenHeight = screenHeight;
-        this.screenWidth = screenWidth;
-        this.players[0] = new Player(10, (screenHeight - 100) / 2, screenHeight);
-        this.players[1] = new Player(screenWidth - 30, (screenHeight - 100) / 2, screenHeight);
-        this.playersReadyFlag[0] = false;
-        this.playersReadyFlag[1] = false;
-	    this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
-        this.setMap(2);
-    }
+  constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
+    super();
+	  this.pause = false;
+    this.id = id;
+    this.connections = connections;
+    this.screenHeight = screenHeight;
+    this.screenWidth = screenWidth;
+    this.players[0] = new Player(10, (screenHeight - 100) / 2, screenHeight);
+    this.players[1] = new Player(screenWidth - 30, (screenHeight - 100) / 2, screenHeight);
+    this.playersReadyFlag[0] = false;
+    this.playersReadyFlag[1] = false;
+	  this.ball = new Ball(this.objects, this.players, (screenWidth - 15) / 2, (screenHeight - 15) / 2, screenWidth, screenHeight);
+    this.map = -1;
+    this.mode = -1;
+  }
 
-    sendToAll(eventName: string, ...args) {
-        this.connections.forEach((s) => {
-            s.emit(eventName, args);
-        })
-    }
+  sendToAll(eventName: string, ...args) {
+    this.connections.forEach((s) => {
+      s.emit(eventName, args);
+    })
+  }
 
-    setMap(mapId: number) {
-        console.log(mapId);
-        let w = this.screenWidth;
-        let h = this.screenHeight;
-        this.objects = new Array();
-        if (mapId == 2) {
-            this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
-            this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
-            console.log(this.objects);
-        }
+  setMap(mapId: number) {
+    console.log(mapId);
+    let w = this.screenWidth;
+    let h = this.screenHeight;
+    this.objects = new Array();
+    if (mapId == 1) {
+      this.objects.push(new GameObject('wall', w / 4, h / 3 - 20, w / 2, 40));
+      this.objects.push(new GameObject('wall', w / 4, h / 3 * 2 - 20, w / 2, 40));
+      console.log(this.objects);
     }
+  }
 
-    movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
-      this.players[playerNumber].move(direction);
-    }
+  movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
+    this.players[playerNumber].move(direction);
+  }
 
     startNewRound() {
-        if ((this.players[0].score + this.players[1].score) % 5 === 0) {
+        if (this.mode == 1 && (this.players[0].score + this.players[1].score) % 5 === 0) {
           this.bonus = new Bonus(
           this.players,
           this.screenWidth / 2,
@@ -70,13 +73,28 @@ export class Game extends EventEmitter {
         this.ball.newRound();
     }
 
-    setPlayerReady(playerNumber: number) {
-        this.playersReadyFlag[playerNumber] = true;
+    getRandomInt(min: number, max: number) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    setPlayerReady(playerNumber: number, settings: number[]) {
+      if (this.map == -1)
+        this.map = settings[0];
+      else if (this.map != settings[0])
+        this.map = this.getRandomInt(0, 2);
+      if (this.mode == -1)
+        this.mode = settings[1];
+      else if (this.mode != settings[1])
+        this.mode = this.getRandomInt(0, 2);
+      this.setMap(this.map);
+      this.playersReadyFlag[playerNumber] = true;
     }
 
     setPause(bool: boolean) {
-	  this.players[0].setPause(bool);
-	  this.players[1].setPause(bool);
+	    this.players[0].setPause(bool);
+	    this.players[1].setPause(bool);
       this.pause = bool;
     }
 
@@ -89,7 +107,7 @@ export class Game extends EventEmitter {
         this.emit('collect', pl, this.bonus.sizeBonus);
         this.bonus = undefined;
       }
-	  eventName = this.ball.update();
+	    eventName = this.ball.update();
       if (eventName == 'goal') {
         if (this.players[0].score == 11 || this.players[1].score == 11) {
           this.emit('win', this.players[0].score, this.players[1].score);

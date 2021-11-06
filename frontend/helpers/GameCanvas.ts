@@ -19,7 +19,7 @@ export class Canvas {
     }
     fill(color: string) {
       this.context.fillStyle = color;
-      this.context.fillRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+      this.drawRoundRectangle(0, 0, this.canvasEl.width, this.canvasEl.height, 20, color);
     }
     clear() {
       this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
@@ -27,6 +27,25 @@ export class Canvas {
     drawRectangle(startX: number, startY: number, width: number, height: number, color: string) {
       this.context.fillStyle = color;
       this.context.fillRect(startX, startY, width, height);
+    }
+    drawRoundRectangle(x: number, y: number, width: number, height: number, round: number, fill: string) {
+      let radius = {topLeft: round, topRight: round, botRight: round, botLeft: round};
+      let draw = this.context;
+      draw.beginPath();
+      draw.moveTo(x + radius.topLeft, y);
+      draw.lineTo(x + width - radius.topRight, y);
+      draw.quadraticCurveTo(x + width, y, x + width, y + radius.topRight);
+      draw.lineTo(x + width, y + height - radius.botRight);
+      draw.quadraticCurveTo(x + width, y + height, x + width - radius.botRight, y + height);
+      draw.lineTo(x + radius.botLeft, y + height);
+      draw.quadraticCurveTo(x, y + height, x, y + height - radius.botLeft);
+      draw.lineTo(x, y + radius.topLeft);
+      draw.quadraticCurveTo(x, y, x + radius.topLeft, y);
+      draw.closePath();
+      if (fill) {
+        draw.fillStyle = fill;
+        draw.fill();
+      }
     }
     drawCircle(x: number, y: number, radius: number, color: string) {
       this.context.beginPath();
@@ -49,7 +68,7 @@ export class Canvas {
       const h = this.canvasEl.height;
       this.clear();
       this.fill("#000000bf");
-      this.drawRectangle(w / 2 - 2, 0, 4, h, "#000000");
+      this.drawRectangle(w / 2 - 2, 0, 4, h, "#057a68");
     }
     waitScreen(string: string) {
       const w = this.canvasEl.width;
@@ -64,12 +83,12 @@ export class Canvas {
     menu() {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
-      let mode = this.mode == 0 ? 'classic' : 'with bonuses';
+      let mode = this.mode == 0 ? 'classic' : ' bonus ';
       this.fill('#057a68');
-      this.write(w / 2 - 100, h / 2 - 40, ('game map ' + (this.map + 1).toString(10)), '#000000');
-      this.write(w / 2 - 100, h / 2, 'game mode ' + mode, '#000000');
-      this.write(w / 2 - 100, h / 2 + 40, 'PLAY', '#000000');
-      this.drawRectangle(w / 2 - 140, h / 2 + 40 * this.position, 10, 40, '#000000');
+      this.drawRoundRectangle(w / 2 - 140, h / 2 - 25 + 40 * this.position, 280, 40, 10, '#dfa876');
+      this.write(w / 2 - 50, h / 2 - 40, ('game map ' + (this.map + 1).toString(10)), '#000000');
+      this.write(w / 2 - 80, h / 2, 'game mode ' + mode, '#000000');
+      this.write(w / 2 - 25, h / 2 + 40, 'PLAY', '#000000');
     }
 
     setPosition(dir: string) {
@@ -80,14 +99,14 @@ export class Canvas {
       this.menu();
     }
 
-    select() {
+    select(): number[] {
       if (this.position == 1) {
         this.clear();
-        return true;
+        return [this.map, this.mode, this.position];
       }
       if (this.position == 0) this.mode = this.mode + 1 > 1 ? 0 : 1;
       if (this.position == -1) this.map = this.map + 1 > 1 ? 0 : 1;
       this.menu();
-      return false;
+      return [this.map, this.mode, this.position];
     }
   }

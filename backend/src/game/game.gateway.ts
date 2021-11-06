@@ -71,8 +71,11 @@ export class GameGateway {
 
 
   @SubscribeMessage('playerReady')
-  playerReady(@ConnectedSocket() client: SocketWithData) {
-    client.data.game.setPlayerReady(client.data.playerNumber);
+  playerReady(
+    @ConnectedSocket() client: SocketWithData,
+    @MessageBody() settings: number[]
+  ) {
+    client.data.game.setPlayerReady(client.data.playerNumber, settings);
     client.emit('ready', client.data.playerNumber);
   }
 
@@ -131,11 +134,4 @@ export class GameGateway {
     } as GameCreatedDto);
     
   }
-
-  // async handleDisconnect(client: SocketWithData) {
-  //   if (!client.data.id) return;
-  //   client.data?.game?.setPause(true);
-  //   client.data?.game?.sendAll('playerDisconnected');
-  // }
-  
 }

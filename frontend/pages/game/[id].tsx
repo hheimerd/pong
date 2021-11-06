@@ -46,6 +46,7 @@ export default function Game(): JSX.Element {
           new Canvas(nodeRef, { zIndex: 3 }),
         ];
         screen[0].drawFon();
+        screen[2].menu();
 
         socket.on("gameConnected", (response: GameConnectedResponse) => {
           const playersId = response.playersId;
@@ -57,21 +58,25 @@ export default function Game(): JSX.Element {
             console.log("connectedAsPlayer");
             const onKeyDown = (e) => {
               e.preventDefault();
+              let settings: number[] = [];
               if (!ready) {
                 if (e.key == "ArrowUp")
                   screen[2].setPosition('up');
                 else if (e.key == "ArrowDown")
                   screen[2].setPosition('down');
-                else if (e.key == " ")
-                  ready = screen[2].select(); 
+                else if (e.key == " ") {
+                  settings = screen[2].select();
+                  if (settings[2] == 1) {
+                    ready = true;
+                    screen[2].clear();
+                    socket.emit('playerReady', settings);
+                  }
+                }
               } else {
                 if (e.key == "ArrowUp")
                   socket.emit("gamePlayerMove", MoveDirectionEnum.UP);
                 else if (e.key == "ArrowDown")
                   socket.emit("gamePlayerMove", MoveDirectionEnum.DOWN);
-                else if (e.key == " ") {
-                  socket.emit("playerReady");
-                }
               }
             };
             document.addEventListener("keydown", onKeyDown);
@@ -90,20 +95,11 @@ export default function Game(): JSX.Element {
 
         socket.emit("connectToGame", { id: gameId });
 
-        socket.on('menu', (args) => {
-          let mode = args[0][1] == 1 ? 'classic' : 'with bonuses'; 
-          screen[2].clear();
-          screen[2].fill('#000000');
-          screen[2].write(20, 20, 'game map ' + args[0][0].toString(10), '#ffffff');
-          screen[2].write(20, 60, 'game mode ' + mode, '#ffffff');
-          screen[2].write(20, 100, 'PLAY', '#ffffff');
-          screen[2].drawRectangle(10, 20 * args[0][2], 10, 20, '#ffffff');
-        });
         socket.on("newFrame", (args) => {
           const [pl1x, pl1y, pl2x, pl2y, ballx, bally, bonusx, bonusy] = args;
           screen[1].clear();
-          screen[1].drawRectangle(pl1x, pl1y, 20, playersSize[0], "#dfa876");
-          screen[1].drawRectangle(pl2x, pl2y, 20, playersSize[1], "#dfa876");
+          screen[1].drawRoundRectangle(pl1x, pl1y, 20, playersSize[0], 5, "#dfa876");
+          screen[1].drawRoundRectangle(pl2x, pl2y, 20, playersSize[1], 5, "#dfa876");
           screen[1].drawCircle(ballx, bally, 15, "#dfa876");
           if (bonusx != undefined && bonusy != undefined) {
             screen[1].drawCircle(bonusx, bonusy, 10, "#123123");
@@ -132,14 +128,6 @@ export default function Game(): JSX.Element {
             screen[2].canvasEl.width / 2 - 50,
             screen[2].canvasEl.height / 2 + 20,
             "Player " + pl + " wins",
-            "#000000"
-          );
-        });
-        socket.on("ready", (playerNumber: number) => {
-          screen[2].write(
-            screen[1].canvasEl.width / 2 - 60,
-            screen[1].canvasEl.height / 2 - 20 + num * 20,
-            "Player " + playerNumber + " ready!",
             "#000000"
           );
         });
