@@ -48,7 +48,8 @@ export default function Game(): JSX.Element {
           new Canvas(nodeRef, { zIndex: 3 }),
         ];
         screen[0].drawFon();
-        screen[2].menu();
+        if (!spectator)
+          screen[2].menu();
 
         socket.on("gameConnected", (response: GameConnectedResponse) => {
           const playersId = response.playersId;
@@ -82,11 +83,11 @@ export default function Game(): JSX.Element {
             document.addEventListener("keydown", onKeyDown);
           });
           socket.emit("connectAsPlayer");
-          socket.on("playerDisconnected", () => {
-            console.log("Player has disconnected");
-            ready = false;
-            socket.emit("playerDisconnected");
-          });
+          // socket.on("playerDisconnected", () => {
+          //   console.log("Player has disconnected");
+          //   ready = false;
+          //   socket.emit("playerDisconnected");
+          // });
         });
 
         socket.on("error", (e) => {

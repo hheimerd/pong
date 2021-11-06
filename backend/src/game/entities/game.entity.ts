@@ -63,6 +63,7 @@ export class GameEntity {
         [pl1score, pl2score],
       );
       this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
+      this.unsubscribe();
     });
     if (playerId) {
       this._players[1] = new Player(playerId);
@@ -123,6 +124,10 @@ export class GameEntity {
 
     this.setPlayerNumber(player, socket);
     return true;
+  }
+
+  unsubscribe() {
+    this._game.removeAllListeners();
   }
 
   getPlayersId() {

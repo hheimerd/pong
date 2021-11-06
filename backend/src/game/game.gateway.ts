@@ -40,9 +40,9 @@ export class GameGateway {
     client.emit('gameConnected', { playersId: targetGame.getPlayersId() });
     targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
-    })
+    });
     targetGame.addEventListener('win', (arg) => {
-      console.log('EXIT');
+      GameGateway.games.splice(GameGateway.games.findIndex(i => i.id == dto.id), 1);
     })
   }
 
