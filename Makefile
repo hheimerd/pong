@@ -9,11 +9,11 @@ build:
 
 # Start development version
 dev:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up $(c)
+	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d $(c)
 
 # Start production version
 prod:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) -f $(DOCKER_COMPOSE_PROD_FILE) up
+	docker-compose -f $(DOCKER_COMPOSE_FILE) -f $(DOCKER_COMPOSE_PROD_FILE) up -d
 
 # Remove containers
 clean:
