@@ -24,6 +24,7 @@ import { Chat } from 'src/chat/entities/chat.entity';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { Public } from 'src/common/auth/decorators/public.decorator';
 import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
+import { GameGateway } from 'src/game/game.gateway';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role, User } from './entities/user.entity';
@@ -100,6 +101,12 @@ export class UserResolver {
   async getChat(@Parent() user: User) {
     return this.userService.getChats(user.id);
   }
+
+  @ResolveField(() => Int, { name: 'gameId' })
+  async getGameId(@Parent() user: User) {
+    return GameGateway.games.filter(g => g.PlayerInGame(user.id))[0] ?? 0;
+  }
+
 
   @ResolveField(() => [User], { name: 'friends' })
   async getFriends(@Parent() user: User) {

@@ -15,6 +15,7 @@ type User {
   TwoFactorAuth: Boolean!
   status: UserStatus!
   chats: [Chat!]!
+  gameId: Int!
   friends: [User!]!
   followers: [User!]!
   following: [User!]!
