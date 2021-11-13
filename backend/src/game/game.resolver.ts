@@ -17,6 +17,8 @@ export class GameResolver {
   @Query(() => [GameInfo])
   getAllGames(): GameInfo[]
   {
-    return GameGateway.games.map(game => game.getInfo());
+    return GameGateway.games
+      .filter(game => !game.GameIsFull())
+      .map(game => game.getInfo());
   }
 }

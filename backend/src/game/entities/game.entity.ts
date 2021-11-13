@@ -76,6 +76,14 @@ export class GameEntity {
     }
   }
 
+  PlayerInGame(id: number): boolean {
+    return this._players.every((p) => p.id === id);
+  }
+
+  GameIsFull(): boolean {
+    return !!this._players[0] && !!this._players[1];
+  }
+
   getInfo(): GameInfo {
     return {
       id: this.id,

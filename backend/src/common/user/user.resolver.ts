@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   ConflictException,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   Args,
@@ -49,8 +50,8 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  async getProfile(@Context('req') req): Promise<User> {
-    const user = await this.userService.findOne(req.user.id);
+  async getProfile(@CurrentUser() currentUser: RequestUser): Promise<User> {
+    const user = await this.userService.findOne(currentUser?.id);
     if (!user) throw new NotFoundException();
     return user;
   }
@@ -138,13 +139,29 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean, { name: 'removeUser' })
-  async remove(@Args('id', ParseIntPipe) id: number) {
+  async remove(
+    @Args('id', ParseIntPipe) id: number, 
+    @CurrentUser() currentUser: RequestUser
+    ) {
+    const user = await this.userService.findOne(id);
+    
+    if (!user) throw new NotFoundException();
+
+    if (currentUser.id != user.id && !currentUser.isAdmin)
+      throw new ForbiddenException();
+
     await this.userService.remove(id);
     return true;
   }
 
   @Mutation(() => Boolean, { name: 'restoreUser' })
-  async restore(@Args('id', ParseIntPipe) id: number) {
+  async restore(
+    @Args('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: RequestUser
+    ) {
+    if (!currentUser.isAdmin)
+      throw new ForbiddenException();
+    
     const user = await this.userService.restore(id);
     if (!user) throw new NotFoundException();
 

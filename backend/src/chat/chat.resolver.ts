@@ -130,8 +130,31 @@ export class ChatResolver {
 
   @UsePipes(ValidationPipe)
   @Mutation(() => Chat)
-  updateChat(@Args('input') input: UpdateChatInput) {
-    return this.chatService.update(input.id, input);
+  async updateChat(
+    @Args('input') input: UpdateChatInput,
+    @CurrentUser() user: RequestUser
+  ) {
+    if (! await this.canUpdate(input.id, user))
+      throw new ForbiddenException();
+
+    return await this.chatService.update(input.id, input);
+  }
+
+  private async canUpdate(id: string, user: RequestUser): Promise<boolean>
+  {
+    const chat = await this.chatService.findOne(id);
+    if (!chat) throw new NotFoundException();
+
+    return chat.ownerId != user.id && !user.isAdmin;    
+  }
+
+  @Mutation(() => Boolean)
+  async removeChat(@Args('id') id: string, @CurrentUser() user: RequestUser) {
+    if (! await this.canUpdate(id, user))
+      throw new ForbiddenException();
+
+    await this.chatService.remove(id);
+    return true;
   }
 
 }

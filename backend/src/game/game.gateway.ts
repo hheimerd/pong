@@ -4,6 +4,8 @@ import { randomUUID } from 'crypto';
 import { retry } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/common/auth/auth.service';
+import { UserStatus } from 'src/common/user/entities/user.entity';
+import { UserService } from 'src/common/user/user.service';
 import { GameResultService } from 'src/game-result/game-result.service';
 import { ConnectGameDto } from './dto/connect-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -24,19 +26,22 @@ export class GameGateway {
   @WebSocketServer() server: Server;
   public static games: GameEntity[] = [];
   
-  constructor(private readonly gameResultService: GameResultService) {}
+  constructor(
+    private readonly gameResultService: GameResultService,
+    private readonly userService: UserService
+    ) {}
   
   @SubscribeMessage('connectToGame')
   connectToGame(
     @MessageBody() dto: ConnectGameDto,
     @ConnectedSocket() client: SocketWithData,
   ) {
-    console.log(dto);
-
     const targetGame = GameGateway.games.find(g => g.id == dto.id);
     client.data.game = targetGame;
 
     targetGame.connect(client);
+    this.userService.update(client.data.id, { status: UserStatus.InGame });
+
     client.emit('gameConnected', { playersId: targetGame.getPlayersId() });
     targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
@@ -45,6 +50,13 @@ export class GameGateway {
       GameGateway.games.splice(GameGateway.games.findIndex(i => i.id == dto.id), 1);
     })
   }
+
+  // Когда игрок ушел из игры
+  @SubscribeMessage('exit')
+  OnPing(@ConnectedSocket() client: SocketWithData) {
+    this.userService.update(client.data.id, { status: UserStatus.Online });
+  }
+
 
   @SubscribeMessage('gamePlayerMove')
   playerMove(

@@ -130,6 +130,7 @@ type Mutation {
   createChatMessage(input: CreateChatMessageInput!): Boolean!
   createChat(createChatInput: CreateChatInput!): Chat!
   updateChat(input: UpdateChatInput!): Chat!
+  removeChat(id: String!): Boolean!
   addUserPunishmentInChat(minutes: Int, degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
   removeUserPunishmentInChat(degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
   addMemberToChat(password: String, userId: Int, chatId: String!): Boolean!
