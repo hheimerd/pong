@@ -28,7 +28,11 @@ const ActiveGames = (): JSX.Element => {
     loading: loadingG,
     error: errorG,
     data: dataG,
-  } = useQuery(GET_ALL_GAMES);
+  } = useQuery(GET_ALL_GAMES, {
+    variables: {
+      fetchPolicy: "cache-and-network",
+    },
+  });
 
   // wait while data loading
   if (loading || loadingG) return <p>Loading data from graphql...</p>;
