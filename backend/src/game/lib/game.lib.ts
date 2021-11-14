@@ -77,18 +77,22 @@ export class Game extends EventEmitter {
     }
 
     setPlayerReady(playerNumber: number, settings: number[]) {
-      if (this.map == -1)
-        this.map = settings[0];
-      else if (this.map != settings[0])
-        this.map = this.getRandomInt(0, 2);
-      if (this.mode == -1)
-        this.mode = settings[1];
-      else if (this.mode != settings[1])
-        this.mode = this.getRandomInt(0, 2);
-      this.playersReadyFlag[playerNumber - 1] = true;
-      if (this.playersReadyFlag[0] == true && this.playersReadyFlag[1] == true) {
-        this.setMap(this.map);
-        this.ball = new Ball(this.objects, this.players, (this.screenWidth - 15) / 2, (this.screenHeight - 15) / 2, this.screenWidth, this.screenHeight);
+      if (this.players[0].score == 0 && this.players[1].score == 0) {
+        if (this.map == -1)
+          this.map = settings[0];
+        else if (this.map != settings[0])
+          this.map = this.getRandomInt(0, 2);
+        if (this.mode == -1)
+          this.mode = settings[1];
+        else if (this.mode != settings[1])
+          this.mode = this.getRandomInt(0, 2);
+        this.playersReadyFlag[playerNumber - 1] = true;
+        if (this.playersReadyFlag[0] == true && this.playersReadyFlag[1] == true) {
+          this.setMap(this.map);
+          this.ball = new Ball(this.objects, this.players, (this.screenWidth - 15) / 2, (this.screenHeight - 15) / 2, this.screenWidth, this.screenHeight);
+          this.emit('gameStart', this.map);
+        }
+      } else {
         this.emit('gameStart', this.map);
       }
     }

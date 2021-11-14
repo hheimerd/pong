@@ -168,7 +168,7 @@ export class GameEntity {
   }
 
   addEventListener(eventName: string, cb: (...args: any[]) => void) {
-    this._game.on('newFrame', (...args) => {
+    this._game.on(eventName, (...args) => {
       cb(args);
     });
   }

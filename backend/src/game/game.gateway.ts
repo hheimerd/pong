@@ -47,14 +47,20 @@ export class GameGateway {
       client.emit('newFrame', ...args);
     });
     targetGame.addEventListener('win', (pl1score, pl2score) => {
-      GameGateway.games.splice(GameGateway.games.findIndex(i => i.id == dto.id), 1);
+      let endedGame = GameGateway.games.findIndex(i => i.id == dto.id);
+      if (endedGame != -1) {
+        GameGateway.games.splice(endedGame, 1);
+      }
     })
   }
 
   // Когда игрок ушел из игры
   @SubscribeMessage('exit')
   OnPing(@ConnectedSocket() client: SocketWithData) {
+    console.log('exit');
     this.userService.update(client.data.id, { status: UserStatus.Online });
+    // const targetGame = GameGateway.games.find(g => g.id == client.data.game.id);
+    // targetGame.setPause(true);
   }
 
 
@@ -144,6 +150,5 @@ export class GameGateway {
         id: game.id,
       }
     } as GameCreatedDto);
-    
   }
 }

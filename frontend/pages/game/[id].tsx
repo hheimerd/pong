@@ -85,6 +85,11 @@ export default function Game(): JSX.Element {
           socket.emit("connectAsPlayer");
         });
 
+        // socket.on("disconnect", () => {
+        //   ready = false;
+        //   socket.emit("exit");
+        // });
+
         socket.on("error", (e) => {
           console.log(e);
         });
