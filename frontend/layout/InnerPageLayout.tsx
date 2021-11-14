@@ -36,13 +36,7 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
     <div className={styles.wrapper}>
       <aside className={styles.aside}>
         <div className={styles.user}>
-          <Link href="/dashboard">
-            <Avatar
-              image={data.getProfile.avatar}
-              alt={data.getProfile.name}
-              aria-controls="simple-menu"
-            />
-          </Link>
+          <Avatar image={data.getProfile.avatar} />
           <p className={styles.stats}>
             {data.getProfile.name}
             &nbsp; &nbsp;
