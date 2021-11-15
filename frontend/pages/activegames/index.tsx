@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { AvatarButton, Button, Htag, MatchHistory } from "../../components";
+import { MatchHistoryOnePlayer } from "../../components/MatchHistoryOnePlayer/MatchHistoryOnePlayer";
 import { PROFILE_QUERY } from "../../graphql";
 import { GET_ALL_GAMES } from "../../graphql/queries";
 import { IGameResult } from "../../interfaces/gameresult.interface";
@@ -36,20 +37,34 @@ const ActiveGames = (): JSX.Element => {
 
   // wait while data loading
   if (loading || loadingG) return <p>Loading data from graphql...</p>;
-  if (error || errorG) return <p>Error: can't fetching data from graphql :(</p>;
+  if (error || errorG)
+    return <p>Error: can't fetching data from graphql :( {}</p>;
 
   // if (!rows) return null;
 
-  // generate list of chats
+  // generate list of games
   const GameList = (games: [IGameResult]) => {
     if (typeof games !== "undefined") {
       return Array.from(games).map((onegame: IGameResult, i: number) => {
+        console.log("onegame ", onegame);
         return (
           <React.Fragment key={i}>
-            <MatchHistory
-              users={[+onegame.players[0], +onegame.players[1]]}
-              href={"/game/" + onegame.id + "/?spectator=true"}
-            />
+            {onegame.players.length == 2 ? (
+              <MatchHistory
+                users={[+onegame.players[0], +onegame.players[1]]}
+                href={"/game/" + onegame.id + "/?spectator=true"}
+              />
+            ) : (
+              ""
+            )}
+            {onegame.players.length == 1 ? (
+              <MatchHistoryOnePlayer
+                users={[+onegame.players[0]]}
+                href={"/game/" + onegame.id}
+              />
+            ) : (
+              ""
+            )}
           </React.Fragment>
         );
       });

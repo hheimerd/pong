@@ -30,7 +30,7 @@ const Users = (): JSX.Element => {
           reject(o);
         }
       });
-      socket.emit("createGame", { name: user.name, userId: user.id });
+      socket.emit("createGame", { name: `${user.login}_matchmaking_game` });
     });
   }
 
@@ -55,11 +55,11 @@ const Users = (): JSX.Element => {
       // if match making game NOT found
       console.log("mathch making game NOT found, will create new game...");
       handleCreateGame(dataU.getProfile);
-      // create game here...
     } else {
       // if match making game found
       console.log("mathch making game FOUND");
-      console.log("first game data: ", data.getMatchmakingGames[0]);
+      const gameId = data.getMatchmakingGames[0].id;
+      router.push(`http://${process.env.HOST}/game/${gameId}`);
     }
   };
 
