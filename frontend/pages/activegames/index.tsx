@@ -60,7 +60,7 @@ const ActiveGames = (): JSX.Element => {
             {onegame.players.length == 1 ? (
               <MatchHistoryOnePlayer
                 users={[+onegame.players[0]]}
-                href={"/game/" + onegame.id}
+                href={"/game/" + onegame.id + "/?spectator=true"}
               />
             ) : (
               ""
