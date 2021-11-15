@@ -8,7 +8,11 @@ import styles from "./leaderboard.module.css";
 
 const Leaderboard = (): JSX.Element => {
   // get my profile
-  const { data, error, loading } = useQuery(GET_LEADER_BOARD);
+  const { data, error, loading } = useQuery(GET_LEADER_BOARD, {
+    variables: {
+      fetchPolicy: "cache-and-network",
+    },
+  });
 
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;
