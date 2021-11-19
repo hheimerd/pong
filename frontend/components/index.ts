@@ -1,6 +1,7 @@
 export * from "./Htag/Htag";
 export * from "./Button/Button";
 export * from "./Avatar/Avatar";
+export * from "./AvatarById/AvatarById";
 export * from "./AvatarButton/AvatarButton";
 export * from "./ChatMessage/ChatMessage";
 export * from "./ChatMessageList/ChatMessageList";

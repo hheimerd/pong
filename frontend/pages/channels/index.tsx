@@ -2,16 +2,18 @@ import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Button, Htag } from "../../components";
+import { AvatarById, Button, Htag } from "../../components";
 import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import {
   ADD_MEMBER_TO_CHAT_MUTATION,
   CHATS_QUERY,
+  DELETE_CHAT_MUTATION,
   PROFILE_QUERY,
   UPDATE_CHAT_MUTATION,
 } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IChatPunishment } from "../../interfaces/punishments.interface";
+import { IUserProfile } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Channel = (): JSX.Element => {
@@ -26,26 +28,40 @@ const Channel = (): JSX.Element => {
   const [updateChat, { data: dataU, loading: loadingU }] = useMutation(
     UPDATE_CHAT_MUTATION,
     {
-      refetchQueries: [{ query: CHATS_QUERY }],
+      refetchQueries: [{ query: CHATS_QUERY }, { query: PROFILE_QUERY }],
       onError(err) {
         console.log(err);
       },
     }
   );
 
-  const [addToChat, { data: dataA, loading: loadingA, error: errorA }] =
-    useMutation(ADD_MEMBER_TO_CHAT_MUTATION, {
+  const [addToChat, { loading: loadingA, error: errorA }] = useMutation(
+    ADD_MEMBER_TO_CHAT_MUTATION,
+    {
       refetchQueries: [{ query: CHATS_QUERY }],
       onError(err) {
         console.log(err);
         updateSnackBarMessage(err.message);
       },
-    });
+    }
+  );
+
+  const [deleteChat, { loading: loadingD, error: errorD }] = useMutation(
+    DELETE_CHAT_MUTATION,
+    {
+      refetchQueries: [{ query: CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+        updateSnackBarMessage(err.message);
+      },
+    }
+  );
 
   // wait while data loading
-  if (loading || loadingU || loadingC)
-    return <p>Loading user profile from graphql...</p>;
-  if (error || errorC) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading || loadingA || loadingU || loadingC || loadingD)
+    return <p>Loading from graphql...</p>;
+  if (error || errorC || errorA || errorD)
+    return <p>Error: can't fetching data from graphql :(</p>;
 
   const current_user_id = data.getProfile.id;
 
@@ -98,12 +114,27 @@ const Channel = (): JSX.Element => {
   };
 
   const handleEdit = (channel: IChat) => {
-    // console.log("The Values that you wish to edit ", values);
     router.push("/channels/edit/" + channel.id);
   };
 
   const handleCreate = () => {
     router.push("/channels/edit/create");
+  };
+
+  const handleDelete = (channel: IChat) => {
+    deleteChat({
+      variables: {
+        removeChatId: channel.id,
+      },
+    });
+  };
+
+  const isCurrentUserAdmin = (user: IUserProfile) => {
+    const curUserRoles = user.roles;
+    if (curUserRoles.length != 0 && curUserRoles.includes("Admin")) {
+      return true;
+    }
+    return false;
   };
 
   const getButtons = (channel: IChat) => {
@@ -119,8 +150,11 @@ const Channel = (): JSX.Element => {
       if (id) a.push(id);
       return a;
     }, []);
+
+    const buttonArr = [];
+
     if (channel.ownerId && channel.ownerId === current_user_id) {
-      return (
+      buttonArr.push(
         <Button appearance="primary" onClick={() => handleEdit(channel)}>
           Edit
         </Button>
@@ -130,7 +164,7 @@ const Channel = (): JSX.Element => {
         membersIdArr.includes(current_user_id) &&
         channel.members.length > 2
       ) {
-        return (
+        buttonArr.push(
           <Button
             appearance="primary"
             onClick={() => handleLeave(channel, membersIdArr)}
@@ -141,7 +175,7 @@ const Channel = (): JSX.Element => {
       }
 
       if (!membersIdArr.includes(current_user_id)) {
-        return (
+        buttonArr.push(
           <Button
             appearance="ghost"
             onClick={() => handleJoin(channel, membersIdArr)}
@@ -152,6 +186,17 @@ const Channel = (): JSX.Element => {
         );
       }
     }
+    if (isCurrentUserAdmin(data.getProfile)) {
+      buttonArr.push(
+        <>
+          &nbsp;
+          <Button appearance="primary" onClick={() => handleDelete(channel)}>
+            Delete
+          </Button>
+        </>
+      );
+    }
+    return buttonArr;
   };
 
   const getLink = (channel: IChat) => {
@@ -159,20 +204,24 @@ const Channel = (): JSX.Element => {
       if (id) a.push(id);
       return a;
     }, []);
-    if (!membersIdArr.includes(current_user_id)) return <>{channel.name}</>;
+    if (
+      !membersIdArr.includes(current_user_id) &&
+      !isCurrentUserAdmin(data.getProfile)
+    )
+      return <>{channel.name}</>;
     return <Link href={"/channels/room/" + channel.id}>{channel.name}</Link>;
   };
 
   const getTable = (channels: [IChat]) => {
     if (!channels.length) return;
     return (
-      <table>
+      <table className="chat_list_table">
         <thead>
           <tr>
             <td>Name</td>
             <td>Type</td>
             <td>Users count</td>
-            {/* <td>Owner</td> */}
+            <td>Owner</td>
             <td align="right"></td>
           </tr>
         </thead>
@@ -185,7 +234,9 @@ const Channel = (): JSX.Element => {
                 {channel.hasPassword ? " (Protected)" : ""}
               </td>
               <td>{channel.members.length}</td>
-              {/*<td>{channel.owner ? channel.owner.name : ""}</td>*/}
+              <td>
+                <AvatarById user_id={+channel.ownerId} size="xxsmall" />
+              </td>
               <td align="right">{getButtons(channel)}</td>
             </tr>
           ))}

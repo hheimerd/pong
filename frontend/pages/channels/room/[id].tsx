@@ -10,6 +10,7 @@ import {
 } from "../../../components";
 import { ChatContextProvider } from "../../../context/chat/chat.context";
 import { MY_CHATS_QUERY } from "../../../graphql";
+import useChannelById from "../../../hooks/useChannelById";
 import { IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../../layout/InnerPageLayout";
@@ -18,6 +19,7 @@ const ChannelRoom = (): JSX.Element => {
   const { loading, error, data } = useQuery(MY_CHATS_QUERY);
   const router = useRouter();
   const { id } = router.query;
+  const channel = useChannelById(id);
 
   // get current channel from current user profile
   const getChannel = (): IChat => {
@@ -27,15 +29,16 @@ const ChannelRoom = (): JSX.Element => {
 
   // on loading
   useEffect(() => {
-    if (!loading && typeof data !== "undefined") {
-      document.title = "Channel: " + getChannel().name;
+    if (!loading && typeof channel !== "undefined") {
+      document.title = "Channel: " + channel.name;
     }
   }, [loading]);
 
   // wait while data loading
-  if (loading) return <p>Loading user profile from graphql...</p>;
+  if (loading || !channel) return <p>Loading user profile from graphql...</p>;
   if (error) return <p>Error: can't fetching data from graphql :(</p>;
-  if (typeof getChannel() === "undefined") router.push("/channels");
+  // if (typeof getChannel() === "undefined") router.push("/channels");
+  // console.log("channel", channel.id);
 
   // check slug type
   if (typeof id !== "string") return null;
@@ -44,12 +47,12 @@ const ChannelRoom = (): JSX.Element => {
   return (
     <InnerPageLayout>
       <ChatContextProvider>
-        <Htag tag="h1">{getChannel().name}</Htag>
-        {getChannel().members.map((user: IUserProfile) => (
+        <Htag tag="h1">{channel.name}</Htag>
+        {channel.members.map((user: IUserProfile) => (
           <ChannelUserChip
             user={user}
             current_user_id={data.getProfile.id}
-            current_channel={getChannel()}
+            current_channel={channel}
           />
         ))}
         <br />

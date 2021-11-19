@@ -29,6 +29,7 @@ const ChannelRoom = (): JSX.Element => {
     {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
       onError(err) {
+        console.log("CREATE_CHAT_MUTATION error");
         console.log(err);
       },
     }
@@ -39,6 +40,7 @@ const ChannelRoom = (): JSX.Element => {
     {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
       onError(err) {
+        console.log("UPDATE_CHAT_MUTATION error");
         console.log(err);
       },
     }

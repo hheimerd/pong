@@ -112,6 +112,38 @@ export const MESSAGES_QUERY = gql`
   }
 `;
 
+export const CHAT_QUERY = gql`
+  query Query($chatId: String!) {
+    chat(id: $chatId) {
+      id
+      name
+      members {
+        name
+        id
+        avatar
+        status
+      }
+      ownerId
+      admins {
+        name
+        id
+        avatar
+      }
+      type
+      is_private
+      hasPassword
+      punishments {
+        chatId
+        fromUserId
+        toUserId
+        degree
+        created_at
+        minutes
+      }
+    }
+  }
+`;
+
 export const CHATS_QUERY = gql`
   query Query {
     chats {

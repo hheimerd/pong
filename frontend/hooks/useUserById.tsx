@@ -1,15 +1,16 @@
 import { useQuery } from "@apollo/client";
 import { USER_QUERY } from "../graphql/queries";
+import { IUserProfile } from "../interfaces/userprofile.interface";
 
-export default function useUser(id: number) {
+export default function useUserById(id: number): IUserProfile {
   // get user
   const { data, error, loading } = useQuery(USER_QUERY, {
-    variables: { id: id },
+    variables: { userId: id },
   });
 
   // wait fetching data
-  if (loading) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading) return;
+  if (error) return;
 
   return data.user;
 }

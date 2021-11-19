@@ -94,9 +94,13 @@ export const ChatMessageList = ({
   // if(!state) return null;
   if (loading || loadingUsers)
     return <p>Loading user profile from graphql...</p>;
-  if (error || errorUsers) {
-    router.push("/channels");
-    return <p>Error: {error.message || errorUsers.message}</p>;
+  if (error) {
+    // router.push("/channels");
+    return <p> Error MESSAGES_QUERY: {error.message} </p>;
+  }
+  if (errorUsers) {
+    // router.push("/channels");
+    return <p> Error USERS_QUERY: {errorUsers.message} </p>;
   }
 
   // console.log(data.chat.messages);

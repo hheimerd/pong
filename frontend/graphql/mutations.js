@@ -88,3 +88,8 @@ export const ADD_MEMBER_TO_CHAT_MUTATION = gql`
     )
   }
 `;
+export const DELETE_CHAT_MUTATION = gql`
+  mutation Mutation($removeChatId: String!) {
+    removeChat(id: $removeChatId)
+  }
+`;

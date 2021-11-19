@@ -150,3 +150,12 @@ hr {
 .center {
   text-align: center;
 }
+.chat_list_table td:nth-child(1) {
+  width: 30%;
+}
+.chat_list_table td:nth-child(2) {
+  width: 20%;
+}
+.chat_list_table td:nth-child(3) {
+  width: 13%;
+}
