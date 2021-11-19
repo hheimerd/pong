@@ -38,6 +38,9 @@ export class UserResolver {
   @Public()
   @UsePipes(ValidationPipe)
   async create(@Args('input') createUserDto: CreateUserDto) {
+    const userExists = await this.userService.exists({email: createUserDto.email, login: createUserDto.login})
+    if (userExists)
+      throw new ConflictException();
     return this.userService.create(createUserDto);
   }
 

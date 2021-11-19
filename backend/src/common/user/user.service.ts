@@ -157,7 +157,14 @@ export class UserService {
     return this.prisma.user.delete({ where: { id } });
   }
 
-  async find(search) {
+
+  async exists(search: Prisma.UserWhereInput): Promise<boolean> {
+    return !! await this.prisma.user.findFirst({
+      where: search,
+    });
+  }
+
+  async find(search: Prisma.UserWhereUniqueInput) {
     return this.prisma.user.findUnique({
       where: search,
     });

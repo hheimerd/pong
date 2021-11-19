@@ -23,6 +23,10 @@ server {
             proxy_cache_bypass $http_upgrade;
     }
 
+    location /adminer/ {
+        proxy_pass http://adminer:8080;
+    }
+
     location /game_api/ {
             rewrite ^/game_api(/.*)$ $1 break;
 

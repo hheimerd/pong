@@ -6,12 +6,12 @@ x-env: &default-env
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: pong
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
   DB_NAME: pong
   DB_PORT: 5432
   DB_HOST: db
   DATABASE_URL: postgresql://postgres:postgres@db:5432/pong?schema=public
   LINK2FA: localhost/account/2fa
+  TS_NODE_TRANSPILE_ONLY: true
   HOST: localhost
   MAIL_HOST: pong-online.ru
   ADMIN_PASS: admin
@@ -26,8 +26,8 @@ services:
     restart: unless-stopped
     environment:
       <<: *default-env
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -37,16 +37,20 @@ services:
   adminer:
     image: adminer
     restart: unless-stopped
-    ports:
-      - 8080:8080
+    links:
+      - "db"
+    # ports:
+    #   - 8080:8080
 
   backend:
     image: node:16-alpine
     container_name: backend
     restart: unless-stopped
     ports:
-      - 3000:3000
       - 81:81
+    #   - 3000:3000
+    links:
+      - "db"
     volumes:
       - ./backend:/app
     depends_on:
@@ -61,8 +65,8 @@ services:
     image: node:14-alpine
     container_name: frontend
     restart: unless-stopped
-    ports:
-      - 3040:3040
+    # ports:
+    #   - 3040:3040
     volumes:
       - ./frontend:/app
     depends_on:
@@ -79,6 +83,9 @@ services:
       - frontend
     ports:
       - 80:80
+    links:
+      - "backend"
+      - "frontend"
     volumes:
       - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro
     command: ['nginx', '-g', 'daemon off;']
