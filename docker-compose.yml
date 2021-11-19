@@ -23,7 +23,7 @@ x-env: &default-env
 services:
   db:
     image: postgres:14
-    restart: always
+    restart: unless-stopped
     environment:
       <<: *default-env
     ports:
@@ -36,14 +36,14 @@ services:
     
   adminer:
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
 
   backend:
     image: node:16-alpine
     container_name: backend
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
       - 81:81
@@ -60,7 +60,7 @@ services:
   frontend:
     image: node:14-alpine
     container_name: frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - 3040:3040
     volumes:

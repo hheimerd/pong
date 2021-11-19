@@ -145,7 +145,7 @@ export class ChatResolver {
     const chat = await this.chatService.findOne(id);
     if (!chat) throw new NotFoundException();
 
-    return chat.ownerId != user.id && !user.isAdmin;    
+    return chat.ownerId == user.id || chat.admins.some((admins) => admins.id == user.id || user.isAdmin);    
   }
 
   @Mutation(() => Boolean)
