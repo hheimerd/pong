@@ -1,14 +1,32 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import TextField from "@material-ui/core/TextField";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Htag } from "../../components";
+import { PersonalTokenContext } from "../../context/personaltoken/personaltoken.context";
+import { useSnackBar } from "../../context/snackbar/snackbar.context";
+import { USER_LOGIN } from "../../graphql";
 import { CREATE_USER_MUTATION } from "../../graphql/mutations";
 import { HomePageLayout } from "../../layout/HomePageLayout";
 
 const Register = (): JSX.Element => {
-  const [createUser, { data, loading, error }] =
-    useMutation(CREATE_USER_MUTATION);
+  const { setToken } = useContext(PersonalTokenContext);
+  const { updateSnackBarMessage } = useSnackBar();
+  const [infoMessage, setInfoMessage] = useState("");
+
+  const [createUser, { data, loading, error }] = useMutation(
+    CREATE_USER_MUTATION,
+    {
+      onError(err) {
+        console.log("CREATE_USER_MUTATION error");
+        console.log(err);
+        updateSnackBarMessage(err.message);
+      },
+    }
+  );
+
+  const [loginLazy, { loading: loadingL, data: dataL, error: errorL }] =
+    useLazyQuery(USER_LOGIN);
 
   const router = useRouter();
 
@@ -34,17 +52,40 @@ const Register = (): JSX.Element => {
   useEffect(() => {
     // console.log("loading: ", loading);
     if (!loading && data) {
-      console.log("data: ", data);
+      // console.log("data: ", data);
     }
   }, [loading]);
 
   // on finish submit
   useEffect(() => {
     if (typeof data !== "undefined") {
-      console.log("data: ", data);
-      router.push("/account/login");
+      // console.log("data: ", data);
+      console.log("CREATE_USER_MUTATION");
+      console.log("login", login);
+      console.log("password", password);
+      loginLazy({
+        variables: {
+          loginLogin: login,
+          loginPassword: password,
+        },
+      });
+      // router.push("/account/login");
     }
   }, [loading]);
+
+  // on finish submit
+  useEffect(() => {
+    if (typeof dataL !== "undefined") {
+      console.log("data loading: ", dataL);
+      if (dataL.login.access_token) {
+        setToken(dataL.login.access_token);
+        router.push("/profile");
+      } else {
+        console.log("message", dataL.login.message);
+        setInfoMessage(data.login.message);
+      }
+    }
+  }, [loadingL]);
 
   // on submit error
   useEffect(() => {
@@ -54,8 +95,8 @@ const Register = (): JSX.Element => {
   }, [error]);
 
   // wait fetching data
-  if (loading) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading || loadingL) return <p>Loading user profile from graphql...</p>;
+  if (errorL) return <p>Error: can't fetching data from graphql :(</p>;
 
   const emailIsValid = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -118,6 +159,7 @@ const Register = (): JSX.Element => {
         </span>
         <Htag tag="h2">Registration</Htag>
         {error && <p className="error-message"> Error: {error.message} </p>}
+        {infoMessage && <p className="info-message"> {infoMessage} </p>}
         <form onSubmit={handleSubmit}>
           <div className="line">
             <TextField

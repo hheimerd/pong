@@ -153,40 +153,13 @@ const Channel = (): JSX.Element => {
 
     const buttonArr = [];
 
-    if (channel.ownerId && channel.ownerId === current_user_id) {
+    if (isCurrentUserAdmin(data.getProfile)) {
+      //  website admin
       buttonArr.push(
         <Button appearance="primary" onClick={() => handleEdit(channel)}>
           Edit
         </Button>
       );
-    } else {
-      if (
-        membersIdArr.includes(current_user_id) &&
-        channel.members.length > 2
-      ) {
-        buttonArr.push(
-          <Button
-            appearance="primary"
-            onClick={() => handleLeave(channel, membersIdArr)}
-          >
-            Leave
-          </Button>
-        );
-      }
-
-      if (!membersIdArr.includes(current_user_id)) {
-        buttonArr.push(
-          <Button
-            appearance="ghost"
-            onClick={() => handleJoin(channel, membersIdArr)}
-          >
-            {membersIdArr.includes(current_user_id)}
-            Join
-          </Button>
-        );
-      }
-    }
-    if (isCurrentUserAdmin(data.getProfile)) {
       buttonArr.push(
         <>
           &nbsp;
@@ -195,6 +168,45 @@ const Channel = (): JSX.Element => {
           </Button>
         </>
       );
+    } else {
+      // not website admin
+      if (channel.ownerId && channel.ownerId === current_user_id) {
+        // channel owner
+        buttonArr.push(
+          <Button appearance="primary" onClick={() => handleEdit(channel)}>
+            Edit
+          </Button>
+        );
+      } else if (!isCurrentUserAdmin(data.getProfile)) {
+        // not channel owner
+        if (
+          membersIdArr.includes(current_user_id) &&
+          channel.members.length > 2
+        ) {
+          // channel member
+          buttonArr.push(
+            <Button
+              appearance="primary"
+              onClick={() => handleLeave(channel, membersIdArr)}
+            >
+              Leave
+            </Button>
+          );
+        }
+
+        if (!membersIdArr.includes(current_user_id)) {
+          buttonArr.push(
+            // not channel member
+            <Button
+              appearance="ghost"
+              onClick={() => handleJoin(channel, membersIdArr)}
+            >
+              {membersIdArr.includes(current_user_id)}
+              Join
+            </Button>
+          );
+        }
+      }
     }
     return buttonArr;
   };
