@@ -14,7 +14,7 @@ x-env: &default-env
   TS_NODE_TRANSPILE_ONLY: true
   HOST: localhost
   MAIL_HOST: pong-online.ru
-  ADMIN_PASS: admin
+  ADMIN_PASS: administrator
   BACKEND_HOST: localhost/api
   GAME_API_HOST: localhost:81
   NGINX_HOST: localhost
