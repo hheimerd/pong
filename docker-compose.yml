@@ -11,7 +11,7 @@ x-env: &default-env
   DB_HOST: db
   DATABASE_URL: postgresql://postgres:postgres@db:5432/pong?schema=public
   LINK2FA: localhost/account/2fa
-  TS_NODE_TRANSPILE_ONLY: true
+  TS_NODE_TRANSPILE_ONLY: 1
   HOST: localhost
   MAIL_HOST: pong-online.ru
   ADMIN_PASS: administrator

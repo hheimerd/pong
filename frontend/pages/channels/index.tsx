@@ -156,14 +156,22 @@ const Channel = (): JSX.Element => {
     if (isCurrentUserAdmin(data.getProfile)) {
       //  website admin
       buttonArr.push(
-        <Button appearance="primary" onClick={() => handleEdit(channel)}>
+        <Button
+          key={1}
+          appearance="primary"
+          onClick={() => handleEdit(channel)}
+        >
           Edit
         </Button>
       );
       buttonArr.push(
         <>
           &nbsp;
-          <Button appearance="primary" onClick={() => handleDelete(channel)}>
+          <Button
+            key={2}
+            appearance="primary"
+            onClick={() => handleDelete(channel)}
+          >
             Delete
           </Button>
         </>
@@ -173,7 +181,11 @@ const Channel = (): JSX.Element => {
       if (channel.ownerId && channel.ownerId === current_user_id) {
         // channel owner
         buttonArr.push(
-          <Button appearance="primary" onClick={() => handleEdit(channel)}>
+          <Button
+            key={3}
+            appearance="primary"
+            onClick={() => handleEdit(channel)}
+          >
             Edit
           </Button>
         );
@@ -186,6 +198,7 @@ const Channel = (): JSX.Element => {
           // channel member
           buttonArr.push(
             <Button
+              key={4}
               appearance="primary"
               onClick={() => handleLeave(channel, membersIdArr)}
             >
@@ -198,10 +211,10 @@ const Channel = (): JSX.Element => {
           buttonArr.push(
             // not channel member
             <Button
+              key={5}
               appearance="ghost"
               onClick={() => handleJoin(channel, membersIdArr)}
             >
-              {membersIdArr.includes(current_user_id)}
               Join
             </Button>
           );
@@ -239,7 +252,7 @@ const Channel = (): JSX.Element => {
         </thead>
         <tbody>
           {channels.map((channel: IChat) => (
-            <tr key={channel.name}>
+            <tr key={channel.id} id={channel.id}>
               <td>{getLink(channel)}</td>
               <td>
                 {channel.is_private ? "Private" : "Public"}

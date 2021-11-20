@@ -11,6 +11,7 @@ import {
   UPDATE_CHAT_MUTATION,
   USERS_QUERY,
 } from "../../../graphql";
+import useChannelById from "../../../hooks/useChannelById";
 import { ChatType, IChat } from "../../../interfaces/chat.interface";
 import { IUserProfile } from "../../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../../layout/InnerPageLayout";
@@ -22,7 +23,7 @@ const ChannelRoom = (): JSX.Element => {
     loading: loadingR,
   } = useQuery(USERS_QUERY, { variables: { usersOffset: 0, usersLimit: 100 } });
 
-  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
+  // const { loading, error, data } = useQuery(MY_CHATS_QUERY);
 
   const [createChat, { data: dataM, loading: loadingM }] = useMutation(
     CREATE_CHAT_MUTATION,
@@ -69,35 +70,34 @@ const ChannelRoom = (): JSX.Element => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
 
   // get current channel from current user profile
-  const getChannel = () => {
-    const channel = data.getProfile.chats.filter(
-      (x: IChat) => x.id === slug
-    )[0];
-    return channel;
-  };
+  // const getChannel = () => {
+  //   const channel = data.getProfile.chats.filter(
+  //     (x: IChat) => x.id === slug
+  //   )[0];
+  //   return channel;
+  // };
+  const channel = useChannelById(slug);
 
   // on loading CHATS_QUERY
   useEffect(() => {
-    if (!loading && slug !== "create") {
-      setName(getChannel().name);
+    if (typeof channel !== "undefined" && slug !== "create") {
+      setName(channel.name);
       // update name input field default value
-      if (nameRef.current) nameRef.current.value = getChannel().name;
-      setUsersValue(getChannel().members);
-      setAdminsValue(getChannel().admins);
-      setPrivate(getChannel().is_private);
-      if (privateRef.current)
-        privateRef.current.value = getChannel().is_private;
-      setPassword("test__");
-      if (passwordRef.current)
-        passwordRef.current.value = getChannel().password;
-      console.log("getChannel.password: ", getChannel().password);
+      if (nameRef.current) nameRef.current.value = channel.name;
+      setUsersValue(channel.members);
+      setAdminsValue(channel.admins);
+      setPrivate(channel.is_private);
+      if (privateRef.current) privateRef.current.value = channel.is_private;
+      // setPassword("test__");
+      if (passwordRef.current) passwordRef.current.value = channel.password;
+      console.log("getChannel.password: ", channel.password);
 
       // Hack to redraw Autocomplete
       // https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
-      setUsersInputReset(getChannel().members);
-      setAdminsInputReset(getChannel().admins);
+      setUsersInputReset(channel.members);
+      setAdminsInputReset(channel.admins);
     }
-  }, [loading]);
+  }, [channel]);
 
   // on submit
   useEffect(() => {
@@ -108,8 +108,8 @@ const ChannelRoom = (): JSX.Element => {
   }, [loadingM, loadingU]);
 
   // wait fetching data
-  if (loading || loadingR) return <p>Loading user profile from graphql...</p>;
-  if (error || errorR) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loadingR) return <p>Loading user profile from graphql...</p>;
+  if (errorR) return <p>Error: can't fetching data from graphql :(</p>;
 
   const isFormValid = (): boolean => {
     if (name !== "") {
@@ -136,7 +136,7 @@ const ChannelRoom = (): JSX.Element => {
       setIsUsersValid(false);
       return false;
     }
-    if (adminsValue.length >= 1) {
+    if (adminsValue && adminsValue.length >= 1) {
       setIsAdminsValid(true);
     } else {
       setIsAdminsValid(false);
@@ -191,7 +191,7 @@ const ChannelRoom = (): JSX.Element => {
         updateChat({
           variables: {
             updateChatInput: {
-              id: getChannel().id,
+              id: channel.id,
               name: name,
               members: membersIdArr,
               admins: adminsIdArr,
@@ -372,7 +372,7 @@ const ChannelRoom = (): JSX.Element => {
                 error={!isPasswordValid}
                 helperText={
                   !isPasswordValid
-                    ? "Password must be longer than or equal to 4 characters"
+                    ? "Password must be longer than or equal to 6 characters"
                     : " "
                 }
               />

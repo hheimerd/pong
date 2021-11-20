@@ -7,6 +7,7 @@ import { PersonalTokenContext } from "../../context/personaltoken/personaltoken.
 import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { USER_LOGIN } from "../../graphql";
 import { CREATE_USER_MUTATION } from "../../graphql/mutations";
+import { extractGraphQLError } from "../../helpers/error-handling.utils";
 import { HomePageLayout } from "../../layout/HomePageLayout";
 
 const Register = (): JSX.Element => {
@@ -18,9 +19,7 @@ const Register = (): JSX.Element => {
     CREATE_USER_MUTATION,
     {
       onError(err) {
-        console.log("CREATE_USER_MUTATION error");
-        console.log(err);
-        updateSnackBarMessage(err.message);
+        updateSnackBarMessage(extractGraphQLError(err).message);
       },
     }
   );
@@ -153,13 +152,17 @@ const Register = (): JSX.Element => {
 
   return (
     <HomePageLayout>
+      <span className="backlink" onClick={() => router.back()}>
+        &lt; Back
+      </span>
+      <Htag tag="h2">Registration</Htag>
+      {error && (
+        <p className="error-message">
+          Error: {extractGraphQLError(error).message}
+        </p>
+      )}
+      {infoMessage && <p className="info-message"> {infoMessage} </p>}
       <div className="loginform">
-        <span className="backlink" onClick={() => router.back()}>
-          &lt; Back
-        </span>
-        <Htag tag="h2">Registration</Htag>
-        {error && <p className="error-message"> Error: {error.message} </p>}
-        {infoMessage && <p className="info-message"> {infoMessage} </p>}
         <form onSubmit={handleSubmit}>
           <div className="line">
             <TextField
