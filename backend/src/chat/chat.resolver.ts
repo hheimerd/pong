@@ -25,6 +25,7 @@ import { RequestUser } from 'src/common/auth/entities/request-user.entitiy';
 import { ChatMessage } from 'src/chat-message/entities/chat-message.entity';
 import { User } from 'src/common/user/entities/user.entity';
 import { ChatPunishment } from './entities/chat-punishment.entity';
+import { PasswordService } from 'src/common/password/password.service';
 
 @UseGuards(JwtAuthGuard, PolicyGuard)
 @Resolver(() => Chat)
@@ -137,7 +138,7 @@ export class ChatResolver {
     if (! await this.canUpdate(input.id, user))
       throw new ForbiddenException();
 
-    return await this.chatService.update(input.id, input);
+    return await this.chatService.update(input);
   }
 
   private async canUpdate(id: string, user: RequestUser): Promise<boolean>
@@ -145,7 +146,7 @@ export class ChatResolver {
     const chat = await this.chatService.findOne(id);
     if (!chat) throw new NotFoundException();
 
-    return chat.ownerId == user.id || chat.admins.some((admins) => admins.id == user.id || user.isAdmin);    
+    return chat.ownerId == user.id || chat.admins.some((admins) => admins.id == user.id) || user.isAdmin;    
   }
 
   @Mutation(() => Boolean)
@@ -154,6 +155,73 @@ export class ChatResolver {
       throw new ForbiddenException();
 
     await this.chatService.remove(id);
+    return true;
+  }
+
+  @Mutation(() => Boolean, { name: 'addMemberToChat' })
+  async addMember(
+    @Args('chatId') chatId: string,
+    @Args('userId', { description: 'default current user id', nullable: true}) 
+    userId: number,
+    @Args('chatPassword', { nullable: true }) chatPassword: string,
+    @CurrentUser() user
+  ) {
+    if (!userId)
+      userId = user.id;
+    
+      const chat = await this.chatService.findOne(chatId);
+      if (!chat) throw new NotFoundException();
+
+      const members = chat.members.map(u => u.id);
+      if (members.includes(userId))
+        return false;
+
+      const isAdmin = await this.canUpdate(chatId, user);
+      if (!isAdmin) {
+        let errorMessages = [];
+        if (chat.is_private)
+          errorMessages.push('chat is private');
+        
+        if (user.id != userId)
+          errorMessages.push('user can\'t join another user');
+        
+        if (chat.password && !PasswordService.isValid(chatPassword, chat.password))
+          errorMessages.push('invalid password');
+        
+        if (errorMessages.length)
+          throw new ForbiddenException(errorMessages);
+      }
+
+      members.push(userId);
+      
+      await this.chatService.update({ id: chat.id, members });
+      return true;
+  }
+
+  @Mutation(() => Boolean, { name: 'rmMemberFromChat' })
+  async removedMember(
+    @Args('chatId') chatId: string,
+    @Args('userId', { description: 'default current user id', nullable: true}) 
+    userId: number,
+    @CurrentUser() user
+  ) {
+    if (!userId)
+      userId = user.id;
+    
+    const chat = await this.chatService.findOne(chatId);
+    if (!chat) throw new NotFoundException();
+
+    const members = chat.members.map(u => u.id);
+    if (!members.includes(userId))
+      return false;
+
+    const isAdmin = await this.canUpdate(chatId, user);
+    if (!isAdmin && user.id != userId)
+      throw new ForbiddenException('you can\'t kick another user');
+
+    members.filter(u => u != userId);
+    
+    await this.chatService.update({ id: chat.id, members });
     return true;
   }
 

@@ -21,16 +21,19 @@ export class AppController implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
-    const userExists = await this.prisma.user.findUnique({
-      where: { login: 'administrator' },
+    const email = 'info@' + env.HOST;
+    const login = 'administrator';
+
+    let userExists = await this.prisma.user.findFirst({
+      where: { OR: [{ email }, { login }]  }
     });
 
     if (userExists) return;
 
     const admin = await this.userService.create(
       {
-        email: 'info@' + env.HOST,
-        login: 'administrator',
+        email,
+        login,
         password: env.ADMIN_PASS,
         name: 'administrator',
       },
