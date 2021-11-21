@@ -133,6 +133,11 @@ type Mutation {
   updateChat(input: UpdateChatInput!): Chat!
   removeChat(id: String!): Boolean!
   addMemberToChat(password: String, userId: Int, chatId: String!): Boolean!
+  rmMemberFromChat(
+    """default current user id"""
+    userId: Float
+    chatId: String!
+  ): Boolean!
   addUserPunishmentInChat(minutes: Int, degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
   removeUserPunishmentInChat(degree: PunishmentDegree!, targetUserId: Int!, chatId: String!): Boolean!
   removeMemberFromChat(
