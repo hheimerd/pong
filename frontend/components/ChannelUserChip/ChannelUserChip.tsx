@@ -267,7 +267,7 @@ export const ChannelUserChip = ({
           />
         }
         label={getChipUserName()}
-        color={current_channel.ownerId === user.id ? "primary" : "secondary"}
+        color={user.id !== current_user_id ? "secondary" : "primary"}
         onClick={handleClick}
       />
       <Menu
