@@ -6,6 +6,9 @@ export default function useChannelById(id: string | string[]) {
   // get user
   const { data, error, loading } = useQuery(CHAT_QUERY, {
     variables: { chatId: id },
+    onError(err) {
+      console.log("useChannelById", err);
+    },
   });
 
   // wait fetching data

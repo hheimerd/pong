@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import { Avatar, Chip, Menu, MenuItem } from "@material-ui/core";
-import id from "date-fns/locale/id/index";
 import { useRouter } from "next/router";
 import React from "react";
 import { io } from "socket.io-client";
@@ -11,6 +10,7 @@ import {
   PUNISHMENT_USER_MUTATION,
   UNPUNISHMENT_USER_MUTATION,
 } from "../../graphql/mutations";
+import { extractGraphQLError } from "../../helpers/error-handling.utils";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
@@ -34,19 +34,27 @@ export const ChannelUserChip = ({
   const [banUser, { data: dataP, loading: loadingP, error: errorP }] =
     useMutation(PUNISHMENT_USER_MUTATION, {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+        updateSnackBarMessage(extractGraphQLError(err).message);
+      },
     });
 
   // ban user
   const [unbanUser, { data: dataU, loading: loadingU, error: errorU }] =
     useMutation(UNPUNISHMENT_USER_MUTATION, {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
+      onError(err) {
+        console.log(err);
+        updateSnackBarMessage(extractGraphQLError(err).message);
+      },
     });
 
   const [addMessage, { data: dataM, loading: loadingM, error: errorM }] =
     useMutation(CREATE_MESSAGE_MUTATION, {
       onError(err) {
         console.log(err);
-        updateSnackBarMessage(err.message);
+        updateSnackBarMessage(extractGraphQLError(err).message);
       },
     });
 

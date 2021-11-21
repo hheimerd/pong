@@ -20,6 +20,9 @@ export const MatchHistory = ({
     loading: loadingL,
   } = useQuery(USER_QUERY, {
     variables: { userId: users[0] },
+    onError(err) {
+      console.log(err);
+    },
   });
 
   const {
@@ -28,6 +31,9 @@ export const MatchHistory = ({
     loading: loadingR,
   } = useQuery(USER_QUERY, {
     variables: { userId: users[1] },
+    onError(err) {
+      console.log(err);
+    },
   });
 
   // wait fetching data

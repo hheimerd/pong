@@ -15,7 +15,11 @@ import { IUserProfile } from "../../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../../layout/InnerPageLayout";
 
 const ChatRoom = (): JSX.Element => {
-  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY, {
+    onError(err) {
+      console.log("chats room MY_CHATS_QUERY", err);
+    },
+  });
   const router = useRouter();
   const { id } = router.query;
 

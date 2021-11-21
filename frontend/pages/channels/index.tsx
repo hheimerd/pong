@@ -20,7 +20,11 @@ import { InnerPageLayout } from "../../layout/InnerPageLayout";
 const Channel = (): JSX.Element => {
   const { updateSnackBarMessage } = useSnackBar();
   const router = useRouter();
-  const { loading, error, data } = useQuery(PROFILE_QUERY);
+  const { loading, error, data } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("channels PROFILE_QUERY", err);
+    },
+  });
   const {
     loading: loadingC,
     error: errorC,

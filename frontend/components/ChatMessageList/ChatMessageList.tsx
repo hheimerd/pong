@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { MESSAGES_SUBSCRIPTION } from "../../graphql";
 import { MESSAGES_QUERY, USERS_QUERY } from "../../graphql/queries";
+import { extractGraphQLError } from "../../helpers/error-handling.utils";
 import { IChatMessage } from "../../interfaces/message.interface";
 import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
@@ -24,9 +25,17 @@ export const ChatMessageList = ({
       usersOffset: 0,
       usersLimit: 100,
     },
+    onError(err) {
+      console.log(err);
+      updateSnackBarMessage(extractGraphQLError(err).message);
+    },
   });
   const { loading, error, data, subscribeToMore } = useQuery(MESSAGES_QUERY, {
     variables: { chatId: id },
+    onError(err) {
+      console.log(err);
+      updateSnackBarMessage(extractGraphQLError(err).message);
+    },
   });
   const { updateSnackBarMessage } = useSnackBar();
 
@@ -48,6 +57,10 @@ export const ChatMessageList = ({
           console.log("newMessage", newMessage);
 
           return { ...prev, chat: [newMessage, ...prev.chat.messages] };
+        },
+        onError(err) {
+          console.log(err);
+          updateSnackBarMessage(extractGraphQLError(err).message);
         },
       });
     } catch (e) {
@@ -96,11 +109,11 @@ export const ChatMessageList = ({
     return <p>Loading user profile from graphql...</p>;
   if (error) {
     // router.push("/channels");
-    return <p> Error MESSAGES_QUERY: {error.message} </p>;
+    return <p> Error: {extractGraphQLError(error).message} </p>;
   }
   if (errorUsers) {
     // router.push("/channels");
-    return <p> Error USERS_QUERY: {errorUsers.message} </p>;
+    return <p> Error: {extractGraphQLError(errorUsers).message} </p>;
   }
 
   // console.log(data.chat.messages);

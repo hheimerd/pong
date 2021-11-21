@@ -11,12 +11,19 @@ const Users = (): JSX.Element => {
     data: dataProfile,
     error: errorProfile,
     loading: loadingProfile,
-  } = useQuery(PROFILE_QUERY);
+  } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log(err);
+    },
+  });
 
   const { loading, error, data } = useQuery(USERS_QUERY, {
     variables: {
       usersOffset: 0,
       usersLimit: 100,
+    },
+    onError(err) {
+      console.log(err);
     },
   });
 

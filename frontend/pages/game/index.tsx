@@ -7,13 +7,17 @@ import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
 import router from "next/router";
 
-const Users = (): JSX.Element => {
+const StartGame = (): JSX.Element => {
   // get my profile
   const {
     data: dataU,
     error: errorU,
     loading: loadingU,
-  } = useQuery(PROFILE_QUERY);
+  } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("startgame PROFILE_QUERY", err);
+    },
+  });
   const { data, error, loading } = useQuery(GET_MATCHMAKING_GAMES);
 
   // wait fetching data
@@ -80,4 +84,4 @@ const Users = (): JSX.Element => {
   );
 };
 
-export default Users;
+export default StartGame;

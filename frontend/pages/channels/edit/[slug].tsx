@@ -21,7 +21,12 @@ const ChannelRoom = (): JSX.Element => {
     data: dataR,
     error: errorR,
     loading: loadingR,
-  } = useQuery(USERS_QUERY, { variables: { usersOffset: 0, usersLimit: 100 } });
+  } = useQuery(USERS_QUERY, {
+    variables: { usersOffset: 0, usersLimit: 100 },
+    onError(err) {
+      console.log("channel room USERS_QUERY", err);
+    },
+  });
 
   // const { loading, error, data } = useQuery(MY_CHATS_QUERY);
 

@@ -4,7 +4,11 @@ import { IUserProfile } from "../interfaces/userprofile.interface";
 
 export default function useUser(): IUserProfile {
   // get user
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("useUser", err);
+    },
+  });
 
   // wait fetching data
   if (loading) return;
