@@ -222,10 +222,11 @@ export class ChatService {
   }
 
   async update(updateChatInput: UpdateChatInput) {
-    const { id, admins, members, password } = updateChatInput;
+    const { id, admins, members, password, ...other } = updateChatInput;
     return await this.prisma.chat.update({
       where: { id },
       data: {
+        ...other,
         password: password.length ? password : null,
         admins: {
           set: admins?.map((adminId) => ({ id: adminId })),
