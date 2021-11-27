@@ -52,22 +52,27 @@ export class GameGateway {
         GameGateway.games.splice(endedGame, 1);
       }
     })
+    client.on('disconnect', () => {
+	this.userService.update(client.data.id, { status: UserStatus.Online });
+	const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
+	stopedGame.setPause(true);
+	client.data.game.onPlayerDisconnected(client);
+	stopedGame.sendToAll('playerDisconnected');
+    })
   }
 
   // Когда игрок ушел из игры
-  @SubscribeMessage('exit')
+  /*@SubscribeMessage('exit')
   OnPing(@ConnectedSocket() client: SocketWithData) {
     console.log('exit');
     this.userService.update(client.data.id, { status: UserStatus.Online });
-    // const targetGame = GameGateway.games.find(g => g.id == client.data.game.id);
-    // targetGame.setPause(true);
-  }
+  }*/
 
 
   @SubscribeMessage('gamePlayerMove')
   playerMove(
     @MessageBody() direction: MoveDirectionEnum,
-    @ConnectedSocket() client: SocketWithData,
+    @ConnectedSocket() client: SocketWithData,i
   ) {
     const game = client.data.game;
    

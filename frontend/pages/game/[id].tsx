@@ -70,6 +70,7 @@ export default function Game(): JSX.Element {
                   if (settings[2] == 1) {
                     ready = true;
                     screen[2].clear();
+		    console.log('ready');
                     socket.emit("playerReady", settings);
                   }
                 }
@@ -85,10 +86,10 @@ export default function Game(): JSX.Element {
           socket.emit("connectAsPlayer");
         });
 
-        // socket.on("disconnect", () => {
-        //   ready = false;
-        //   socket.emit("exit");
-        // });
+        socket.on("playerDisconnected", () => {
+          ready = false;
+          screen[2].waitScreen('reconnect');
+        });
 
         socket.on("error", (e) => {
           console.log(e);

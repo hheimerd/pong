@@ -29,6 +29,7 @@ export class GameEntity {
   private _connections: SocketWithData[] = [];
   private _players: Player[] = [];
   private _game: Game;
+  private _gameStarted: boolean;
   public readonly name;
   public readonly id: string;
   private _timer: NodeJS.Timeout;
@@ -68,6 +69,7 @@ export class GameEntity {
       this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
       this.unsubscribe();
     });
+    this._gameStarted = false;
     if (playerId) {
       this._players[1] = new Player(playerId);
       this.gameType = GameType.Friend;
@@ -162,8 +164,11 @@ export class GameEntity {
   setPlayerReady(playerNumber: number, settings: number[]) {
     this._game.setPlayerReady(playerNumber, settings)
     this._players[playerNumber - 1].isReady = true;
-    if (this._players.every((p) => p.isReady)) {
+    if (this._players.every((p) => p.isReady) && this._gameStarted == false) {
       this.animate();
+    }
+    else if (this._players.every((p) => p.isReady)) {
+      this.setPause(false);
     }
   }
 
@@ -174,6 +179,7 @@ export class GameEntity {
   }
 
   animate() {
+    this._gameStarted = true;
     this._timer = this._timer = setInterval(() => {
       this._game.update();
     }, 30);
@@ -203,5 +209,9 @@ export class GameEntity {
     if (index !== -1) {
       this._connections.splice(index, 1);
     }
+  }
+
+  sendToAll(eventName: string, ...args) {
+    this._game.sendToAll(eventName, args);
   }
 }

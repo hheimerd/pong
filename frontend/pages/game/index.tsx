@@ -58,6 +58,8 @@ const Users = (): JSX.Element => {
     } else {
       // if match making game found
       console.log("mathch making game FOUND");
+      console.log(data.getMatchmakingGames[0].players[0]);
+      data.getMatchmakingGames[0].players.push(1);
       const gameId = data.getMatchmakingGames[0].id;
       router.push(`http://${process.env.HOST}/game/${gameId}`);
     }
