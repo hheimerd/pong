@@ -53,6 +53,7 @@ export class GameGateway {
       }
     })
     client.on('disconnect', () => {
+	if (!this.checkIsPlayer(client)) return;
 	this.userService.update(client.data.id, { status: UserStatus.Online });
 	const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
 	stopedGame.setPause(true);

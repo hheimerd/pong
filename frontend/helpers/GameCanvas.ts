@@ -77,12 +77,12 @@ export class Canvas {
     waitScreen(string: string) {
       const w = this.canvasEl.width;
       const h = this.canvasEl.height;
-      this.fill("#00000033");
-      this.drawRoundRectangle(w / 3, (h * 2 ) / 5, w / 3, h / 5, 10, "#957a68");
-      this.write(w / 2 - 80, h / 2 + 30, "Your opponend has been", "#000000");
-      this.write(w / 2 - 80, h / 2 + 60, "disconnected", "#000000");
-      this.write(w / 2 - 80, h / 2 + 90, "game paused", "#000000");
-      this.write(w / 2 - 80, h / 2 + 120, "if you ready to play press space", "#000000");
+      this.fill("#00000066");
+      this.drawRoundRectangle(w / 4, (h * 2 ) / 5, w / 2, h / 5, 10, "#957a68");
+      this.write(w / 2 - 140, h / 2 - 40, "Your opponent has been", "#000000");
+      this.write(w / 2 - 70, h / 2 - 10, "disconnected", "#000000");
+      this.write(w / 2 - 70, h / 2 + 20, "game paused", "#000000");
+      this.write(w / 2 - 200, h / 2 + 50, "if you are ready to play press space", "#000000");
     }
     menu() {
       const w = this.canvasEl.width;
