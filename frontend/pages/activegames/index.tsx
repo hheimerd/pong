@@ -15,7 +15,11 @@ import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const ActiveGames = (): JSX.Element => {
   // Get my profile.
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("ActiveGames PROFILE_QUERY", err);
+    },
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +36,9 @@ const ActiveGames = (): JSX.Element => {
   } = useQuery(GET_ALL_GAMES, {
     variables: {
       fetchPolicy: "cache-and-network",
+    },
+    onError(err) {
+      console.log("GET_ALL_GAMES", err);
     },
   });
 

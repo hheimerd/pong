@@ -14,7 +14,11 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
   const { setStatus } = useContext(UserStatusContext);
   const router = useRouter();
   // get user
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log(err);
+    },
+  });
 
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;

@@ -20,6 +20,9 @@ export const MatchHistoryOnePlayer = ({
     loading: loadingL,
   } = useQuery(USER_QUERY, {
     variables: { userId: users[0] },
+    onError(err) {
+      console.log(err);
+    },
   });
 
   // wait fetching data

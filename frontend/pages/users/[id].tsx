@@ -26,7 +26,11 @@ const UserProfile = (): JSX.Element => {
     data: dataProfile,
     error: errorProfile,
     loading: loadingProfile,
-  } = useQuery(PROFILE_QUERY);
+  } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("users PROFILE_QUERY", err);
+    },
+  });
 
   // get viewed user
   const {
@@ -38,6 +42,9 @@ const UserProfile = (): JSX.Element => {
       skip: !id,
       fetchPolicy: "cache-and-network",
       userId: +id,
+    },
+    onError(err) {
+      console.log("users USER_QUERY", err);
     },
   });
 
@@ -53,11 +60,17 @@ const UserProfile = (): JSX.Element => {
       userId: +id,
       take: 100,
     },
+    onError(err) {
+      console.log("users GAME_RESULT", err);
+    },
   });
 
   // follow to user
   const [followUser, { loading: loadingF }] = useMutation(FOLLOW_TO_USER, {
     refetchQueries: [{ query: PROFILE_QUERY }],
+    onError(err) {
+      console.log(err);
+    },
   });
 
   // follow to user

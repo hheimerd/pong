@@ -21,7 +21,12 @@ const ChannelRoom = (): JSX.Element => {
     data: dataR,
     error: errorR,
     loading: loadingR,
-  } = useQuery(USERS_QUERY, { variables: { usersOffset: 0, usersLimit: 100 } });
+  } = useQuery(USERS_QUERY, {
+    variables: { usersOffset: 0, usersLimit: 100 },
+    onError(err) {
+      console.log("channel room USERS_QUERY", err);
+    },
+  });
 
   // const { loading, error, data } = useQuery(MY_CHATS_QUERY);
 
@@ -36,16 +41,14 @@ const ChannelRoom = (): JSX.Element => {
     }
   );
 
-  const [updateChat, { data: dataU, loading: loadingU }] = useMutation(
-    UPDATE_CHAT_MUTATION,
-    {
+  const [updateChat, { data: dataU, loading: loadingU, error: errorU }] =
+    useMutation(UPDATE_CHAT_MUTATION, {
       refetchQueries: [{ query: MY_CHATS_QUERY }],
       onError(err) {
         console.log("UPDATE_CHAT_MUTATION error");
         console.log(err);
       },
-    }
-  );
+    });
   const router = useRouter();
   const { slug } = router.query;
 
@@ -101,6 +104,9 @@ const ChannelRoom = (): JSX.Element => {
 
   // on submit
   useEffect(() => {
+    if (dataU) {
+      console.log(dataU);
+    }
     if (typeof dataM !== "undefined" || typeof dataU !== "undefined") {
       console.log("mutation: ", dataM);
       router.push("/channels");
@@ -108,8 +114,9 @@ const ChannelRoom = (): JSX.Element => {
   }, [loadingM, loadingU]);
 
   // wait fetching data
-  if (loadingR) return <p>Loading user profile from graphql...</p>;
-  if (errorR) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loadingR || loadingU) return <p>Loading user profile from graphql...</p>;
+  if (errorR || errorU)
+    return <p>Error: can't fetching data from graphql :(</p>;
 
   const isFormValid = (): boolean => {
     if (name !== "") {

@@ -6,6 +6,9 @@ export default function useUserById(id: number): IUserProfile {
   // get user
   const { data, error, loading } = useQuery(USER_QUERY, {
     variables: { userId: id },
+    onError(err) {
+      console.log("useUserById", err);
+    },
   });
 
   // wait fetching data

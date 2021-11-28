@@ -1,17 +1,20 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
 import { AvatarButton, Htag } from "../../components";
-import { PROFILE_QUERY, USERS_QUERY } from "../../graphql";
+import { PROFILE_QUERY } from "../../graphql";
 import {
   IUserProfile,
   UserStatus,
 } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
-import styles from "./friends.module.css";
 
 const Users = (): JSX.Element => {
   // get my profile
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("friends PROFILE_QUERY", err);
+    },
+  });
 
   // wait while data loading
   if (loading) return <p>Loading data from graphql...</p>;

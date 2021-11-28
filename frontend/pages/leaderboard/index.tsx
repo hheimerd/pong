@@ -12,6 +12,9 @@ const Leaderboard = (): JSX.Element => {
     variables: {
       fetchPolicy: "cache-and-network",
     },
+    onError(err) {
+      console.log("GET_LEADER_BOARD", err);
+    },
   });
 
   // wait fetching data

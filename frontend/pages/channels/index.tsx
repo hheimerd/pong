@@ -9,8 +9,9 @@ import {
   CHATS_QUERY,
   DELETE_CHAT_MUTATION,
   PROFILE_QUERY,
-  UPDATE_CHAT_MUTATION,
+  RM_MEMBER_CHAT_MUTATION,
 } from "../../graphql";
+import { extractGraphQLError } from "../../helpers/error-handling.utils";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
 import { IChatPunishment } from "../../interfaces/punishments.interface";
 import { IUserProfile } from "../../interfaces/userprofile.interface";
@@ -19,18 +20,23 @@ import { InnerPageLayout } from "../../layout/InnerPageLayout";
 const Channel = (): JSX.Element => {
   const { updateSnackBarMessage } = useSnackBar();
   const router = useRouter();
-  const { loading, error, data } = useQuery(PROFILE_QUERY);
+  const { loading, error, data } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("channels PROFILE_QUERY", err);
+    },
+  });
   const {
     loading: loadingC,
     error: errorC,
     data: dataC,
   } = useQuery(CHATS_QUERY);
-  const [updateChat, { data: dataU, loading: loadingU }] = useMutation(
-    UPDATE_CHAT_MUTATION,
+  const [leaveChat, { loading: loadingU, error: errorU }] = useMutation(
+    RM_MEMBER_CHAT_MUTATION,
     {
       refetchQueries: [{ query: CHATS_QUERY }, { query: PROFILE_QUERY }],
       onError(err) {
         console.log(err);
+        updateSnackBarMessage(extractGraphQLError(err).message);
       },
     }
   );
@@ -41,7 +47,7 @@ const Channel = (): JSX.Element => {
       refetchQueries: [{ query: CHATS_QUERY }],
       onError(err) {
         console.log(err);
-        updateSnackBarMessage(err.message);
+        updateSnackBarMessage(extractGraphQLError(err).message);
       },
     }
   );
@@ -60,7 +66,7 @@ const Channel = (): JSX.Element => {
   // wait while data loading
   if (loading || loadingA || loadingU || loadingC || loadingD)
     return <p>Loading from graphql...</p>;
-  if (error || errorC || errorA || errorD)
+  if (error || errorC || errorA || errorD || errorU)
     return <p>Error: can't fetching data from graphql :(</p>;
 
   const current_user_id = data.getProfile.id;
@@ -76,38 +82,31 @@ const Channel = (): JSX.Element => {
     .filter((x: IChat) => x.is_private === true);
   console.log("private_channels", private_channels);
 
-  const handleLeave = (channel: IChat, membersIdArr: Array<number>) => {
-    membersIdArr = membersIdArr.filter((n) => n != current_user_id);
-    console.log("values", membersIdArr);
-    updateChat({
+  const handleLeave = (channel: IChat) => {
+    leaveChat({
       variables: {
-        updateChatInput: {
-          id: channel.id,
-          members: membersIdArr,
-        },
+        chatId: channel.id,
+        userId: current_user_id,
       },
     });
   };
 
-  const handleJoin = (channel: IChat, membersIdArr: Array<number>) => {
+  const handleJoin = (channel: IChat) => {
     if (channel.hasPassword) {
       const pass = prompt("Please enter password for channel " + channel.name);
       console.log("password", pass);
       addToChat({
         variables: {
-          addMemberToChatChatId: channel.id,
-          addMemberToChatPassword: pass,
+          chatId: channel.id,
+          password: pass,
+          userId: current_user_id,
         },
       });
     } else {
-      membersIdArr.push(current_user_id);
-      console.log("values", membersIdArr);
-      updateChat({
+      addToChat({
         variables: {
-          updateChatInput: {
-            id: channel.id,
-            members: membersIdArr,
-          },
+          chatId: channel.id,
+          userId: current_user_id,
         },
       });
     }
@@ -200,7 +199,7 @@ const Channel = (): JSX.Element => {
             <Button
               key={4}
               appearance="primary"
-              onClick={() => handleLeave(channel, membersIdArr)}
+              onClick={() => handleLeave(channel)}
             >
               Leave
             </Button>
@@ -213,7 +212,7 @@ const Channel = (): JSX.Element => {
             <Button
               key={5}
               appearance="ghost"
-              onClick={() => handleJoin(channel, membersIdArr)}
+              onClick={() => handleJoin(channel)}
             >
               Join
             </Button>

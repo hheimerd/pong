@@ -11,7 +11,11 @@ const Profile = (): JSX.Element => {
   const router = useRouter();
 
   // get user
-  const { data, error, loading } = useQuery(PROFILE_QUERY);
+  const { data, error, loading } = useQuery(PROFILE_QUERY, {
+    onError(err) {
+      console.log("PROFILE_QUERY", err);
+    },
+  });
 
   // update user
   const [

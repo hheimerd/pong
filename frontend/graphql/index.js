@@ -17,6 +17,7 @@ export { UNFOLLOW_TO_USER } from "./mutations";
 export { UNPUNISHMENT_USER_MUTATION } from "./mutations";
 export { PUNISHMENT_USER_MUTATION } from "./mutations";
 export { ADD_MEMBER_TO_CHAT_MUTATION } from "./mutations";
+export { RM_MEMBER_CHAT_MUTATION } from "./mutations";
 export { GAME_RESULT } from "./queries";
 export { GET_LEADER_BOARD } from "./queries";
 export { CHAT_QUERY } from "./queries";

@@ -3,11 +3,14 @@ import React from "react";
 import { AvatarButton, Htag } from "../../components";
 import { MY_CHATS_QUERY } from "../../graphql";
 import { ChatType, IChat } from "../../interfaces/chat.interface";
-import { UserStatus } from "../../interfaces/userprofile.interface";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 
 const Chat = (): JSX.Element => {
-  const { loading, error, data } = useQuery(MY_CHATS_QUERY);
+  const { loading, error, data } = useQuery(MY_CHATS_QUERY, {
+    onError(err) {
+      console.log("chats room MY_CHATS_QUERY", err);
+    },
+  });
 
   // wait while data loading
   if (loading) return <p>Loading user profile from graphql...</p>;

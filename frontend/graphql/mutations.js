@@ -5,7 +5,7 @@ export const CREATE_MESSAGE_MUTATION = gql`
   }
 `;
 export const CREATE_CHAT_MUTATION = gql`
-  mutation NameMutation($createChatCreateChatInput: CreateChatInput!) {
+  mutation Mutation($createChatCreateChatInput: CreateChatInput!) {
     createChat(createChatInput: $createChatCreateChatInput) {
       id
       name
@@ -14,7 +14,7 @@ export const CREATE_CHAT_MUTATION = gql`
   }
 `;
 export const UPDATE_CHAT_MUTATION = gql`
-  mutation NameMutation($updateChatInput: UpdateChatInput!) {
+  mutation Mutation($updateChatInput: UpdateChatInput!) {
     updateChat(input: $updateChatInput) {
       id
     }
@@ -78,14 +78,13 @@ export const UNPUNISHMENT_USER_MUTATION = gql`
   }
 `;
 export const ADD_MEMBER_TO_CHAT_MUTATION = gql`
-  mutation AddMemberToChatMutation(
-    $addMemberToChatChatId: String!
-    $addMemberToChatPassword: String
-  ) {
-    addMemberToChat(
-      chatId: $addMemberToChatChatId
-      password: $addMemberToChatPassword
-    )
+  mutation Mutation($chatId: String!, $password: String, $userId: Int) {
+    addMemberToChat(chatId: $chatId, password: $password, userId: $userId)
+  }
+`;
+export const RM_MEMBER_CHAT_MUTATION = gql`
+  mutation Mutation($chatId: String!, $userId: Int) {
+    removeMemberFromChat(chatId: $chatId, userId: $userId)
   }
 `;
 export const DELETE_CHAT_MUTATION = gql`
