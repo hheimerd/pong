@@ -70,7 +70,7 @@ const StartGame = (): JSX.Element => {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      socket.emit('connectToGame', gameId);
+      socket.emit('connectToGame', { id:gameId } );
       router.push(`http://${process.env.HOST}/game/${gameId}`);
     }
   };

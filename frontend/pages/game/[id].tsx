@@ -50,12 +50,11 @@ export default function Game(): JSX.Element {
         screen[0].drawFon(0);
         if (!spectator)
           screen[2].menu();
-
         socket.on("gameConnected", (response: GameConnectedResponse) => {
           const playersId = response.playersId;
 
           let isPlayer = playersId.includes(user.id);
-          if (!isPlayer) return;
+          if (!isPlayer && !response.isMM) return;
 
           socket.on("connectedAsPlayer", () => {
             console.log("connectedAsPlayer");
@@ -167,4 +166,4 @@ export default function Game(): JSX.Element {
   );
 }
 
-type GameConnectedResponse = { playersId: number[] };
+type GameConnectedResponse = { playersId: number[], isMM: boolean };

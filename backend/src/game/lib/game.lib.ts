@@ -22,7 +22,7 @@ export class Game extends EventEmitter {
 
   constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
     super();
-	  this.pause = false;
+	  this.pause = true;
     this.id = id;
     this.connections = connections;
     this.screenHeight = screenHeight;
@@ -90,9 +90,11 @@ export class Game extends EventEmitter {
         if (this.playersReadyFlag[0] == true && this.playersReadyFlag[1] == true) {
           this.setMap(this.map);
           this.ball = new Ball(this.objects, this.players, (this.screenWidth - 15) / 2, (this.screenHeight - 15) / 2, this.screenWidth, this.screenHeight);
+          this.setPause(false);
           this.emit('gameStart', this.map);
         }
       } else {
+        this.setPause(false);
         this.emit('gameStart', this.map);
       }
     }

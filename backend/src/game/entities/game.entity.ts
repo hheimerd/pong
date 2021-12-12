@@ -95,9 +95,14 @@ export class GameEntity {
   }
 
   connect(socket: SocketWithData) {
-    if (this.gameType == GameType.MM && this._players.length == 1) {
+    if (
+        this.gameType == GameType.MM 
+        && this._players.length == 1 
+        && this._players[0].id != socket.data.id
+        ) {
       this._players[1] = new Player(socket.data.id);
       this._players[1].number = this._players[0]?.number + 1;
+      this._players[1].socket = socket;
     }
     this._connections.push(socket);
   }
@@ -123,6 +128,7 @@ export class GameEntity {
     }
 
     const player = new Player(socket.data.id);
+    player.socket = socket;
 
     if (!this._players[0]) {
       this._players[0] = player;
@@ -201,18 +207,15 @@ export class GameEntity {
     player.socket = undefined;
 
     this._players.forEach((p) => (p.isReady = false));
+    var index = this._connections.indexOf(socket);
+    if (index !== -1) {
+      this._connections.splice(index, 1);
+    }
   }
 
   movePlayer(playerNumber: number, direction: MoveDirectionEnum) {
     const player = this._game.players[playerNumber - 1];
     player.move(direction);
-  }
-
-  onDisconnect(socket: SocketWithData) {
-    var index = this._connections.indexOf(socket);
-    if (index !== -1) {
-      this._connections.splice(index, 1);
-    }
   }
 
   sendToAll(eventName: string, ...args) {

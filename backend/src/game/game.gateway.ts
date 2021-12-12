@@ -10,7 +10,7 @@ import { GameResultService } from 'src/game-result/game-result.service';
 import { ConnectGameDto } from './dto/connect-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GameCreatedDto } from './dto/game-connected.dto';
-import { GameEntity, MoveDirectionEnum } from './entities/game.entity';
+import { GameEntity, GameType, MoveDirectionEnum } from './entities/game.entity';
 
 export interface SocketWithData extends Socket {
   data: {
@@ -37,13 +37,16 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
 
+    console.log(dto);
     const targetGame = GameGateway.games.find(g => g.id == dto.id);
     client.data.game = targetGame;
-
+    
+    console.log(targetGame);
+    
     targetGame.connect(client);
     this.userService.update(client.data.id, { status: UserStatus.InGame });
 
-    client.emit('gameConnected', { playersId: targetGame.getPlayersId() });
+    client.emit('gameConnected', { playersId: targetGame.getPlayersId(), isMM: targetGame.gameType == GameType.MM  });
     targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
     });
@@ -54,12 +57,14 @@ export class GameGateway {
       }
     })
     client.on('disconnect', () => {
-	if (!this.checkIsPlayer(client)) return;
-	this.userService.update(client.data.id, { status: UserStatus.Online });
-	const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
-	stopedGame.setPause(true);
-	client.data.game.onPlayerDisconnected(client);
-	stopedGame.sendToAll('playerDisconnected');
+      if (!this.checkIsPlayer(client)) return;
+      this.userService.update(client.data.id, { status: UserStatus.Online });
+      const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
+      if (stopedGame) {
+        stopedGame.setPause(true);
+        client.data.game.onPlayerDisconnected(client);
+        stopedGame.sendToAll('playerDisconnected');
+      }
     })
   }
 
@@ -129,6 +134,8 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
     const isPlayer = this.checkIsPlayer(client);
+    console.log(isPlayer);
+    
     if (!isPlayer) return;
   
     client.data.game.tryReconnect(client);

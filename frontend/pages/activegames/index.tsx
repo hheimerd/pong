@@ -52,14 +52,25 @@ const ActiveGames = (): JSX.Element => {
   // generate list of games
   const GameList = (games: [IGameResult]) => {
     if (typeof games !== "undefined") {
+
+
       return Array.from(games).map((onegame: IGameResult, i: number) => {
         console.log("onegame ", onegame);
+
+        let isSpectator = "/?spectator=true";
+
+        for(var i = 0; i < onegame.players.length; i++){
+          if (onegame.players[i] == data.getProfile.id ){
+            isSpectator = "";
+          }
+         }
+
         return (
           <React.Fragment key={i}>
             {onegame.players.length == 2 ? (
               <MatchHistory
                 users={[+onegame.players[0], +onegame.players[1]]}
-                href={"/game/" + onegame.id + "/?spectator=true"}
+                href={"/game/" + onegame.id + isSpectator}
               />
             ) : (
               ""
@@ -67,7 +78,7 @@ const ActiveGames = (): JSX.Element => {
             {onegame.players.length == 1 ? (
               <MatchHistoryOnePlayer
                 users={[+onegame.players[0]]}
-                href={"/game/" + onegame.id + "/?spectator=true"}
+                href={"/game/" + onegame.id + isSpectator}
               />
             ) : (
               ""

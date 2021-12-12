@@ -10,6 +10,7 @@ export class GameResolver {
   {
     return GameGateway.games
       .filter(game => game.gameType == GameType.MM)
+      .filter(game => !game.GameIsFull())
       .map(game => game.getInfo());
   }
 
@@ -17,8 +18,6 @@ export class GameResolver {
   @Query(() => [GameInfo])
   getAllGames(): GameInfo[]
   {
-    return GameGateway.games
-      .filter(game => !game.GameIsFull())
-      .map(game => game.getInfo());
+    return GameGateway.games.map(game => game.getInfo());
   }
 }
