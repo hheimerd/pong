@@ -95,6 +95,10 @@ export class GameEntity {
   }
 
   connect(socket: SocketWithData) {
+    if (this.gameType == GameType.MM && this._players.length == 1) {
+      this._players[1] = new Player(socket.data.id);
+      this._players[1].number = this._players[0]?.number + 1;
+    }
     this._connections.push(socket);
   }
 

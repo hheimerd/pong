@@ -62,9 +62,15 @@ const StartGame = (): JSX.Element => {
     } else {
       // if match making game found
       console.log("mathch making game FOUND");
-      console.log(data.getMatchmakingGames[0].players[0]);
-      data.getMatchmakingGames[0].players.push(1);
+      console.log(data.getMatchmakingGames[0]);
+//      data.getMatchmakingGames[0].players.push(1);
       const gameId = data.getMatchmakingGames[0].id;
+      const socket = io("ws://" + process.env.GAME_API_HOST, {
+        extraHeaders: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      socket.emit('connectToGame', gameId);
       router.push(`http://${process.env.HOST}/game/${gameId}`);
     }
   };
