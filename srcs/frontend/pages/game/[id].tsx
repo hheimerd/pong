@@ -12,6 +12,7 @@ import useUser from "../../hooks/useUser";
 import { Canvas } from "../../helpers/GameCanvas";
 import useKeypress from "../../hooks/useKeypress";
 import zIndex from "@material-ui/core/styles/zIndex";
+import { Htag } from "../../components";
 
 export enum MoveDirectionEnum {
   UP = "up",
@@ -164,6 +165,15 @@ export default function Game(): JSX.Element {
     <InnerPageLayout>
       <div className="wrapper">
         <div ref={gameRef}></div>
+        
+        <ul>
+          <li>Press Start game</li>
+          <li>Config your game</li>
+          <li>Press SPACE button</li>
+          <li>Press UP DOWN button to move your desk</li>
+          <li>Collect bonus red balls</li>
+          <li>Play game, have fun!</li>
+        </ul>
       </div>
     </InnerPageLayout>
   );

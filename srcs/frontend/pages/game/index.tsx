@@ -86,6 +86,17 @@ const StartGame = (): JSX.Element => {
           <Button appearance="primary" onClick={() => handleMM()}>
             START GAME
           </Button>
+          <br/>
+
+        <Htag tag="h2">Rules</Htag>
+        <ul style={{ listStyle: "none" }}>
+          <li>Press Start game</li>
+          <li>Config your game</li>
+          <li>Press SPACE button</li>
+          <li>Press UP DOWN button to move your desk</li>
+          <li>Collect bonus red balls</li>
+          <li>Play game, have fun!</li>
+        </ul>
         </div>
       </div>
     </InnerPageLayout>
