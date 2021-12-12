@@ -37,7 +37,6 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
 
-    console.log(dto);
     const targetGame = GameGateway.games.find(g => g.id == dto.id);
     client.data.game = targetGame;
     

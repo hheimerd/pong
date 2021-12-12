@@ -25,7 +25,8 @@ export default function Game(): JSX.Element {
 
   const { id: gameId } = router.query;
   // spectator = "true" or typeof spectator === "undefined"
-  const { spectator } = router.query;
+  let { spectator, player1, player2 } = router.query;
+
 
   // https://stackoverflow.com/questions/54346040/react-hooks-ref-is-not-avaiable-inside-useeffect/54346500
   const gameRef = useCallback(
@@ -48,7 +49,9 @@ export default function Game(): JSX.Element {
           new Canvas(nodeRef, { zIndex: 3 }),
         ];
         screen[0].drawFon(0);
-        if (!spectator)
+        console.log(player1, player2, spectator, user.id);
+        
+        if (spectator === undefined && (+player1 == user.id || +player2 == user.id))
           screen[2].menu();
         socket.on("gameConnected", (response: GameConnectedResponse) => {
           const playersId = response.playersId;

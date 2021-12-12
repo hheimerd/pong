@@ -37,10 +37,10 @@ const Users = (): JSX.Element => {
   // generate list of chats
   const UsersList = (users: [IUserProfile]) => {
     if (typeof users !== "undefined") {
-      return Array.from(users).map((user: IUserProfile, i: number) => {
+      return Array.from(users).map((user: IUserProfile) => {
         if (user.id != dataProfile.getProfile.id) {
           return (
-            <React.Fragment key={i}>
+            <React.Fragment key={user.id}>
               <AvatarButton
                 user={user}
                 link={"/users/" + user.id}

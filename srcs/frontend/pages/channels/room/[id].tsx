@@ -41,8 +41,8 @@ const ChannelRoom = (): JSX.Element => {
   }, [loading]);
 
   // wait while data loading
-  if (loading || !channel) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (loading) return <p>Loading user profile from graphql...</p>;
+  if (error || !channel) return <p>Error: can't fetching data from graphql :(</p>;
   // if (typeof getChannel() === "undefined") router.push("/channels");
   // console.log("channel", channel.id);
 

@@ -145,7 +145,7 @@ export const ChatMessageList = ({
 
       if (!isBlocked) {
         return (
-          <React.Fragment key={i}>
+          <React.Fragment key={""+onemessage.created_at}>
             <ChatMessage onemessage={onemessage} user={user} />
           </React.Fragment>
         );

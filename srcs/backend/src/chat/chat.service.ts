@@ -227,7 +227,7 @@ export class ChatService {
       where: { id },
       data: {
         ...other,
-        password: password.length ? password : null,
+        password: password?.length ? await PasswordService.hash(password) : null,
         admins: {
           set: admins?.map((adminId) => ({ id: adminId })),
         },
@@ -239,6 +239,8 @@ export class ChatService {
   }
 
   async remove(id: string) {
+    await this.prisma.chatMessage.deleteMany({ where: { chatId: id} })
+    await this.prisma.chatPunishment.deleteMany({ where: { chatId: id} })
     return await this.prisma.chat.delete({ where: { id } });
   }
 }

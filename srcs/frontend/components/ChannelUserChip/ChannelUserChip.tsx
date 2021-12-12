@@ -170,7 +170,7 @@ export const ChannelUserChip = ({
         variables: {
           createChatMessageInput: {
             chatId: current_channel.id,
-            message: `Game created, please <a href="http://${process.env.HOST}/game/${gameId}">open link</a>`,
+            message: `Game created, please <a href="http://${process.env.HOST}/game/${gameId}/?player1=${current_user_id}&player2=${user.id}">open link</a>`,
           },
         },
       });

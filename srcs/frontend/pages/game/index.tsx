@@ -48,7 +48,7 @@ const StartGame = (): JSX.Element => {
       const gameId = await createGame(socket, user);
       console.log(`Game ${gameId} created`);
       // redirect to game URL
-      router.push(`http://${process.env.HOST}/game/${gameId}`);
+      router.push(`http://${process.env.HOST}/game/${gameId}/?player1=${dataU.getProfile.id}`);
     } catch (e) {
       console.log(e);
     }
@@ -71,7 +71,7 @@ const StartGame = (): JSX.Element => {
         },
       });
       socket.emit('connectToGame', { id:gameId } );
-      router.push(`http://${process.env.HOST}/game/${gameId}`);
+      router.push(`http://${process.env.HOST}/game/${gameId}/?player2=${dataU.getProfile.id}`);
     }
   };
 

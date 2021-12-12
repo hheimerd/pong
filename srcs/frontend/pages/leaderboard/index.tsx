@@ -24,13 +24,12 @@ const Leaderboard = (): JSX.Element => {
   const Leaderboard = Array.from(data.getLeaderBoard).map(
     (user: IUserProfile, i: number) => {
       return (
-        <React.Fragment key={i}>
-          <LeaderboardItem
+        <LeaderboardItem
             name={user.name}
             image={user.avatar}
             position={user.rank}
+            key={user.id}
           />
-        </React.Fragment>
       );
     }
   );

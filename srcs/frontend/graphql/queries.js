@@ -243,6 +243,7 @@ export const GET_LEADER_BOARD = gql`
       name
       avatar
       rank
+      id
     }
   }
 `;

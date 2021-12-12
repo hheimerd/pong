@@ -54,7 +54,7 @@ const ActiveGames = (): JSX.Element => {
     if (typeof games !== "undefined") {
 
 
-      return Array.from(games).map((onegame: IGameResult, i: number) => {
+      return Array.from(games).map((onegame: IGameResult) => {
         console.log("onegame ", onegame);
 
         let isSpectator = "/?spectator=true";
@@ -66,7 +66,7 @@ const ActiveGames = (): JSX.Element => {
          }
 
         return (
-          <React.Fragment key={i}>
+          <React.Fragment key={onegame.id}>
             {onegame.players.length == 2 ? (
               <MatchHistory
                 users={[+onegame.players[0], +onegame.players[1]]}
@@ -119,24 +119,24 @@ const ActiveGames = (): JSX.Element => {
   }
 
   // Generate list of chats.
-  const UsersList = (users: [IUserProfile]) => {
-    if (typeof users !== "undefined") {
-      return Array.from(users).map((user: IUserProfile, i: number) => {
-        if (user.id != data.getProfile.id) {
-          return (
-            <React.Fragment key={i}>
-              <AvatarButton
-                user={user}
-                link={"/users/" + user.id}
-                appearance={UserStatus.Undefined}
-              />
-            </React.Fragment>
-          );
-        }
-      });
-    }
-    return undefined;
-  };
+  // const UsersList = (users: [IUserProfile]) => {
+  //   if (typeof users !== "undefined") {
+  //     return Array.from(users).map((user: IUserProfile) => {
+  //       if (user.id != data.getProfile.id) {
+  //         return (
+  //           <React.Fragment key={user.id}>
+  //             <AvatarButton
+  //               user={user}
+  //               link={"/users/" + user.id}
+  //               appearance={UserStatus.Undefined}
+  //             />
+  //           </React.Fragment>
+  //         );
+  //       }
+  //     });
+  //   }
+  //   return undefined;
+  // };
 
   return (
     <InnerPageLayout>

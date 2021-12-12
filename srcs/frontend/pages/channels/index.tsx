@@ -66,7 +66,7 @@ const Channel = (): JSX.Element => {
   // wait while data loading
   if (loading || loadingA || loadingU || loadingC || loadingD)
     return <p>Loading from graphql...</p>;
-  if (error || errorC || errorA || errorD || errorU)
+  if (error || errorC || errorD || errorU)
     return <p>Error: can't fetching data from graphql :(</p>;
 
   const current_user_id = data.getProfile.id;
@@ -164,16 +164,14 @@ const Channel = (): JSX.Element => {
         </Button>
       );
       buttonArr.push(
-        <>
-          &nbsp;
           <Button
-            key={2}
+           key={2}
             appearance="primary"
             onClick={() => handleDelete(channel)}
+            style={{marginLeft: "10px"}}
           >
             Delete
           </Button>
-        </>
       );
     } else {
       // not website admin
@@ -251,7 +249,7 @@ const Channel = (): JSX.Element => {
         </thead>
         <tbody>
           {channels.map((channel: IChat) => (
-            <tr key={channel.id} id={channel.id}>
+            <tr key={channel.id}>
               <td>{getLink(channel)}</td>
               <td>
                 {channel.is_private ? "Private" : "Public"}

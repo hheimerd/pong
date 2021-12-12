@@ -67,6 +67,7 @@ export class GameEntity {
         [pl1score, pl2score],
       );
       this._game.sendToAll('winner', pl1score == 11 ? 1 : 2);
+      this._players.forEach(c => c.socket.data.game = null)
       this.unsubscribe();
     });
     this._gameStarted = false;

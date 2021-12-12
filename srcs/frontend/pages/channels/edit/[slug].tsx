@@ -195,6 +195,7 @@ const ChannelRoom = (): JSX.Element => {
           },
         });
       } else {
+        console.log("pass before submit", password);
         updateChat({
           variables: {
             updateChatInput: {

@@ -229,9 +229,9 @@ const UserProfile = (): JSX.Element => {
   const arr = Array.from(dataGames.gameResult);
   console.log("arr", arr);
   const HistoryList = Array.from(dataGames.gameResult).map(
-    (oneresult: IGameResult, i: number) => {
+    (oneresult: IGameResult) => {
       return (
-        <React.Fragment key={i}>
+        <React.Fragment key={oneresult.id}>
           <MatchHistory
             scores={[+oneresult.score[0], +oneresult.score[1]]}
             users={[+oneresult.players[0], +oneresult.players[1]]}
