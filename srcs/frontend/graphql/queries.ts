@@ -16,6 +16,7 @@ export const PROFILE_QUERY = gql`
         id
         name
         avatar
+        gameId
       }
       followers {
         id
@@ -204,6 +205,7 @@ export const USER_QUERY = gql`
       roles
       rank
       status
+      gameId
     }
   }
 `;

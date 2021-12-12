@@ -1,4 +1,4 @@
-import { SocketWithData } from '../game.gateway';
+import { GameGateway, SocketWithData } from '../game.gateway';
 import { v4 as randomUUID } from 'uuid';
 import { Game } from '../lib/game.lib';
 import { GameResultService } from 'src/game-result/game-result.service';
@@ -80,7 +80,7 @@ export class GameEntity {
   }
 
   PlayerInGame(id: number): boolean {
-    return this._players.every((p) => p.id === id);
+    return this._players.some((p) => p.id === id);
   }
 
   GameIsFull(): boolean {
@@ -121,12 +121,15 @@ export class GameEntity {
   }
 
   setPlayer(socket: SocketWithData): boolean {
-    if (this._players[0] && this._players[1]) {
+    // TODO: Пофиксить один пользователь играет сам с собой
+    if (this._players.some((p) => p.id == socket.data.id)) {
       const reconnectSuccess = this.tryReconnect(socket);
       if (!reconnectSuccess) {
         return false;
       }
     }
+
+    GameGateway.games = GameGateway.games.filter(g => !g.PlayerInGame(socket.data.id))
 
     const player = new Player(socket.data.id);
     player.socket = socket;

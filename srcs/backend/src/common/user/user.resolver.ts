@@ -105,9 +105,11 @@ export class UserResolver {
     return this.userService.getChats(user.id);
   }
 
-  @ResolveField(() => Int, { name: 'gameId' })
+  @ResolveField(() => String, { name: 'gameId', nullable: true })
   async getGameId(@Parent() user: User) {
-    return GameGateway.games.filter(g => g.PlayerInGame(user.id))[0] ?? 0;
+    const res = GameGateway.games.filter(g => g.PlayerInGame(user.id))[0]?.id ?? '';
+    console.log(res);
+    return res;
   }
 
 

@@ -31,6 +31,8 @@ export class GameResultService {
   }
 
   async findAll(userId?: number, take = 15, skip = 0) {
+    if (!userId) return [];
+    
     const results = (await this.prisma.gameResult.findMany({
       where: {
         players: {

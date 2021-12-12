@@ -224,6 +224,7 @@ const UserProfile = (): JSX.Element => {
   const isThisPageForMyProfile = dataProfile.getProfile.id == +id;
 
   console.log("dataGames", typeof dataGames.gameResult);
+  console.log("dataVProfile", dataVProfile);
 
   // iterate over all games
   const arr = Array.from(dataGames.gameResult);
@@ -235,6 +236,7 @@ const UserProfile = (): JSX.Element => {
           <MatchHistory
             scores={[+oneresult.score[0], +oneresult.score[1]]}
             users={[+oneresult.players[0], +oneresult.players[1]]}
+            href={"/game/" + oneresult.id + "/?spectator=true"}
           />
         </React.Fragment>
       );
@@ -275,6 +277,10 @@ const UserProfile = (): JSX.Element => {
           )}
         </div>
         <div className={styles.history_container}>{HistoryList}</div>
+        { dataVProfile.user.gameId ? 
+        <Button appearance="primary" onClick={() => router.push("/game/" + dataVProfile.user.gameId + "/?spectator=true")}>Watch user current game</Button>
+        : ""}
+        
       </div>
     </InnerPageLayout>
   );

@@ -96,6 +96,7 @@ const StartGame = (): JSX.Element => {
           <li>Press UP DOWN button to move your desk</li>
           <li>Collect bonus red balls</li>
           <li>Play game, have fun!</li>
+          <li>Player with 11 points wins the game</li>
         </ul>
         </div>
       </div>

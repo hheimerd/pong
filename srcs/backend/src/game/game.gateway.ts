@@ -104,6 +104,8 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
     @MessageBody() settings: number[]
   ) {
+    if (!client.data.game) return;
+    
     client.data.game.setPlayerReady(client.data.playerNumber, settings);
     client.emit('ready', client.data.playerNumber);
   }

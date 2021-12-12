@@ -58,7 +58,11 @@ export default function Game(): JSX.Element {
           const playersId = response.playersId;
 
           let isPlayer = playersId.includes(user.id);
-          if (!isPlayer && !response.isMM) return;
+
+          if (spectator) return;
+          if (!isPlayer) 
+            if (playersId.length == 2 || !response.isMM)
+              return;
 
           socket.on("connectedAsPlayer", () => {
             console.log("connectedAsPlayer");
@@ -166,13 +170,14 @@ export default function Game(): JSX.Element {
       <div className="wrapper">
         <div ref={gameRef}></div>
         
-        <ul>
+        <ul style={{marginTop: "800px"}}>
           <li>Press Start game</li>
           <li>Config your game</li>
           <li>Press SPACE button</li>
           <li>Press UP DOWN button to move your desk</li>
           <li>Collect bonus red balls</li>
           <li>Play game, have fun!</li>
+          <li>Player with 11 points wins the game</li>
         </ul>
       </div>
     </InnerPageLayout>
