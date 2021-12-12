@@ -34,18 +34,21 @@ const Profile = (): JSX.Element => {
 
   // form fields states
   const [name, setName] = React.useState("");
+  const [nickname, setNickname] = React.useState("");
   // const [password, setPassword] = React.useState("");
   // const [email, setEmail] = React.useState("");
   const [avatar, setAvatar] = React.useState(["", ""]);
 
   // form fields refs
   const nameRef = useRef<HTMLInputElement | null>();
+  const nicknameRef = useRef<HTMLInputElement | null>();
   // const passwordRef = useRef<HTMLInputElement | null>();
   // const emailRef = useRef<HTMLInputElement | null>();
   const avatarRef = useRef<HTMLInputElement | null>();
 
   // form fields validation states
   const [isNameValid, setIsNameValid] = useState(true);
+  const [isNicknameValid, setIsNicknameValid] = useState(true);
   // const [isPasswordValid, setIsPasswordValid] = useState(true);
   // const [isEmailValid, setIsEmailValid] = useState(true);
 
@@ -58,7 +61,9 @@ const Profile = (): JSX.Element => {
     if (!loading && data) {
       console.log("data: ", data);
       setName(data.getProfile.name);
+      setNickname(data.getProfile.login);
       if (nameRef.current) nameRef.current.value = data.getProfile.name;
+      if (nicknameRef.current) nicknameRef.current.value = data.getProfile.login;
       // setPassword(data.user.password);
       // if (passwordRef.current) passwordRef.current.value = data.user.password;
       // setEmail(data.getProfile.email);
@@ -126,7 +131,8 @@ const Profile = (): JSX.Element => {
       updateUser({
         variables: {
           updateUserInput: {
-            name: name,
+            name,
+            login: nickname,
             TwoFactorAuth: is2FAEnabled,
             // email: email,
             // oldPassword: oldPassword,
@@ -179,6 +185,23 @@ const Profile = (): JSX.Element => {
               inputRef={nameRef}
               error={!isNameValid}
               helperText={!isNameValid ? "Empty field!" : " "}
+            />
+          </div>
+          <div className="line">
+            <TextField
+              id="nickname"
+              label="Nickname *"
+              fullWidth
+              size="small"
+              variant="outlined"
+              onChange={(event) => setNickname(event.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              defaultValue={nickname}
+              inputRef={nicknameRef}
+              error={!isNicknameValid}
+              helperText={!isNicknameValid ? "Empty field!" : " "}
             />
           </div>
           {/* 
@@ -236,7 +259,8 @@ const Profile = (): JSX.Element => {
             />
           </div>
           <div className="line">
-            <OutlinedDiv label="Avatar">
+            
+            <OutlinedDiv label="Avatar (Max 1Mb)">
               <Avatar
                 size="large"
                 name={data.getProfile.name}

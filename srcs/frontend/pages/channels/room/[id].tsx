@@ -23,6 +23,8 @@ const ChannelRoom = (): JSX.Element => {
   });
   const router = useRouter();
   const { id } = router.query;
+  console.log("channel id", id);
+  
   const channel = useChannelById(id);
 
   // get current channel from current user profile
@@ -54,6 +56,7 @@ const ChannelRoom = (): JSX.Element => {
         <Htag tag="h1">{channel.name}</Htag>
         {channel.members.map((user: IUserProfile) => (
           <ChannelUserChip
+            key={user.id}
             user={user}
             current_user_id={data.getProfile.id}
             current_channel={channel}

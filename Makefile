@@ -21,9 +21,9 @@ clean:
 
 # Docker full clean
 fclean: clean
-	rm -rf ./backend/node_modules
-	rm -rf ./backend/dist
-	rm -rf ./frontend/node_modules
+	rm -rf ./srcs/backend/node_modules
+	rm -rf ./srcs/backend/dist
+	rm -rf ./srcs/frontend/node_modules
 	docker container prune --force
 	docker images prune
 	docker system prune --force

@@ -45,6 +45,7 @@ services:
   backend:
     image: node:16-alpine
     container_name: backend
+    build: ./srcs/backend
     restart: unless-stopped
     ports:
       - 81:81
@@ -52,7 +53,7 @@ services:
     links:
       - "db"
     volumes:
-      - ./backend:/app
+      - ./srcs/backend:/app
     depends_on:
       db:
         condition: service_healthy
@@ -64,11 +65,12 @@ services:
   frontend:
     image: node:14-alpine
     container_name: frontend
+    build: ./srcs/frontend
     restart: unless-stopped
     # ports:
     #   - 3040:3040
     volumes:
-      - ./frontend:/app
+      - ./srcs/frontend:/app
     depends_on:
       - backend
     # change yarn to npm due this issue https://github.com/yarnpkg/yarn/issues/1496
@@ -87,7 +89,7 @@ services:
       - "backend"
       - "frontend"
     volumes:
-      - ./nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./srcs/nginx/templates/default.conf.template:/etc/nginx/templates/default.conf.template:ro 
     command: ['nginx', '-g', 'daemon off;']
     environment:
       <<: *default-env

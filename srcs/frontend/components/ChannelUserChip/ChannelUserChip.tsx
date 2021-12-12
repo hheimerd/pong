@@ -223,20 +223,16 @@ export const ChannelUserChip = ({
         current_channel.ownerId === current_user_id) ||
         adminsIdArr.includes(current_user_id))
     ) {
-      return (
-        <>
-          {isBanned ? (
-            <MenuItem onClick={handleUnBan}>Unban</MenuItem>
-          ) : (
-            <MenuItem onClick={handleBan}>Kick and ban {user.name}</MenuItem>
-          )}
-          {isMuted ? (
-            <MenuItem onClick={handleUnMute}>Unmute</MenuItem>
-          ) : (
-            <MenuItem onClick={handleMute}>Mute {user.name}</MenuItem>
-          )}
-        </>
-      );
+      if (isBanned) {
+        return <MenuItem onClick={handleUnBan}>Unban</MenuItem>
+      } else {
+        return <MenuItem onClick={handleBan}>Kick and ban {user.name}</MenuItem>
+      }
+      if (isMuted) {
+        return <MenuItem onClick={handleUnMute}>Unmute</MenuItem>
+      } else {
+        return <MenuItem onClick={handleMute}>Mute {user.name}</MenuItem>
+      }
     }
   };
 

@@ -22,7 +22,7 @@ export const InnerPageLayout = ({ children }): JSX.Element => {
 
   // wait fetching data
   if (loading) return <p>Loading user profile from graphql...</p>;
-  if (error) return <p>Error: can't fetching data from graphql :(</p>;
+  if (error) router.push('/');
 
   // useEffect(() => {
   //   console.log("getProfile", data.getProfile);

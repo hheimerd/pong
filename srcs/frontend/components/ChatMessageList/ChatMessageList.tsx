@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { join } from "path/posix";
 import React, { useEffect, useRef } from "react";
 import { useSnackBar } from "../../context/snackbar/snackbar.context";
 import { MESSAGES_SUBSCRIPTION } from "../../graphql";
@@ -31,7 +32,8 @@ export const ChatMessageList = ({
     },
   });
   const { loading, error, data, subscribeToMore } = useQuery(MESSAGES_QUERY, {
-    variables: { chatId: id },
+    variables: { chatId: id,
+    },
     onError(err) {
       console.log(err);
       updateSnackBarMessage(extractGraphQLError(err).message);
@@ -47,6 +49,7 @@ export const ChatMessageList = ({
       subscribeToMore({
         document: MESSAGES_SUBSCRIPTION,
         variables: {
+          fetchPolicy: "network-only",
           token: localStorage.getItem("token"),
           chatId: id,
         },
@@ -105,18 +108,24 @@ export const ChatMessageList = ({
 
   // wait until state will be ready
   // if(!state) return null;
+  console.log("data from chatmessage", data);
   if (loading || loadingUsers)
     return <p>Loading user profile from graphql...</p>;
   if (error) {
-    // router.push("/channels");
-    return <p> Error: {extractGraphQLError(error).message} </p>;
+    router.push("/channels");
+    // return <p> Error: {extractGraphQLError(error).message} </p>;
   }
   if (errorUsers) {
-    // router.push("/channels");
-    return <p> Error: {extractGraphQLError(errorUsers).message} </p>;
+    router.push("/channels");
+    // return <p> Error: {extractGraphQLError(errorUsers).message} </p>;
   }
-
-  // console.log(data.chat.messages);
+  if (!data) {
+    window.location.href = "/channels";
+  }
+  else {
+    console.log("tabdddou");
+    
+  }
 
   // iterate over all messages
   const Messages = Array.from(data.chat.messages)
