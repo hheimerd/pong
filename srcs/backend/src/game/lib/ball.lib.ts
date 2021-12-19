@@ -13,7 +13,7 @@ export class Ball {
     objects: GameObject[];
     players: Player[];
     constructor(objects: GameObject[], players: Player[], x: number, y: number, screenWidth: number, screenHeight: number,
-        xSpeed = 7, ySpeed = 5, width = 15, height = 15) { 
+        xSpeed = 9, ySpeed = 4, width = 15, height = 15) { 
         this.objects = objects;
         this.players = players;
         this.x = x;
@@ -24,6 +24,14 @@ export class Ball {
         this.height = height;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+    }
+
+    getRandomInt() {
+        if (Math.floor(Math.random() * 2) < 1) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     move() {
@@ -69,6 +77,8 @@ export class Ball {
     newRound() {
         this.x = (this.screenWidth - 15) / 2;
         this.y = (this.screenHeight - 15) / 2;
+        this.xSpeed = 9 * this.getRandomInt();
+        this.ySpeed = 4 * this.getRandomInt();
     }
 
     update() {
