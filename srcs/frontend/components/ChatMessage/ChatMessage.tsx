@@ -21,8 +21,6 @@ export const ChatMessage = ({
 }: ChatMessageProps): JSX.Element => {
   const { message, created_at } = onemessage;
 
-  // console.log("user", user);
-
   return (
     <div className={styles.box}>
       <div className={styles.wrapper}>

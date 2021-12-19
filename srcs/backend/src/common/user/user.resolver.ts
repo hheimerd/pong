@@ -108,7 +108,6 @@ export class UserResolver {
   @ResolveField(() => String, { name: 'gameId', nullable: true })
   async getGameId(@Parent() user: User) {
     const res = GameGateway.games.filter(g => g.PlayerInGame(user.id))[0]?.id ?? '';
-    console.log(res);
     return res;
   }
 

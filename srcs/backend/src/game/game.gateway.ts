@@ -163,10 +163,6 @@ export class GameGateway {
     game.setPlayer(client);
     
     client.data.game = game;
-
-  
-    console.log(dto);
-    console.log(client.data);
     
     client.emit('gameCreated', {
       game: {

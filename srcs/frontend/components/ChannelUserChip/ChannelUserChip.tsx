@@ -164,7 +164,6 @@ export const ChannelUserChip = ({
     });
     try {
       const gameId = await createGame(socket, user);
-      console.log("Game created");
       // send message to back via mutation CREATE_MESSAGE_MUTATION
       addMessage({
         variables: {
@@ -236,7 +235,6 @@ export const ChannelUserChip = ({
     }
   };
 
-  console.log("current_channel: ", current_channel);
   const getChipUserName = () => {
     let chipUserName = user.name;
     if (current_channel.ownerId === user.id) {

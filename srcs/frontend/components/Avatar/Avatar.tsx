@@ -11,12 +11,6 @@ export const Avatar = ({
   onClick,
   ...props
 }: AvatarProps): JSX.Element => {
-  useEffect(() => {
-    if (typeof onClick !== "undefined") {
-      console.log("Avatar onClick: " + onClick);
-    }
-  }, []);
-
   if (Object.keys(image).length === 0) {
     image = ["/no-avatar.png", "/no-avatar.png"];
   } else {

@@ -16,7 +16,6 @@ export const AvatarButtonById = ({
   const user = useUserById(user_id);
   if (typeof user === "undefined") return <span>Loading...</span>;
   const appearance = user.status
-  // console.log("status", appearance);
   return (
     <Link href={"/users/" + user.id}>
       <a className={styles.button} {...props}>

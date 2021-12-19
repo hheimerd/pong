@@ -9,7 +9,6 @@ const MainPage = (): JSX.Element => {
   const { setToken } = useContext(PersonalTokenContext);
 
   useEffect(() => {
-    console.log("localStorage", localStorage.getItem("token"));
     if (typeof localStorage !== "undefined" && localStorage.getItem("token"))
       router.push("/activegames");
   }, []);
@@ -18,7 +17,6 @@ const MainPage = (): JSX.Element => {
     if (router.isReady) {
       const url_token = router.query.token as string;
       if (typeof url_token !== "undefined") {
-        console.log("token intra", url_token);
         localStorage.setItem("token", url_token);
         setToken(url_token);
         window.location.replace("/profile");

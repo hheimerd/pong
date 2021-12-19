@@ -1,15 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useRef } from "react";
 import { useSnackBar } from "../../context/snackbar/snackbar.context";
-// import { UserProfileContext } from "../../context/userprofile/userprofile.context";
 import { CREATE_MESSAGE_MUTATION, PROFILE_QUERY } from "../../graphql";
 import { Avatar } from "../Avatar/Avatar";
 import styles from "./ChatForm.module.css";
 import { ChatFormListProps } from "./ChatForm.props";
 
 export const ChatForm = ({ id }: ChatFormListProps): JSX.Element => {
-  // const { name } = useContext(UserProfileContext);
-  // console.log("name: ", name);
   const { updateSnackBarMessage } = useSnackBar();
 
   const { loading, error, data } = useQuery(PROFILE_QUERY);

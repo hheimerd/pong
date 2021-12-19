@@ -112,7 +112,6 @@ export class GameEntity {
       this._players[1].socket = socket;
     }
     this._connections.push(socket);
-    console.log('connect', this._players);
   }
 
   setMap(mapId: number) {
@@ -229,7 +228,6 @@ export class GameEntity {
     const player = this._players.find((p) => p.id === socket.data.id);
     player.socket = undefined;
 
-    console.log('ready = false');
     this._players.forEach((p) => (p.isReady = false));
     
     var index = this._connections.indexOf(socket);

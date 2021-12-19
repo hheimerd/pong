@@ -41,9 +41,6 @@ export const ChatMessageList = ({
   });
   const { updateSnackBarMessage } = useSnackBar();
 
-  // Make ref for scrolling to down of message list
-  // const messagesEndRef = useRef<null | HTMLDivElement>(null);
-
   useEffect(() => {
     try {
       subscribeToMore({
@@ -70,25 +67,6 @@ export const ChatMessageList = ({
       console.log(e);
     }
   }, [subscribeToMore]);
-
-  // const {state, dispatch} = useContext(ChatContext);
-
-  // useEffect(() => {
-  //   console.log("ChatMessageList useEffect, state: " + state);
-  //   dispatch({
-  //     type: ActionType.GetMessages,
-  //     payload: id
-  //   });
-  // }, []);
-
-  // const scrollToBottom = () => {
-  //   console.log("ref in useEffect");
-  //   messagesEndRef?.current?.scrollIntoView({
-  //     block: "end",
-  //     inline: "nearest",
-  //     behavior: "smooth",
-  //   });
-  // };
 
   const AlwaysScrollToBottom = () => {
     const elementRef = useRef<HTMLDivElement>();
