@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import React from "react";
-import { AvatarButton, Htag } from "../../components";
+import { AvatarButton, AvatarById, Htag } from "../../components";
+import { AvatarButtonById } from "../../components/AvatarButtonById/AvatarButtonById";
 import { PROFILE_QUERY } from "../../graphql";
 import {
   IUserProfile,
@@ -30,10 +31,8 @@ const Users = (): JSX.Element => {
         if (user.id != data.getProfile.id) {
           return (
             <React.Fragment key={user.id}>
-              <AvatarButton
-                user={user}
-                link={"/users/" + user.id}
-                appearance={UserStatus.Undefined}
+              <AvatarButtonById
+                user_id={user.id}
               />
             </React.Fragment>
           );

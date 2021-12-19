@@ -1,0 +1,44 @@
+.button {
+  display: inline-block;
+
+  margin: 1rem 0.5rem;
+}
+
+.button__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+
+  width: 270px;
+
+  grid-row-gap: 1rem;
+
+  padding: 0.5rem 1rem;
+
+  transition: all 0.2s;
+
+  border-radius: 2rem;
+}
+
+.button__wrapper:hover,
+.button__wrapper.undefined {
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);
+  -moz-box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);
+  box-shadow: 2px 2px 13px 0px rgba(50, 50, 50, 0.33);
+}
+
+.offline {
+  border: 1px solid var(--green-light);
+}
+
+.online {
+  border: 3px solid var(--online);
+}
+
+.ingame {
+  border: 3px solid var(--ingame);
+}
+
+.button__name {
+  align-self: center;
+}
