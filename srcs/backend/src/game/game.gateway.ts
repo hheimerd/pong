@@ -40,8 +40,8 @@ export class GameGateway {
     const targetGame = GameGateway.games.find(g => g.id == dto.id);
     client.data.game = targetGame;
     
-    console.log(targetGame);
-    
+    if (!targetGame) return;
+
     targetGame.connect(client);
     this.userService.update(client.data.id, { status: UserStatus.InGame });
 
@@ -55,7 +55,7 @@ export class GameGateway {
         GameGateway.games.splice(endedGame, 1);
       }
     })
-    client.on('disconnect', () => {
+    client.on('exitGame', () => {
       if (!this.checkIsPlayer(client)) return;
       this.userService.update(client.data.id, { status: UserStatus.Online });
       const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
@@ -135,7 +135,7 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,
   ) {
     const isPlayer = this.checkIsPlayer(client);
-    console.log(isPlayer);
+    console.debug('isPlayer', isPlayer);
     
     if (!isPlayer) return;
   
@@ -148,6 +148,8 @@ export class GameGateway {
     @MessageBody() dto: CreateGameDto,
     @ConnectedSocket() client: SocketWithData,
   ) {
+    GameGateway.games = GameGateway.games.filter(g => !g.PlayerInGame(client.data.id))
+
     const game = new GameEntity(dto.name, this.gameResultService, dto.userId);
     GameGateway.games.push(game);
     

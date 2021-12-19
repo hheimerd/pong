@@ -120,7 +120,7 @@ export class Game extends EventEmitter {
           this.emit('win', this.players[0].score, this.players[1].score);
 	      this.setPause(true);
 	      return;	
-        }
+        } 
           this.emit('goal', this.players[0].score, this.players[1].score);
           this.startNewRound();
       } else {   

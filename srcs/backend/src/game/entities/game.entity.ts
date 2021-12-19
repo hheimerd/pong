@@ -101,11 +101,13 @@ export class GameEntity {
         && this._players.length == 1 
         && this._players[0].id != socket.data.id
         ) {
+          
       this._players[1] = new Player(socket.data.id);
       this._players[1].number = this._players[0]?.number + 1;
       this._players[1].socket = socket;
     }
     this._connections.push(socket);
+    console.log('connect', this._players);
   }
 
   setMap(mapId: number) {
@@ -128,8 +130,6 @@ export class GameEntity {
         return false;
       }
     }
-
-    GameGateway.games = GameGateway.games.filter(g => !g.PlayerInGame(socket.data.id))
 
     const player = new Player(socket.data.id);
     player.socket = socket;
@@ -169,6 +169,7 @@ export class GameEntity {
     socket.data.playerNumber = player.number;
 
     player.socket = socket;
+    return true;
   }
 
   setPlayerNumber(player: Player, socket: SocketWithData) {
@@ -178,7 +179,9 @@ export class GameEntity {
   setPlayerReady(playerNumber: number, settings: number[]) {
     this._game.setPlayerReady(playerNumber, settings)
     this._players[playerNumber - 1].isReady = true;
-    if (this._players.every((p) => p.isReady) && this._gameStarted == false) {
+    console.log(this._players);
+    
+    if (this._players.length == 2 && this._players.every((p) => p.isReady) && this._gameStarted == false) {
       this.animate();
     }
     else if (this._players.every((p) => p.isReady)) {

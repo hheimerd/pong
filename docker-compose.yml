@@ -48,6 +48,7 @@ services:
     build: ./srcs/backend
     restart: unless-stopped
     ports:
+      - 9229:9229
       - 81:81
     #   - 3000:3000
     links:

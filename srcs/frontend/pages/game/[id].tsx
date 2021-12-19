@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { InnerPageLayout } from "../../layout/InnerPageLayout";
 import io from "socket.io-client";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
 import { Canvas } from "../../helpers/GameCanvas";
 import useKeypress from "../../hooks/useKeypress";
@@ -40,6 +40,11 @@ export default function Game(): JSX.Element {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         });
+
+        Router.events.on('routeChangeStart', () => {
+          socket.emit('exitGame')
+        })
+
 
         let num = -1;
         let ready = false;
