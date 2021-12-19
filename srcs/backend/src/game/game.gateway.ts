@@ -45,7 +45,11 @@ export class GameGateway {
     targetGame.connect(client);
     this.userService.update(client.data.id, { status: UserStatus.InGame });
 
-    client.emit('gameConnected', { playersId: targetGame.getPlayersId(), isMM: targetGame.gameType == GameType.MM  });
+    client.emit('gameConnected', { 
+      playersId: targetGame.getPlayersId(), 
+      isMM: targetGame.gameType == GameType.MM,  
+      mapId: targetGame.mapId
+     });
     targetGame.addEventListener('newFrame', (...args) =>  {
       client.emit('newFrame', ...args);
     });
@@ -55,24 +59,26 @@ export class GameGateway {
         GameGateway.games.splice(endedGame, 1);
       }
     })
-    client.on('exitGame', () => {
-      if (!this.checkIsPlayer(client)) return;
+
+    client.on('disconnect', () => {
+      this.exitGame(client)
+    })
+  }
+
+  
+  // Когда игрок ушел из игры
+  @SubscribeMessage('exitGame')
+  exitGame(@ConnectedSocket() client: SocketWithData) {
+    if (!this.checkIsPlayer(client)) return;
       this.userService.update(client.data.id, { status: UserStatus.Online });
       const stopedGame = GameGateway.games.find(g => g.id == client.data.game.id);
+      
       if (stopedGame) {
         stopedGame.setPause(true);
         client.data.game.onPlayerDisconnected(client);
         stopedGame.sendToAll('playerDisconnected');
       }
-    })
   }
-
-  // Когда игрок ушел из игры
-  /*@SubscribeMessage('exit')
-  OnPing(@ConnectedSocket() client: SocketWithData) {
-    console.log('exit');
-    this.userService.update(client.data.id, { status: UserStatus.Online });
-  }*/
 
 
   @SubscribeMessage('gamePlayerMove')
@@ -81,12 +87,12 @@ export class GameGateway {
     @ConnectedSocket() client: SocketWithData,i
   ) {
     const game = client.data.game;
-   
-    if (!client.data.playerNumber) {
-      if (!game) {
-        client.emit('error', 'no game selected!');
+    
+    if (!game) {
+        console.log('game not exist', client);
         return;
       }
+    if (!client.data.playerNumber) {
 
       const isReconnected = game.tryReconnect(client);
       if (!isReconnected) {
@@ -94,7 +100,6 @@ export class GameGateway {
         return;
       }
     }
-
     game.movePlayer(client.data.playerNumber, direction);
   }
 
@@ -148,6 +153,7 @@ export class GameGateway {
     @MessageBody() dto: CreateGameDto,
     @ConnectedSocket() client: SocketWithData,
   ) {
+    GameGateway.games.filter(g => g.PlayerInGame(client.data.id)).forEach(g => game.stop())
     GameGateway.games = GameGateway.games.filter(g => !g.PlayerInGame(client.data.id))
 
     const game = new GameEntity(dto.name, this.gameResultService, dto.userId);

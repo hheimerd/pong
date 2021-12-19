@@ -79,6 +79,11 @@ export class GameEntity {
     }
   }
 
+  get mapId()
+  {
+    return this._game.map;
+  }
+
   PlayerInGame(id: number): boolean {
     return this._players.some((p) => p.id === id);
   }
@@ -179,14 +184,20 @@ export class GameEntity {
   setPlayerReady(playerNumber: number, settings: number[]) {
     this._game.setPlayerReady(playerNumber, settings)
     this._players[playerNumber - 1].isReady = true;
-    console.log(this._players);
+
     
-    if (this._players.length == 2 && this._players.every((p) => p.isReady) && this._gameStarted == false) {
-      this.animate();
+    if (this.playersReady()) {
+      if (this._gameStarted == false)
+        this.animate();
+      else  {
+        this.setPause(false);                
+      }
     }
-    else if (this._players.every((p) => p.isReady)) {
-      this.setPause(false);
-    }
+  }
+
+  playersReady()
+  {
+    return this._players.length == 2 && this._players.every((p) => p.isReady == true);
   }
 
   addEventListener(eventName: string, cb: (...args: any[]) => void) {
@@ -198,7 +209,12 @@ export class GameEntity {
   animate() {
     this._gameStarted = true;
     this._timer = this._timer = setInterval(() => {
-      this._game.update();
+      try {
+        this._game.update();
+      } catch {
+        this._players.forEach(c => c.socket.data.game = null)
+        GameGateway.games = GameGateway.games.filter(g => g != this)
+      }
     }, 30);
     this._timer = setTimeout(() => {
       this.stop();
@@ -213,7 +229,9 @@ export class GameEntity {
     const player = this._players.find((p) => p.id === socket.data.id);
     player.socket = undefined;
 
+    console.log('ready = false');
     this._players.forEach((p) => (p.isReady = false));
+    
     var index = this._connections.indexOf(socket);
     if (index !== -1) {
       this._connections.splice(index, 1);

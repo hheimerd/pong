@@ -59,11 +59,11 @@ const ActiveGames = (): JSX.Element => {
 
         let isSpectator = "/?spectator=true";
 
-        for(var i = 0; i < onegame.players.length; i++){
-          if (onegame.players[i] == data.getProfile.id ){
-            isSpectator = "";
-          }
-         }
+        // for(var i = 0; i < onegame.players.length; i++){
+        //   if (onegame.players[i] == data.getProfile.id ){
+        //     isSpectator = "";
+        //   }
+        //  }
 
         return (
           <React.Fragment key={onegame.id}>

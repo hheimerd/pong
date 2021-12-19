@@ -9,8 +9,10 @@ import { Bonus } from "./bonus.lib";
 export class Game extends EventEmitter {
   connections: SocketWithData[];
   id: string;
-  pause: boolean;
   players: Player[] = [];
+  get pause() {
+    return this.players.some(p => p.pause)
+  } ;
   playersReadyFlag: boolean[] = [];
   ball: Ball;
   objects: GameObject[];
@@ -22,7 +24,6 @@ export class Game extends EventEmitter {
 
   constructor(id: string, connections: SocketWithData[], screenWidth: number, screenHeight: number, gameMod: number) {
     super();
-	  this.pause = true;
     this.id = id;
     this.connections = connections;
     this.screenHeight = screenHeight;
@@ -76,10 +77,13 @@ export class Game extends EventEmitter {
       return Math.floor(Math.random() * (max - min)) + min;
     }
 
+
+    gameConfiguredCounter = 0;
     setPlayerReady(playerNumber: number, settings: number[]) {
-      if (this.players[0].score == 0 && this.players[1].score == 0) {
+      if (this.gameConfiguredCounter < 2) {
+        this.gameConfiguredCounter++;
         if (this.map == -1)
-          this.map = settings[0];
+          this.map = settings[0]; 
         else if (this.map != settings[0])
           this.map = this.getRandomInt(0, 2);
         if (this.mode == -1)
@@ -94,20 +98,21 @@ export class Game extends EventEmitter {
           this.emit('gameStart', this.map);
         }
       } else {
-        this.setPause(false);
-        this.emit('gameStart', this.map);
+        this.players[playerNumber-1].pause = false;
+        if (!this.pause)
+          this.emit('gameStart', this.map);
       }
     }
 
     setPause(bool: boolean) {
 	    this.players[0].setPause(bool);
 	    this.players[1].setPause(bool);
-      this.pause = bool;
     }
 
     update() {
       let eventName: string;
       let pl: number;
+      
       if (this.pause) return;
       this.bonus?.update();
       if (this.bonus && (pl = this.bonus.collect()) != 0) {

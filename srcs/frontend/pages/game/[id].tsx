@@ -55,12 +55,19 @@ export default function Game(): JSX.Element {
           new Canvas(nodeRef, { zIndex: 3 }),
         ];
         screen[0].drawFon(0);
-        console.log(player1, player2, spectator, user.id);
         
-        if (spectator === undefined && (+player1 == user.id || +player2 == user.id))
+        const isPlayer = spectator === undefined && (+player1 == user.id || +player2 == user.id)
+
+        if (isPlayer)
           screen[2].menu();
+        
+          
         socket.on("gameConnected", (response: GameConnectedResponse) => {
           const playersId = response.playersId;
+          const mapId = response.mapId;
+          
+          if (spectator)
+            screen[0].drawFon(mapId);
 
           let isPlayer = playersId.includes(user.id);
 
@@ -74,6 +81,7 @@ export default function Game(): JSX.Element {
             const onKeyDown = (e) => {
               e.preventDefault();
               let settings: number[] = [];
+              
               if (!ready) {
                 if (e.key == "ArrowUp") screen[2].setPosition("up");
                 else if (e.key == "ArrowDown") screen[2].setPosition("down");
@@ -82,7 +90,7 @@ export default function Game(): JSX.Element {
                   if (settings[2] == 1) {
                     ready = true;
                     screen[2].clear();
-		    console.log('ready');
+
                     socket.emit("playerReady", settings);
                   }
                 }
@@ -110,7 +118,6 @@ export default function Game(): JSX.Element {
         socket.emit("connectToGame", { id: gameId });
 
         socket.on('gameStart', (gameMap: number) => {
-          console.log('gameStart ' + gameMap.toString(10));
           screen[0].drawFon(gameMap);
         });
 
@@ -189,4 +196,4 @@ export default function Game(): JSX.Element {
   );
 }
 
-type GameConnectedResponse = { playersId: number[], isMM: boolean };
+type GameConnectedResponse = { playersId: number[], isMM: boolean, mapId: number };

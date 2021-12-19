@@ -55,7 +55,10 @@ const StartGame = (): JSX.Element => {
   };
 
   const handleMM = () => {
-    if (data.getMatchmakingGames.length == 0) {
+    if (dataU.getProfile.gameId) {
+      router.push(`http://${process.env.HOST}/game/${dataU.getProfile.gameId}/?player1=${dataU.getProfile.id}`);
+    }
+    else if (data.getMatchmakingGames.length == 0) {
       // if match making game NOT found
       console.log("mathch making game NOT found, will create new game...");
       handleCreateGame(dataU.getProfile);

@@ -6,6 +6,7 @@ export const PROFILE_QUERY = gql`
       id
       name
       email
+      gameId
       login
       roles
       TwoFactorAuth
